@@ -6,7 +6,7 @@ Dépôt git servant pour le projet correspondant aux blocs 1, 2, et 3 du DIU EIL
 
 Il peut y avoir de 2 à 4 personnes impliqués dans le projet. Vous devez indiquer les noms et logins des participants au format suivant :
 
-- Prénom1 NOM1 : login_github1
+- Jean-Luc COSSALTER : jlcoss
 - Prénom2 NOM2 : login_github2
 - Prénom3 NOM3 : login_github3
 - Prénom4 NOM4 : login_github4
