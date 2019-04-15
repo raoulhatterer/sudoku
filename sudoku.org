@@ -1,0 +1,13 @@
+#+STARTUP: inlineimages
+#+LANGUAGE: fr
+#+LATEX_HEADER: \usepackage[AUTO]{babel}
+#+LaTeX_HEADER: \usepackage[x11names]{xcolor}
+#+LaTeX_HEADER: \hypersetup{linktoc = all, colorlinks = true, urlcolor = DodgerBlue4, citecolor = PaleGreen1, linkcolor = black}
+#+LATEX_HEADER: \usepackage[left=1cm,right=1cm,top=2cm,bottom=2cm]{geometry}
+#+TITLE: Diplôme Inter-Universitaire
+#+SUBTITLE: Projet Sudoku
+#+AUTHOR: Raoul HATTERER & Jean-Luc COSSALTER 
+#+OPTIONS: toc:1
+
+* Choix du niveau
+
