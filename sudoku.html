@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="fr" xml:lang="fr">
 <head>
-<!-- 2019-04-15 lun. 22:13 -->
+<!-- 2019-04-15 lun. 23:43 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Diplôme Inter-Universitaire</title>
@@ -250,18 +250,108 @@ for the JavaScript code in this tag.
 <h2>Table des matières</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#orgeed2663">1. Choix du niveau</a></li>
+<li><a href="#org42b0a5e">1. Choix du niveau</a></li>
+<li><a href="#org3fdd186">2. Sacs de chiffres restant à placer.</a></li>
 </ul>
 </div>
 </div>
 
-<div id="outline-container-orgeed2663" class="outline-2">
-<h2 id="orgeed2663"><span class="section-number-2">1</span> Choix du niveau</h2>
+<div id="outline-container-org42b0a5e" class="outline-2">
+<h2 id="org42b0a5e"><span class="section-number-2">1</span> Choix du niveau</h2>
+<div class="outline-text-2" id="text-1">
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-right" />
+
+<col  class="org-right" />
+
+<col  class="org-right" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">niveau</th>
+<th scope="col" class="org-right">restant</th>
+<th scope="col" class="org-right">pourcentage</th>
+<th scope="col" class="org-right">minimum</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left">Beginner</td>
+<td class="org-right">24</td>
+<td class="org-right">30</td>
+<td class="org-right">1</td>
+</tr>
+
+<tr>
+<td class="org-left">Easy</td>
+<td class="org-right">37</td>
+<td class="org-right">46</td>
+<td class="org-right">2</td>
+</tr>
+
+<tr>
+<td class="org-left">Medium</td>
+<td class="org-right">46</td>
+<td class="org-right">57</td>
+<td class="org-right">3</td>
+</tr>
+
+<tr>
+<td class="org-left">Hard</td>
+<td class="org-right">52</td>
+<td class="org-right">64</td>
+<td class="org-right">4</td>
+</tr>
+
+<tr>
+<td class="org-left">Extreme</td>
+<td class="org-right">57</td>
+<td class="org-right">70</td>
+<td class="org-right">5</td>
+</tr>
+</tbody>
+</table>
+
+<ul class="org-ul">
+<li>restant : numéros restant à placer (sur 81)</li>
+<li>minimum : nombre minimum de numéros pour compléter les blocs de 9 numéros (ligne, colonne ou carré)</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-org3fdd186" class="outline-2">
+<h2 id="org3fdd186"><span class="section-number-2">2</span> Sacs de chiffres restant à placer.</h2>
+<div class="outline-text-2" id="text-2">
+<div class="org-src-container">
+<pre class="src src-python"><span class="linenr"> 1: </span><span style="color: #a020f0;">class</span> <span style="color: #228b22;">sac</span>:
+<span class="linenr"> 2: </span><span style="background-color: #f2f2f2;"> </span>   <span style="color: #8b2252;">""" </span>
+<span class="linenr"> 3: </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   Un sac contient &#224; l'origine 9 num&#233;ros identiques. </span>
+<span class="linenr"> 4: </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   </span>
+<span class="linenr"> 5: </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   &#192; l'initialisation de la grille:</span>
+<span class="linenr"> 6: </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   un certain nombre de ces num&#233;ros est pr&#233;l&#233;v&#233; pour les placer sur la grille.  </span>
+<span class="linenr"> 7: </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   Au cours du jeu:</span>
+<span class="linenr"> 8: </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   tant qu'il reste des num&#233;ros dans un sac, le joueur peux en piocher pour les placer sur la grille.</span>
+<span class="linenr"> 9: </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   """</span>
+<span class="linenr">10: </span><span style="background-color: #f2f2f2;"> </span>   <span style="color: #a020f0;">def</span> <span style="color: #0000ff;">__init__</span> (<span style="color: #a020f0;">self</span>,numero):
+<span class="linenr">11: </span><span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="color: #a020f0;">self</span>.<span style="color: #483d8b;">id</span> = numero
+<span class="linenr">12: </span><span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="color: #a020f0;">self</span>.contenu = 9 
+<span class="linenr">13: </span>
+<span class="linenr">14: </span><span style="color: #a0522d;">liste_sacs</span> = <span style="color: #483d8b;">list</span>()
+<span class="linenr">15: </span><span style="color: #a020f0;">for</span> i <span style="color: #a020f0;">in</span> <span style="color: #483d8b;">range</span>(9):
+<span class="linenr">16: </span><span style="background-color: #f2f2f2;"> </span>   liste_sacs.append(sac(i))
+</pre>
+</div>
+</div>
 </div>
 </div>
 <div id="postamble" class="status">
 <p class="author">Auteur: Raoul HATTERER &amp; Jean-Luc COSSALTER</p>
-<p class="date">Created: 2019-04-15 lun. 22:13</p>
+<p class="date">Created: 2019-04-15 lun. 23:43</p>
 <p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
 </div>
 </body>

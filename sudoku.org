@@ -11,3 +11,40 @@
 
 * Choix du niveau
 
+| niveau   | restant | pourcentage | minimum |
+|----------+---------+-------------+---------|
+| Beginner |      24 |          30 |       1 |
+| Easy     |      37 |          46 |       2 |
+| Medium   |      46 |          57 |       3 |
+| Hard     |      52 |          64 |       4 |
+| Extreme  |      57 |          70 |       5 |
+|----------+---------+-------------+---------|
+#+TBLFM: $3=round(100*$2/81) 
+
+- restant : numéros restant à placer (sur 81)
+- minimum : nombre minimum de numéros pour compléter les blocs de 9 numéros (ligne, colonne ou carré)
+
+* Sacs de chiffres restant à placer.
+
+#+begin_src python -n
+class sac:
+    """ 
+    Un sac contient à l'origine 9 numéros identiques. 
+    
+    À l'initialisation de la grille:
+    un certain nombre de ces numéros est prélévé pour les placer sur la grille.  
+    Au cours du jeu:
+    tant qu'il reste des numéros dans un sac, le joueur peux en piocher pour les placer sur la grille.
+    """
+    def __init__ (self,numero):
+        self.id = numero
+        self.contenu = 9 
+
+liste_sacs = list()
+for i in range(9):
+    liste_sacs.append(sac(i))
+#+end_src
+
+#+RESULTS:
+: None
+
