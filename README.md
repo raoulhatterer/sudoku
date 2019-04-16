@@ -25,3 +25,8 @@ Vous pouvez faire un projet sur un autre sujet du moment qu'il respecte le cahie
 - rapport : expliquer interface, expliquer code, expliquer la démarche, transfert au lycée via une idée sur la mobilisation des compétences des programmes NSI dans des activités en séances (hors projet filé) tirées du projet, 20 pages max
 
 Si vous décidez de faire un autre projet, mettez sa description dans cette section du README. 
+
+### Avancement du projet
+
+[Avancement (html)](https://github.com/L2InfoAMU/diu-eil-project123-lycee_mediterranee/blob/master/sudoku.html)
+[Avancement (org)](https://github.com/L2InfoAMU/diu-eil-project123-lycee_mediterranee/blob/master/sudoku.org)
