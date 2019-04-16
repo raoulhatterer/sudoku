@@ -61,7 +61,7 @@ liste_sacs = sacs_pleins()
 
 La grille comporte 81 cases.
 
-#+begin_src python
+#+begin_src python -n
 class case:
     def __init__ (self,numero):
         self.id = numero
