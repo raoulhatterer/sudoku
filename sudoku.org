@@ -40,7 +40,7 @@ class sac:
         self.id = numero
         self.contenu = 9 
 
-def initialisation_des_9sacs:
+def sacs_pleins():
     """
     Initialisation d'une liste contenant 9 sacs
 
@@ -49,6 +49,9 @@ def initialisation_des_9sacs:
     liste_sacs = list()
     for i in range(9):
         liste_sacs.append(sac(i))
+    return liste_sacs
+
+liste_sacs = sacs_pleins()
 #+end_src
 
 #+RESULTS:
@@ -65,16 +68,19 @@ class case:
         self.valeur = 0
         self.pretendants = [1,2,3,4,5,6,7,8,9] 
 
-def initialisation_des_81cases:
+def cases_vides():
     """
-    initialisation d'une liste contenant les 81 cases  
+    initialisation d'une liste contenant les 81 cases
+
+    numérotées de 1 à 81
     """
     NBR_CASES = 81
-    liste_cases = list()
-    for i in range(NBR_CASES):
-        liste_cases.append(case(i+1))
+    liste_cases = [case(0)] # occupe l'index 0 qui ne sera pas utilisé 
+    for i in range(1,NBR_CASES+1):
+        liste_cases.append(case(i))
+    return liste_cases
 
-
+liste_cases = cases_vides()
 #+end_src
 
 #+RESULTS:
