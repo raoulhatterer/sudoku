@@ -28,5 +28,6 @@ Si vous décidez de faire un autre projet, mettez sa description dans cette sect
 
 ### Avancement du projet
 
-* [Avancement (html)](http://htmlpreview.github.io/?https://github.com/L2InfoAMU/diu-eil-project123-lycee_mediterranee/blob/master/sudoku.html)
+* [Avancement (html)](http://htmlpreview.github.io/?
+https://github.com/L2InfoAMU/diu-eil-project123-lycee_mediterranee/blob/master/sudoku.html)
 * [Avancement (org)](https://github.com/L2InfoAMU/diu-eil-project123-lycee_mediterranee/blob/master/sudoku.org)
