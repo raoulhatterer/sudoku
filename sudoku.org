@@ -40,11 +40,42 @@ class sac:
         self.id = numero
         self.contenu = 9 
 
-liste_sacs = list()
-for i in range(9):
-    liste_sacs.append(sac(i))
+def initialisation_des_9sacs:
+    """
+    Initialisation d'une liste contenant 9 sacs
+
+    chaque sac contenant chacun 9 numéros identiques
+    """
+    liste_sacs = list()
+    for i in range(9):
+        liste_sacs.append(sac(i))
 #+end_src
 
 #+RESULTS:
 : None
 
+* Cases
+
+La grille comporte 81 cases.
+
+#+begin_src python
+class case:
+    def __init__ (self,numero):
+        self.id = numero
+        self.valeur = 0
+        self.pretendants = [1,2,3,4,5,6,7,8,9] 
+
+def initialisation_des_81cases:
+    """
+    initialisation d'une liste contenant les 81 cases  
+    """
+    NBR_CASES = 81
+    liste_cases = list()
+    for i in range(NBR_CASES):
+        liste_cases.append(case(i+1))
+
+
+#+end_src
+
+#+RESULTS:
+: None
