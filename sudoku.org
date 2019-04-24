@@ -81,6 +81,15 @@
 
   #+begin_src python -n
     class case:
+        """
+        Classe représentant une case.
+
+        Chacune des 81 cases de la grille possède un identifiant `id` unique
+        allant de 0 à 80.
+        Une case non vide a un `contenu` qui est affiché quand on tape le nom
+        de la case dans l'interpréteur.
+        Une case vide à des prétendants (valeurs possibles de la case).
+        """
         def __init__(self, numero):
             self.id = numero
             self.contenu = None
@@ -91,7 +100,7 @@
             Représentation d'une case.
 
             Lorsque l'on tape son nom dans l'interpréteur
-            son contenu est renvoyé.
+            son `contenu` est renvoyé.
             """
             if self.contenu is None:
                 return "⛶"
@@ -107,7 +116,7 @@
         """
         NBR_CASES = 81
 
-        liste_cases = [] 
+        liste_cases = list()
         for i in range(NBR_CASES):
             liste_cases.append(case(i))
         return liste_cases
