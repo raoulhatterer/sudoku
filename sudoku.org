@@ -81,23 +81,37 @@
 
   #+begin_src python -n
     class case:
-        def __init__ (self,numero):
+        def __init__(self, numero):
             self.id = numero
-            self.valeur = 0
-            self.pretendants = [1,2,3,4,5,6,7,8,9] 
+            self.contenu = None
+            self.pretendants = [1, 2, 3, 4, 5, 6, 7, 8, 9]
+
+        def __repr__(self):
+            """
+            Représentation d'une case.
+
+            Lorsque l'on tape son nom dans l'interpréteur
+            son contenu est renvoyé.
+            """
+            if self.contenu is None:
+                return "⛶"
+            else:
+                return "{}".format(self.contenu)
+
 
     def cases_vides():
         """
         initialisation d'une liste contenant les 81 cases
 
-        numérotées de 1 à 81
+        numérotées de 0 à 80
         """
         NBR_CASES = 81
 
-        liste_cases = [None] # occupe l'index 0 qui ne sera pas utilisé 
-        for i in range(1,NBR_CASES+1):
+        liste_cases = [] 
+        for i in range(NBR_CASES):
             liste_cases.append(case(i))
         return liste_cases
+
 
     liste_cases = cases_vides()
   #+end_src
