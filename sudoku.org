@@ -10,78 +10,98 @@
 #+OPTIONS: toc:1
 
 * Choix du niveau
+  | niveau   | restant | pourcentage | minimum |
+  |----------+---------+-------------+---------|
+  | Beginner |      24 |          30 |       1 |
+  | Easy     |      37 |          46 |       2 |
+  | Medium   |      46 |          57 |       3 |
+  | Hard     |      52 |          64 |       4 |
+  | Extreme  |      57 |          70 |       5 |
+  |----------+---------+-------------+---------|
+  #+TBLFM: $3=round(100*$2/81) 
 
-| niveau   | restant | pourcentage | minimum |
-|----------+---------+-------------+---------|
-| Beginner |      24 |          30 |       1 |
-| Easy     |      37 |          46 |       2 |
-| Medium   |      46 |          57 |       3 |
-| Hard     |      52 |          64 |       4 |
-| Extreme  |      57 |          70 |       5 |
-|----------+---------+-------------+---------|
-#+TBLFM: $3=round(100*$2/81) 
-
-- restant : numéros restant à placer (sur 81)
-- minimum : nombre minimum de numéros pour compléter les blocs de 9 numéros (ligne, colonne ou carré)
+  - restant : numéros restant à placer (sur 81)
+  - minimum : nombre minimum de numéros pour compléter les blocs de 9 numéros (ligne, colonne ou carré)
 
 * Sacs de chiffres restant à placer.
 
-#+begin_src python -n
-class sac:
-    """ 
-    Un sac contient à l'origine 9 numéros identiques. 
-    
-    À l'initialisation de la grille:
-    un certain nombre de ces numéros est prélévé pour les placer sur la grille.  
-    Au cours du jeu:
-    tant qu'il reste des numéros dans un sac, le joueur peux en piocher pour les placer sur la grille.
-    """
-    def __init__ (self,numero):
-        self.id = numero
-        self.contenu = 9 
+  #+begin_src python -n
+    class sac:
+        """
+        Classe représentant un sac. Un sac contient de 0 à 9 numéros identiques.
 
-def sacs_pleins():
-    """
-    Initialisation d'une liste contenant 9 sacs
+        Un sac contient à l'origine 9 numéros identiques.
+        À l'initialisation de la grille, un certain nombre de ces numéros est
+        prélevé pour les placer sur la grille.
+        Au cours du jeu, tant qu'il reste des numéros dans un sac, le joueur peut
+        en piocher pour les placer sur la grille.
+        """
+        def __init__(self, numero):
+            """
+            Constructeur de sac contenant 9 numéros identiques
+            """
+            self.id = numero
+            self.contenu = 9
 
-    chaque sac contenant chacun 9 numéros identiques
-    """
-    liste_sacs = list()
-    for i in range(9):
-        liste_sacs.append(sac(i))
-    return liste_sacs
+        def __repr__(self):
+            """
+            Représentation d'un sac lorsque l'on tape son nom dans l'interpréteur.
 
-liste_sacs = sacs_pleins()
-#+end_src
+            Le contenu du sac est renvoyé.
+            """
+            if self.contenu == 0:
+                return "sac vide"
+            elif self.contenu == 1:
+                return "contient 1 chiffre {}".format(self.id)
+            else:
+                return "contient {} chiffres {}".format(self.contenu, self.id)
 
-#+RESULTS:
-: None
+
+    def sacs_pleins():
+        """
+        Initialisation d'une liste contenant 9 sacs
+
+        chaque sac contenant chacun 9 numéros identiques
+        """
+        liste_sacs = list()
+        for i in range(1, 10):
+            liste_sacs.append(sac(i))
+        return liste_sacs
+
+
+    liste_sacs = sacs_pleins()
+  #+end_src
+
+  #+RESULTS:
+  : None
 
 * Cases
 
-La grille comporte 81 cases.
+  La grille comporte 81 cases.
 
-#+begin_src python -n
-class case:
-    def __init__ (self,numero):
-        self.id = numero
-        self.valeur = 0
-        self.pretendants = [1,2,3,4,5,6,7,8,9] 
+  #+begin_src python -n
+    class case:
+        def __init__ (self,numero):
+            self.id = numero
+            self.valeur = 0
+            self.pretendants = [1,2,3,4,5,6,7,8,9] 
 
-def cases_vides():
-    """
-    initialisation d'une liste contenant les 81 cases
+    def cases_vides():
+        """
+        initialisation d'une liste contenant les 81 cases
 
-    numérotées de 1 à 81
-    """
-    NBR_CASES = 81
-    liste_cases = [case(0)] # occupe l'index 0 qui ne sera pas utilisé 
-    for i in range(1,NBR_CASES+1):
-        liste_cases.append(case(i))
-    return liste_cases
+        numérotées de 1 à 81
+        """
+        NBR_CASES = 81
 
-liste_cases = cases_vides()
-#+end_src
+        liste_cases = [None] # occupe l'index 0 qui ne sera pas utilisé 
+        for i in range(1,NBR_CASES+1):
+            liste_cases.append(case(i))
+        return liste_cases
 
-#+RESULTS:
-: None
+    liste_cases = cases_vides()
+  #+end_src
+
+  #+RESULTS:
+  : None
+  

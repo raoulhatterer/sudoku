@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="fr" xml:lang="fr">
 <head>
-<!-- 2019-04-16 mar. 23:01 -->
+<!-- 2019-04-24 mer. 20:05 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Diplôme Inter-Universitaire</title>
@@ -250,15 +250,15 @@ for the JavaScript code in this tag.
 <h2>Table des matières</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#orgab65b98">1. Choix du niveau</a></li>
-<li><a href="#org158a1a7">2. Sacs de chiffres restant à placer.</a></li>
-<li><a href="#org29a54b9">3. Cases</a></li>
+<li><a href="#org64a1c5a">1. Choix du niveau</a></li>
+<li><a href="#orgfa0dcf5">2. Sacs de chiffres restant à placer.</a></li>
+<li><a href="#org272a5b2">3. Cases</a></li>
 </ul>
 </div>
 </div>
 
-<div id="outline-container-orgab65b98" class="outline-2">
-<h2 id="orgab65b98"><span class="section-number-2">1</span> Choix du niveau</h2>
+<div id="outline-container-org64a1c5a" class="outline-2">
+<h2 id="org64a1c5a"><span class="section-number-2">1</span> Choix du niveau</h2>
 <div class="outline-text-2" id="text-1">
 <table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
 
@@ -325,42 +325,61 @@ for the JavaScript code in this tag.
 </div>
 </div>
 
-<div id="outline-container-org158a1a7" class="outline-2">
-<h2 id="org158a1a7"><span class="section-number-2">2</span> Sacs de chiffres restant à placer.</h2>
+<div id="outline-container-orgfa0dcf5" class="outline-2">
+<h2 id="orgfa0dcf5"><span class="section-number-2">2</span> Sacs de chiffres restant à placer.</h2>
 <div class="outline-text-2" id="text-2">
 <div class="org-src-container">
 <pre class="src src-python"><span class="linenr"> 1: </span><span style="color: #a020f0;">class</span> <span style="color: #228b22;">sac</span>:
-<span class="linenr"> 2: </span><span style="background-color: #f2f2f2;"> </span>   <span style="color: #8b2252;">""" </span>
-<span class="linenr"> 3: </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   Un sac contient &#224; l'origine 9 num&#233;ros identiques. </span>
-<span class="linenr"> 4: </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   </span>
-<span class="linenr"> 5: </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   &#192; l'initialisation de la grille:</span>
-<span class="linenr"> 6: </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   un certain nombre de ces num&#233;ros est pr&#233;l&#233;v&#233; pour les placer sur la grille.  </span>
-<span class="linenr"> 7: </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   Au cours du jeu:</span>
-<span class="linenr"> 8: </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   tant qu'il reste des num&#233;ros dans un sac, le joueur peux en piocher pour les placer sur la grille.</span>
-<span class="linenr"> 9: </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   """</span>
-<span class="linenr">10: </span><span style="background-color: #f2f2f2;"> </span>   <span style="color: #a020f0;">def</span> <span style="color: #0000ff;">__init__</span> (<span style="color: #a020f0;">self</span>,numero):
-<span class="linenr">11: </span><span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="color: #a020f0;">self</span>.<span style="color: #483d8b;">id</span> = numero
-<span class="linenr">12: </span><span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="color: #a020f0;">self</span>.contenu = 9 
-<span class="linenr">13: </span>
-<span class="linenr">14: </span><span style="color: #a020f0;">def</span> <span style="color: #0000ff;">sacs_pleins</span>():
-<span class="linenr">15: </span><span style="background-color: #f2f2f2;"> </span>   <span style="color: #8b2252;">"""</span>
-<span class="linenr">16: </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   Initialisation d'une liste contenant 9 sacs</span>
+<span class="linenr"> 2: </span><span style="background-color: #f2f2f2;"> </span>   <span style="color: #8b2252;">"""</span>
+<span class="linenr"> 3: </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   Classe repr&#233;sentant un sac. Un sac contient de 0 &#224; 9 num&#233;ros identiques.</span>
+<span class="linenr"> 4: </span>
+<span class="linenr"> 5: </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   Un sac contient &#224; l'origine 9 num&#233;ros identiques.</span>
+<span class="linenr"> 6: </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   &#192; l'initialisation de la grille, un certain nombre de ces num&#233;ros est</span>
+<span class="linenr"> 7: </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   pr&#233;lev&#233; pour les placer sur la grille.</span>
+<span class="linenr"> 8: </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   Au cours du jeu, tant qu'il reste des num&#233;ros dans un sac, le joueur peut</span>
+<span class="linenr"> 9: </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   en piocher pour les placer sur la grille.</span>
+<span class="linenr">10: </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   """</span>
+<span class="linenr">11: </span><span style="background-color: #f2f2f2;"> </span>   <span style="color: #a020f0;">def</span> <span style="color: #0000ff;">__init__</span>(<span style="color: #a020f0;">self</span>, numero):
+<span class="linenr">12: </span><span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="color: #8b2252;">"""</span>
+<span class="linenr">13: </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   Constructeur de sac contenant 9 num&#233;ros identiques</span>
+<span class="linenr">14: </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   """</span>
+<span class="linenr">15: </span><span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="color: #a020f0;">self</span>.<span style="color: #483d8b;">id</span> = numero
+<span class="linenr">16: </span><span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="color: #a020f0;">self</span>.contenu = 9
 <span class="linenr">17: </span>
-<span class="linenr">18: </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   chaque sac contenant chacun 9 num&#233;ros identiques</span>
-<span class="linenr">19: </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   """</span>
-<span class="linenr">20: </span><span style="background-color: #f2f2f2;"> </span>   <span style="color: #a0522d;">liste_sacs</span> = <span style="color: #483d8b;">list</span>()
-<span class="linenr">21: </span><span style="background-color: #f2f2f2;"> </span>   <span style="color: #a020f0;">for</span> i <span style="color: #a020f0;">in</span> <span style="color: #483d8b;">range</span>(9):
-<span class="linenr">22: </span><span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   liste_sacs.append(sac(i))
-<span class="linenr">23: </span><span style="background-color: #f2f2f2;"> </span>   <span style="color: #a020f0;">return</span> liste_sacs
-<span class="linenr">24: </span>
-<span class="linenr">25: </span><span style="color: #a0522d;">liste_sacs</span> = sacs_pleins()
+<span class="linenr">18: </span><span style="background-color: #f2f2f2;"> </span>   <span style="color: #a020f0;">def</span> <span style="color: #0000ff;">__repr__</span>(<span style="color: #a020f0;">self</span>):
+<span class="linenr">19: </span><span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="color: #8b2252;">"""</span>
+<span class="linenr">20: </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   Repr&#233;sentation d'un sac lorsque l'on tape son nom dans l'interpr&#233;teur.</span>
+<span class="linenr">21: </span>
+<span class="linenr">22: </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   Le contenu du sac est renvoy&#233;.</span>
+<span class="linenr">23: </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   """</span>
+<span class="linenr">24: </span><span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="color: #a020f0;">if</span> <span style="color: #a020f0;">self</span>.contenu == 0:
+<span class="linenr">25: </span><span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="color: #a020f0;">return</span> <span style="color: #8b2252;">"sac vide"</span>
+<span class="linenr">26: </span><span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="color: #a020f0;">elif</span> <span style="color: #a020f0;">self</span>.contenu == 1:
+<span class="linenr">27: </span><span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="color: #a020f0;">return</span> <span style="color: #8b2252;">"contient 1 chiffre {}"</span>.<span style="color: #483d8b;">format</span>(<span style="color: #a020f0;">self</span>.<span style="color: #483d8b;">id</span>)
+<span class="linenr">28: </span><span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="color: #a020f0;">else</span>:
+<span class="linenr">29: </span><span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="color: #a020f0;">return</span> <span style="color: #8b2252;">"contient {} chiffres {}"</span>.<span style="color: #483d8b;">format</span>(<span style="color: #a020f0;">self</span>.contenu, <span style="color: #a020f0;">self</span>.<span style="color: #483d8b;">id</span>)
+<span class="linenr">30: </span>
+<span class="linenr">31: </span>
+<span class="linenr">32: </span><span style="color: #a020f0;">def</span> <span style="color: #0000ff;">sacs_pleins</span>():
+<span class="linenr">33: </span><span style="background-color: #f2f2f2;"> </span>   <span style="color: #8b2252;">"""</span>
+<span class="linenr">34: </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   Initialisation d'une liste contenant 9 sacs</span>
+<span class="linenr">35: </span>
+<span class="linenr">36: </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   chaque sac contenant chacun 9 num&#233;ros identiques</span>
+<span class="linenr">37: </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   """</span>
+<span class="linenr">38: </span><span style="background-color: #f2f2f2;"> </span>   <span style="color: #a0522d;">liste_sacs</span> = <span style="color: #483d8b;">list</span>()
+<span class="linenr">39: </span><span style="background-color: #f2f2f2;"> </span>   <span style="color: #a020f0;">for</span> i <span style="color: #a020f0;">in</span> <span style="color: #483d8b;">range</span>(1, 10):
+<span class="linenr">40: </span><span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   liste_sacs.append(sac(i))
+<span class="linenr">41: </span><span style="background-color: #f2f2f2;"> </span>   <span style="color: #a020f0;">return</span> liste_sacs
+<span class="linenr">42: </span>
+<span class="linenr">43: </span>
+<span class="linenr">44: </span><span style="color: #a0522d;">liste_sacs</span> = sacs_pleins()
 </pre>
 </div>
 </div>
 </div>
 
-<div id="outline-container-org29a54b9" class="outline-2">
-<h2 id="org29a54b9"><span class="section-number-2">3</span> Cases</h2>
+<div id="outline-container-org272a5b2" class="outline-2">
+<h2 id="org272a5b2"><span class="section-number-2">3</span> Cases</h2>
 <div class="outline-text-2" id="text-3">
 <p>
 La grille comporte 81 cases.
@@ -380,12 +399,13 @@ La grille comporte 81 cases.
 <span class="linenr">11: </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   num&#233;rot&#233;es de 1 &#224; 81</span>
 <span class="linenr">12: </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   """</span>
 <span class="linenr">13: </span><span style="background-color: #f2f2f2;"> </span>   <span style="color: #a0522d;">NBR_CASES</span> = 81
-<span class="linenr">14: </span><span style="background-color: #f2f2f2;"> </span>   <span style="color: #a0522d;">liste_cases</span> = [case(0)] <span style="color: #b22222;"># </span><span style="color: #b22222;">occupe l'index 0 qui ne sera pas utilis&#233; </span>
-<span class="linenr">15: </span><span style="background-color: #f2f2f2;"> </span>   <span style="color: #a020f0;">for</span> i <span style="color: #a020f0;">in</span> <span style="color: #483d8b;">range</span>(1,NBR_CASES+1):
-<span class="linenr">16: </span><span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   liste_cases.append(case(i))
-<span class="linenr">17: </span><span style="background-color: #f2f2f2;"> </span>   <span style="color: #a020f0;">return</span> liste_cases
-<span class="linenr">18: </span>
-<span class="linenr">19: </span><span style="color: #a0522d;">liste_cases</span> = cases_vides()
+<span class="linenr">14: </span>
+<span class="linenr">15: </span><span style="background-color: #f2f2f2;"> </span>   <span style="color: #a0522d;">liste_cases</span> = [<span style="color: #008b8b;">None</span>] <span style="color: #b22222;"># </span><span style="color: #b22222;">occupe l'index 0 qui ne sera pas utilis&#233; </span>
+<span class="linenr">16: </span><span style="background-color: #f2f2f2;"> </span>   <span style="color: #a020f0;">for</span> i <span style="color: #a020f0;">in</span> <span style="color: #483d8b;">range</span>(1,NBR_CASES+1):
+<span class="linenr">17: </span><span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   liste_cases.append(case(i))
+<span class="linenr">18: </span><span style="background-color: #f2f2f2;"> </span>   <span style="color: #a020f0;">return</span> liste_cases
+<span class="linenr">19: </span>
+<span class="linenr">20: </span><span style="color: #a0522d;">liste_cases</span> = cases_vides()
 </pre>
 </div>
 </div>
@@ -393,7 +413,7 @@ La grille comporte 81 cases.
 </div>
 <div id="postamble" class="status">
 <p class="author">Auteur: Raoul HATTERER &amp; Jean-Luc COSSALTER</p>
-<p class="date">Created: 2019-04-16 mar. 23:01</p>
+<p class="date">Created: 2019-04-24 mer. 20:05</p>
 <p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
 </div>
 </body>
