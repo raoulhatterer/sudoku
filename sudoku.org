@@ -129,13 +129,13 @@
           affichage = ""
           index = 0
           for une_case in self.contenu:
-              affichage += une_case.__repr__()
+              affichage += une_case.__repr__()  # ajout de l'affichage d'une case
               if index%27 == 26 and index < 80:
-                  affichage += "\n--- --- ---\n"
+                  affichage += "\n--- --- ---\n"  # à faire toutes les 3 lignes
               elif index%9 == 8:
-                  affichage += "\n"
+                  affichage += "\n"  # sinon à faire toutes les lignes
               elif index%3 == 2:
-                  affichage += "|"
+                  affichage += "|"  # sinon à faire toutes les 3 colonnes 
               index += 1
           return affichage
 
