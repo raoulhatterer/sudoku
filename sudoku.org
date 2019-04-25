@@ -80,16 +80,21 @@
 
 
 
-#+begin_src python -n :results output :exports both
+#+begin_src python -n
   class SDcolors:
-      RESET = '\033[0m'    
+      """
+      Gestion basique de la couleur dans le Terminal
+
+      Remarque: Toujours terminer par RESET pour revenir à la couleur de base.
+      """
+      RESET = '\033[0m'
       BOLD = '\033[1m'
-      ITALIC = '\033[3m'    
+      ITALIC = '\033[3m'
       UNDERLINE = '\033[4m'
-      GREEN = '\033[5m'    
+      GREEN = '\033[5m'
       ORANGE = '\033[6m'
       RED = '\033[7m'
-      BLACK = '\033[30m'    
+      BLACK = '\033[30m'
       BROWN = '\033[31m'
       LIGHTGREEN = '\033[32m'
       GOLD = '\033[33m'
@@ -100,48 +105,64 @@
       BLACKBG = '\033[40m'
       REDBG = '\033[41m'
       GREENBG = '\033[42m'
-      GOLDBG = '\033[43m'        
+      GOLDBG = '\033[43m'
       BLUEBG = '\033[44m'
       PURPLEBG = '\033[45m'
       CYANBG = '\033[46m'
       SNOWBG = '\033[47m'
 
+
   class case:
       """
       Classe représentant une case.
 
-      Chacune des 81 cases de la grille possède un identifiant `id` unique
-      allant de 0 à 80.
       Une case non vide a un `contenu` qui est affiché quand on tape le nom
       de la case dans l'interpréteur.
       Une case vide à des prétendants (valeurs possibles de la case).
+      Une case a une `couleur` à choisir parmi `SDcolors`.
+
+      exemple:
+      -------
+      ma_case = case()
+      print(ma_case)
       """
-      def __init__(self, numero):
-          self.id = numero
+      def __init__(self):
           self.contenu = None
+          self.couleur = SDcolors.BLACK
           self.pretendants = [1, 2, 3, 4, 5, 6, 7, 8, 9]
 
       def __repr__(self):
           """
-          Représentation d'une case.
+          Affichage d'une case.
 
           Lorsque l'on tape son nom dans l'interpréteur
           son `contenu` est affiché.
           """
           if self.contenu is None:
-              return "0"    #"⛶"
+              return "0"    # "⛶"
           else:
               return "{}".format(self.contenu)
+
 
   class grille:
       """
       Classe représentant une grille de 9 x 9 cases.
+
+      Chacune des 81 cases est accessible via un index allant de 0 à 80.
+
+      exemple:
+      -------
+      ma_grille = grille()
+      print(ma_grille)            # affiche la grille 9 x 9 cases
+      print(ma_grille.contenu)    # affiche la grille sous forme de liste
+      print(ma_grille.contenu[0]) # affiche la première case (son index est 0)
+
       """
       def __init__(self):
           NBR_CASES = 81
           liste_cases = list()
           for i in range(NBR_CASES):
-              liste_cases.append(case(i))
+              liste_cases.append(case())
           self.contenu = liste_cases
 
       def __repr__(self):
@@ -155,38 +176,21 @@
           index = 0
           for une_case in self.contenu:
               affichage += une_case.__repr__()  # ajout de l'affichage d'une case
-              if index%27 == 26 and index < 80:
+              if index % 27 == 26 and index < 80:
                   affichage += "\n"+SDcolors.SNOWBG + " "*19 + SDcolors.RESET + "\n"  # à faire toutes les 3 lignes
-              elif index%9 == 8:
+              elif index % 9 == 8:
                   affichage += "\n"  # sinon à faire toutes les lignes
-              elif index%3 == 2:
+              elif index % 3 == 2:
                   affichage += SDcolors.SNOWBG + "  " + SDcolors.RESET  # sinon à faire toutes les 3 colonnes
-              elif index%9 in [0,1,3,4,6,7]:
+              elif index % 9 in [0, 1, 3, 4, 6, 7]:
                   affichage += " "
               index += 1
           return affichage
+
 
   grille_sudoku = grille()
   print(grille_sudoku)
 #+end_src
 
 #+RESULTS:
-#+begin_example
-000|000|000
-000|000|000
-000|000|000
---- --- ---
-000|000|000
-000|000|000
-000|000|000
---- --- ---
-000|000|000
-000|000|000
-000|000|000
-
-#+end_example
-* Test couleurs
-
-#+begin_src python
-  print(''.join(['\033[' + str(x) + 'mfoo' + str(x) for x in range(0,150)]) +'\033[0m')
-#+end_src
+: None
