@@ -101,7 +101,7 @@
           Représentation d'une case.
 
           Lorsque l'on tape son nom dans l'interpréteur
-          son `contenu` est renvoyé.
+          son `contenu` est affiché.
           """
           if self.contenu is None:
               return "0"    #"⛶"
@@ -121,23 +121,23 @@
 
       def __repr__(self):
           """
-          Représentation d'une grille.
+          Affichage d'une grille.
 
           Lorsque l'on tape son nom dans l'interpréteur
-          son `contenu` est renvoyé sous forme d'une grille 9 x 9.
+          son `contenu` est affiché sous forme d'une grille 9 x 9.
           """
-          repr = ""
+          affichage = ""
           index = 0
           for une_case in self.contenu:
-              repr += str(une_case.__repr__())
+              affichage += une_case.__repr__()
               if index%27 == 26 and index < 80:
-                  repr += "\n--- --- ---\n"
+                  affichage += "\n--- --- ---\n"
               elif index%9 == 8:
-                  repr += "\n"
+                  affichage += "\n"
               elif index%3 == 2:
-                  repr += "|"
+                  affichage += "|"
               index += 1
-          return repr
+          return affichage
 
   grille_sudoku = grille()
   print(grille_sudoku)
