@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="fr" xml:lang="fr">
 <head>
-<!-- 2019-04-26 ven. 19:05 -->
+<!-- 2019-04-26 ven. 21:47 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Diplôme Inter-Universitaire</title>
@@ -250,15 +250,15 @@ for the JavaScript code in this tag.
 <h2>Table des matières</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#org2e45625">1. Choix du niveau</a></li>
-<li><a href="#org3d6a866">2. Sacs de chiffres restant à placer.</a></li>
-<li><a href="#org043349e">3. Cases et grille</a></li>
+<li><a href="#org0049939">1. Choix du niveau</a></li>
+<li><a href="#org7f8659f">2. Sacs de chiffres restant à placer.</a></li>
+<li><a href="#org808899a">3. Cases et grille</a></li>
 </ul>
 </div>
 </div>
 
-<div id="outline-container-org2e45625" class="outline-2">
-<h2 id="org2e45625"><span class="section-number-2">1</span> Choix du niveau</h2>
+<div id="outline-container-org0049939" class="outline-2">
+<h2 id="org0049939"><span class="section-number-2">1</span> Choix du niveau</h2>
 <div class="outline-text-2" id="text-1">
 <table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
 
@@ -325,8 +325,8 @@ for the JavaScript code in this tag.
 </div>
 </div>
 
-<div id="outline-container-org3d6a866" class="outline-2">
-<h2 id="org3d6a866"><span class="section-number-2">2</span> Sacs de chiffres restant à placer.</h2>
+<div id="outline-container-org7f8659f" class="outline-2">
+<h2 id="org7f8659f"><span class="section-number-2">2</span> Sacs de chiffres restant à placer.</h2>
 <div class="outline-text-2" id="text-2">
 <div class="org-src-container">
 <pre class="src src-python"><span class="linenr"> 1: </span><span style="color: #a020f0;">class</span> <span style="color: #228b22;">sac</span>:
@@ -378,8 +378,8 @@ for the JavaScript code in this tag.
 </div>
 </div>
 
-<div id="outline-container-org043349e" class="outline-2">
-<h2 id="org043349e"><span class="section-number-2">3</span> Cases et grille</h2>
+<div id="outline-container-org808899a" class="outline-2">
+<h2 id="org808899a"><span class="section-number-2">3</span> Cases et grille</h2>
 <div class="outline-text-2" id="text-3">
 <p>
 La grille comporte 81 cases.
@@ -464,10 +464,10 @@ La grille comporte 81 cases.
 <span class="linenr"> 74: </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   print(ma_grille.contenu)    # affiche la grille sous forme de liste</span>
 <span class="linenr"> 75: </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   print(ma_grille.contenu[0]) # affiche la premi&#232;re case (son index est 0)</span>
 <span class="linenr"> 76: </span>
-<span class="linenr"> 77: </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   Affichage en couleur (fonctionne uniquement dans le Terminal pas dans la</span>
-<span class="linenr"> 78: </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   console Python):</span>
-<span class="linenr"> 79: </span>
-<span class="linenr"> 80: </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   ma_grille.affichage_en_couleur = True # active l'affichage en couleur</span>
+<span class="linenr"> 77: </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   options:</span>
+<span class="linenr"> 78: </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   -------</span>
+<span class="linenr"> 79: </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   Affichage en couleur (fonctionne uniquement dans le Terminal pas dans la</span>
+<span class="linenr"> 80: </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   console Python): ma_grille.affichage_en_couleur = True</span>
 <span class="linenr"> 81: </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   """</span>
 <span class="linenr"> 82: </span><span style="background-color: #f2f2f2;"> </span>   <span style="color: #a020f0;">def</span> <span style="color: #0000ff;">__init__</span>(<span style="color: #a020f0;">self</span>):
 <span class="linenr"> 83: </span><span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="color: #a0522d;">NBR_CASES</span> = 81
@@ -505,13 +505,72 @@ La grille comporte 81 cases.
 <span class="linenr">115: </span><span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="color: #a0522d;">index</span> += 1
 <span class="linenr">116: </span><span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="color: #a020f0;">return</span> affichage
 <span class="linenr">117: </span>
-<span class="linenr">118: </span>
-<span class="linenr">119: </span><span style="color: #a0522d;">grille_sudoku</span> = grille()
-<span class="linenr">120: </span><span style="color: #a020f0;">print</span>(grille_sudoku)
+<span class="linenr">118: </span><span style="background-color: #f2f2f2;"> </span>   <span style="color: #a020f0;">def</span> <span style="color: #0000ff;">remplir_case</span>(<span style="color: #a020f0;">self</span>, index, valeur):
+<span class="linenr">119: </span><span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="color: #8b2252;">"""</span>
+<span class="linenr">120: </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   Rempli la case d'index compris entre 0 et 80 avec `valeur`.</span>
+<span class="linenr">121: </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   """</span>
+<span class="linenr">122: </span><span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="color: #a020f0;">if</span> <span style="color: #a020f0;">self</span>.autorisation_colonne(<span style="color: #a020f0;">self</span>,index) <span style="color: #a020f0;">and</span> <span style="color: #a020f0;">self</span>.autorisation_ligne(<span style="color: #a020f0;">self</span>,index) <span style="color: #a020f0;">and</span> <span style="color: #a020f0;">self</span>.autorisation_carr&#233;(<span style="color: #a020f0;">self</span>,index):
+<span class="linenr">123: </span><span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="color: #a020f0;">self</span>.contenu[index] = valeur
+<span class="linenr">124: </span><span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="color: #a020f0;">self</span>.r&#233;duire_pr&#233;tendants
+<span class="linenr">125: </span><span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="color: #a020f0;">self</span>.r&#233;duire_sac
+<span class="linenr">126: </span>
+<span class="linenr">127: </span><span style="background-color: #f2f2f2;"> </span>   <span style="color: #a020f0;">def</span> <span style="color: #0000ff;">autorisation_colonne</span>(<span style="color: #a020f0;">self</span>, index):
+<span class="linenr">128: </span><span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="color: #a020f0;">pass</span>
+<span class="linenr">129: </span>
+<span class="linenr">130: </span><span style="background-color: #f2f2f2;"> </span>   <span style="color: #a020f0;">def</span> <span style="color: #0000ff;">autorisation_ligne</span>(<span style="color: #a020f0;">self</span>, index):
+<span class="linenr">131: </span><span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="color: #a020f0;">pass</span>
+<span class="linenr">132: </span>
+<span class="linenr">133: </span><span style="background-color: #f2f2f2;"> </span>   <span style="color: #a020f0;">def</span> <span style="color: #0000ff;">autorisation_carr&#233;</span>(<span style="color: #a020f0;">self</span>, index):
+<span class="linenr">134: </span><span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="color: #a020f0;">pass</span>
+<span class="linenr">135: </span>
+<span class="linenr">136: </span><span style="background-color: #f2f2f2;"> </span>   <span style="color: #a020f0;">def</span> <span style="color: #0000ff;">r&#233;duire_pr&#233;tendants</span>(<span style="color: #a020f0;">self</span>, index):
+<span class="linenr">137: </span><span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="color: #a020f0;">pass</span>
+<span class="linenr">138: </span>
+<span class="linenr">139: </span><span style="background-color: #f2f2f2;"> </span>   <span style="color: #a020f0;">def</span> <span style="color: #0000ff;">r&#233;duire_sac</span>(<span style="color: #a020f0;">self</span>, index):
+<span class="linenr">140: </span><span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="color: #a020f0;">pass</span>
+<span class="linenr">141: </span>
+<span class="linenr">142: </span>
+<span class="linenr">143: </span>
+<span class="linenr">144: </span><span style="background-color: #f2f2f2;"> </span>   <span style="color: #a020f0;">def</span> <span style="color: #0000ff;">colonne</span>(<span style="color: #a020f0;">self</span>, index):
+<span class="linenr">145: </span><span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="color: #8b2252;">"""</span>
+<span class="linenr">146: </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   Retourne le num&#233;ro de colonne de la case d'index compris entre 0 et 80.</span>
+<span class="linenr">147: </span>
+<span class="linenr">148: </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   Les 9 colonnes sont num&#233;rot&#233;es de 1 &#224; 9.</span>
+<span class="linenr">149: </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   """</span>
+<span class="linenr">150: </span><span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="color: #a020f0;">return</span> index % 9 + 1
+<span class="linenr">151: </span>
+<span class="linenr">152: </span><span style="background-color: #f2f2f2;"> </span>   <span style="color: #a020f0;">def</span> <span style="color: #0000ff;">ligne</span>(<span style="color: #a020f0;">self</span>, index):
+<span class="linenr">153: </span><span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="color: #8b2252;">"""</span>
+<span class="linenr">154: </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   Retourne le num&#233;ro de ligne de la case d'index compris entre 0 et 80.</span>
+<span class="linenr">155: </span>
+<span class="linenr">156: </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   Les 9 lignes sont num&#233;rot&#233;es de 1 &#224; 9.</span>
+<span class="linenr">157: </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   """</span>
+<span class="linenr">158: </span><span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="color: #a020f0;">return</span> index//9 + 1
+<span class="linenr">159: </span>
+<span class="linenr">160: </span><span style="color: #a020f0;">print</span>(grille.<span style="color: #483d8b;">__doc__</span>)
+<span class="linenr">161: </span><span style="color: #a0522d;">grille_sudoku</span> = grille()
+<span class="linenr">162: </span><span style="color: #a020f0;">print</span>(grille_sudoku)
 </pre>
 </div>
 
 <pre class="example">
+
+    Classe représentant une grille de 9 x 9 cases.
+
+    Chacune des 81 cases est accessible via un index allant de 0 à 80.
+
+    exemple:
+    -------
+    ma_grille = grille()
+    print(ma_grille)            # affiche la grille 9 x 9 cases
+    print(ma_grille.contenu)    # affiche la grille sous forme de liste
+    print(ma_grille.contenu[0]) # affiche la première case (son index est 0)
+
+    options:
+    -------
+    Affichage en couleur (fonctionne uniquement dans le Terminal pas dans la
+    console Python): ma_grille.affichage_en_couleur = True
+    
 0 0 0  0 0 0  0 0 0
 0 0 0  0 0 0  0 0 0
 0 0 0  0 0 0  0 0 0
@@ -530,7 +589,7 @@ La grille comporte 81 cases.
 </div>
 <div id="postamble" class="status">
 <p class="author">Auteur: Raoul HATTERER &amp; Jean-Luc COSSALTER</p>
-<p class="date">Created: 2019-04-26 ven. 19:05</p>
+<p class="date">Created: 2019-04-26 ven. 21:47</p>
 <p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
 </div>
 </body>

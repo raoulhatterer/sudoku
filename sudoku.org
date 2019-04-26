@@ -157,10 +157,10 @@
       print(ma_grille.contenu)    # affiche la grille sous forme de liste
       print(ma_grille.contenu[0]) # affiche la première case (son index est 0)
 
+      options:
+      -------
       Affichage en couleur (fonctionne uniquement dans le Terminal pas dans la
-      console Python):
-
-      ma_grille.affichage_en_couleur = True # active l'affichage en couleur
+      console Python): ma_grille.affichage_en_couleur = True
       """
       def __init__(self):
           NBR_CASES = 81
@@ -198,13 +198,72 @@
               index += 1
           return affichage
 
+      def remplir_case(self, index, valeur):
+          """
+          Rempli la case d'index compris entre 0 et 80 avec `valeur`.
+          """
+          if self.autorisation_colonne(self,index) and self.autorisation_ligne(self,index) and self.autorisation_carré(self,index):
+              self.contenu[index] = valeur
+              self.réduire_prétendants
+              self.réduire_sac
 
+      def autorisation_colonne(self, index):
+          pass
+
+      def autorisation_ligne(self, index):
+          pass
+
+      def autorisation_carré(self, index):
+          pass
+
+      def réduire_prétendants(self, index):
+          pass
+    
+      def réduire_sac(self, index):
+          pass
+
+
+
+      def colonne(self, index):
+          """
+          Retourne le numéro de colonne de la case d'index compris entre 0 et 80.
+
+          Les 9 colonnes sont numérotées de 1 à 9.
+          """
+          return index % 9 + 1
+
+      def ligne(self, index):
+          """
+          Retourne le numéro de ligne de la case d'index compris entre 0 et 80.
+
+          Les 9 lignes sont numérotées de 1 à 9.
+          """
+          return index//9 + 1
+
+  print(grille.__doc__)
   grille_sudoku = grille()
   print(grille_sudoku)
 #+end_src
 
 #+RESULTS:
 #+begin_example
+
+    Classe représentant une grille de 9 x 9 cases.
+
+    Chacune des 81 cases est accessible via un index allant de 0 à 80.
+
+    exemple:
+    -------
+    ma_grille = grille()
+    print(ma_grille)            # affiche la grille 9 x 9 cases
+    print(ma_grille.contenu)    # affiche la grille sous forme de liste
+    print(ma_grille.contenu[0]) # affiche la première case (son index est 0)
+
+    options:
+    -------
+    Affichage en couleur (fonctionne uniquement dans le Terminal pas dans la
+    console Python): ma_grille.affichage_en_couleur = True
+    
 0 0 0  0 0 0  0 0 0
 0 0 0  0 0 0  0 0 0
 0 0 0  0 0 0  0 0 0
