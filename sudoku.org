@@ -74,13 +74,13 @@
 
   #+RESULTS:
 
-* Cases
+* Cases et grille
 
   La grille comporte 81 cases.
 
 
 
-#+begin_src python -n
+#+begin_src python -n :results output :exports both
   class SDcolors:
       """
       Gestion basique de la couleur dans le Terminal
@@ -157,6 +157,10 @@
       print(ma_grille.contenu)    # affiche la grille sous forme de liste
       print(ma_grille.contenu[0]) # affiche la première case (son index est 0)
 
+      Affichage en couleur (fonctionne uniquement dans le Terminal pas dans la
+      console Python):
+
+      ma_grille.affichage_en_couleur = True # active l'affichage en couleur
       """
       def __init__(self):
           NBR_CASES = 81
@@ -164,6 +168,8 @@
           for i in range(NBR_CASES):
               liste_cases.append(case())
           self.contenu = liste_cases
+          self.affichage_en_couleur = False
+          self.couleur_grille = SDcolors.SNOWBG
 
       def __repr__(self):
           """
@@ -174,14 +180,19 @@
           """
           affichage = ""
           index = 0
+          if self.affichage_en_couleur :
+              couleur_on = self.couleur_grille
+              couleur_off = SDcolors.RESET
+          else :
+              couleur_on, couleur_off = "",""
           for une_case in self.contenu:
               affichage += une_case.__repr__()  # ajout de l'affichage d'une case
               if index % 27 == 26 and index < 80:
-                  affichage += "\n"+SDcolors.SNOWBG + " "*19 + SDcolors.RESET + "\n"  # à faire toutes les 3 lignes
+                  affichage += "\n"+couleur_on + " "*19 + couleur_off + "\n"  # à faire toutes les 3 lignes
               elif index % 9 == 8:
                   affichage += "\n"  # sinon à faire toutes les lignes
               elif index % 3 == 2:
-                  affichage += SDcolors.SNOWBG + "  " + SDcolors.RESET  # sinon à faire toutes les 3 colonnes
+                  affichage += couleur_on + "  " + couleur_off  # sinon à faire toutes les 3 colonnes
               elif index % 9 in [0, 1, 3, 4, 6, 7]:
                   affichage += " "
               index += 1
@@ -193,4 +204,19 @@
 #+end_src
 
 #+RESULTS:
-: None
+#+begin_example
+0 0 0  0 0 0  0 0 0
+0 0 0  0 0 0  0 0 0
+0 0 0  0 0 0  0 0 0
+                   
+0 0 0  0 0 0  0 0 0
+0 0 0  0 0 0  0 0 0
+0 0 0  0 0 0  0 0 0
+                   
+0 0 0  0 0 0  0 0 0
+0 0 0  0 0 0  0 0 0
+0 0 0  0 0 0  0 0 0
+
+#+end_example
+
+
