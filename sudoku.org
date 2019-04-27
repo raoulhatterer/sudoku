@@ -28,20 +28,25 @@
   #+begin_src python -n :session
     class sac:
         """
-        Classe représentant un sac. Un sac contient de 0 à 9 numéros identiques.
+        Classe représentant un sac. Un sac contient des symboles identiques.
 
-        Un sac contient à l'origine 9 numéros identiques.
-        À l'initialisation de la grille, un certain nombre de ces numéros est
+        Un sac contient à l'origine 9 symboles identiques.
+        À l'initialisation de la grille, un certain nombre de ces symboles est
         prélevé pour les placer sur la grille.
-        Au cours du jeu, tant qu'il reste des numéros dans un sac, le joueur peut
+        Au cours du jeu, tant qu'il reste des symboles dans un sac, le joueur peut
         en piocher pour les placer sur la grille.
+
+        Attributs:
+        ---------
+        symbole : symbole placé dans le sacs
+        cardinal : nombre de symboles que le sac contient
         """
-        def __init__(self, numero):
+        def __init__(self, symbole):
             """
-            Constructeur de sac contenant 9 numéros identiques
+            Constructeur de sac contenant 9 symboles identiques
             """
-            self.id = numero
-            self.contenu = 9
+            self.symbole = symbole
+            self.cardinal = 9  # nombre d'éléments dans le sac
 
         def __repr__(self):
             """
@@ -49,27 +54,75 @@
 
             Le contenu du sac est renvoyé.
             """
-            if self.contenu == 0:
+            if self.cardinal == 0:
                 return "sac vide"
-            elif self.contenu == 1:
-                return "contient 1 chiffre {}".format(self.id)
+            elif self.cardinal == 1:
+                return "contient 1 chiffre {}".format(self.symbole)
             else:
-                return "contient {} chiffres {}".format(self.contenu, self.id)
+                return "contient {} chiffres {}".format(self.cardinal, self.symbole)
 
 
-    def sacs_pleins():
+    class pioche():
         """
-        Initialisation d'une liste contenant 9 sacs
+        Classe représentant 9 sacs contenant chacun des symboles identiques
+        tous différents (1 sac avec que des "1", un autre avec que des "2", etc.)
 
-        chaque sac contenant chacun 9 numéros identiques
+        exemple:
+        -------
+        ma_pioche = pioche()
+        print(ma_pioche)            # affiche la pioche (contenu des 9 sacs de pioche)
+        print(ma_pioche.contenu)    # affiche la pioche sous forme de liste
+        print(ma_pioche.[1])        # affiche le contenu du premier sac de pioche
+
+
         """
-        liste_sacs = list()
-        for i in range(1, 10):
-            liste_sacs.append(sac(i))
-        return liste_sacs
+        NBR_SACS = 9
+
+        def __init__(self):
+            """
+            Initialisation d'une liste contenant 9 sacs
+
+            chaque sac contenant chacun 9 symboles identiques
+            """
+            self.contenu = [sac(numéro) for numéro in range(1, self.NBR_SACS+1)]
+
+        def __getitem__(self, index):
+            """
+            Permet d'obtenir le contenu d'un sac dans la pioche avec:
+            ma_pioche[index] # où index est compris entre 1 et NBR_SACS.
+            """
+            return self.contenu[index-1]
+
+        def __setitem__(self, index, sac):
+            """
+            Permet d'écrire un sac dans la pioche.
+
+            exemple:
+            -------
+            ma_pioche[9] = sac(9)
+            """
+            if index < self.NBR_SACS+1:
+                self.contenu[index-1] = sac
+            else:
+                raise IndexError()
+
+        def __len__(self):
+            return self.NBR_SACS
+
+        def __repr__(self):
+            """
+            Représentation de la pioche.
+
+            Le contenu des 9 sacs est renvoyé.
+            """
+            affichage = ""
+            for sac in self.contenu:
+                affichage += sac.__repr__() + "\n"
+            return affichage
 
 
-    liste_sacs = sacs_pleins()
+    pioche_sudoku = pioche()
+    print(pioche_sudoku)
   #+end_src
 
   #+RESULTS:
@@ -155,21 +208,46 @@
       ma_grille = grille()
       print(ma_grille)            # affiche la grille 9 x 9 cases
       print(ma_grille.contenu)    # affiche la grille sous forme de liste
-      print(ma_grille.contenu[0]) # affiche la première case (son index est 0)
+      print(ma_grille[0]) # affiche la première case (son index est 0)
 
       options:
       -------
       Affichage en couleur (fonctionne uniquement dans le Terminal pas dans la
       console Python): ma_grille.affichage_en_couleur = True
       """
+
+      NBR_CASES = 81
+
       def __init__(self):
-          NBR_CASES = 81
           liste_cases = list()
-          for i in range(NBR_CASES):
+          for i in range(self.NBR_CASES):
               liste_cases.append(case())
           self.contenu = liste_cases
           self.affichage_en_couleur = False
           self.couleur_grille = SDcolors.SNOWBG
+
+      def __getitem__(self, index):
+          """
+          Permet d'obtenir le contenu d'une case de la grille avec:
+          ma_grille[index] # où index est compris entre 0 et NBR_CASES-1.
+          """
+          return self.contenu[index]
+
+      def __setitem__(self, index, symbole):
+          """
+          Permet d'écrire dans le contenu d'une case de la grille.
+
+          exemple:
+          -------
+          ma_grille[0] = 5
+          """
+          if index < self.NBR_CASES:
+              self.contenu[index].contenu = symbole
+          else:
+              raise IndexError()
+
+      def __len__(self):
+          return self.NBR_CASES
 
       def __repr__(self):
           """
@@ -202,27 +280,26 @@
           """
           Rempli la case d'index compris entre 0 et 80 avec `valeur`.
           """
-          if self.autorisation_colonne(self,index) and self.autorisation_ligne(self,index) and self.autorisation_carré(self,index):
-              self.contenu[index] = valeur
+          if self.autorisation_colonne(index) and self.autorisation_ligne(index) and self.autorisation_carré(index):
+              self.__setitem__(index, valeur)
               self.réduire_prétendants
               self.réduire_sac
 
       def autorisation_colonne(self, index):
-          pass
+          return True
+
 
       def autorisation_ligne(self, index):
-          pass
+          return True
 
       def autorisation_carré(self, index):
-          pass
+          return True
 
       def réduire_prétendants(self, index):
           pass
-    
+
       def réduire_sac(self, index):
           pass
-
-
 
       def colonne(self, index):
           """
@@ -240,7 +317,7 @@
           """
           return index//9 + 1
 
-  print(grille.__doc__)
+
   grille_sudoku = grille()
   print(grille_sudoku)
 #+end_src
