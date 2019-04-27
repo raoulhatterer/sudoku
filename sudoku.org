@@ -72,7 +72,7 @@
         ma_pioche = pioche()
         print(ma_pioche)            # affiche la pioche (contenu des 9 sacs de pioche)
         print(ma_pioche.contenu)    # affiche la pioche sous forme de liste
-        print(ma_pioche.[1])        # affiche le contenu du premier sac de pioche
+        print(ma_pioche[1])        # affiche le contenu du premier sac de pioche
 
 
         """
