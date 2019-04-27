@@ -169,8 +169,8 @@
       """
       Classe représentant une case.
 
-      Une case non vide a un `contenu` qui est affiché quand on tape le nom
-      de la case dans l'interpréteur.
+      Une case non vide a un `contenu`, le symbole qui est affiché quand on tape
+      le nom de la case dans l'interpréteur.
       Une case vide à des prétendants (valeurs possibles de la case).
       Une case a une `couleur` à choisir parmi `SDcolors`.
 

@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="fr" xml:lang="fr">
 <head>
-<!-- 2019-04-28 dim. 00:01 -->
+<!-- 2019-04-28 dim. 00:12 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Diplôme Inter-Universitaire</title>
@@ -250,15 +250,15 @@ for the JavaScript code in this tag.
 <h2>Table des matières</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#org9380354">1. Choix du niveau</a></li>
-<li><a href="#orgf8e23eb">2. Sacs de chiffres restant à placer.</a></li>
-<li><a href="#org1272adf">3. Cases et grille</a></li>
+<li><a href="#orgca638aa">1. Choix du niveau</a></li>
+<li><a href="#orgd2fff90">2. Sacs de chiffres restant à placer.</a></li>
+<li><a href="#org534b653">3. Cases et grille</a></li>
 </ul>
 </div>
 </div>
 
-<div id="outline-container-org9380354" class="outline-2">
-<h2 id="org9380354"><span class="section-number-2">1</span> Choix du niveau</h2>
+<div id="outline-container-orgca638aa" class="outline-2">
+<h2 id="orgca638aa"><span class="section-number-2">1</span> Choix du niveau</h2>
 <div class="outline-text-2" id="text-1">
 <table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
 
@@ -325,8 +325,8 @@ for the JavaScript code in this tag.
 </div>
 </div>
 
-<div id="outline-container-orgf8e23eb" class="outline-2">
-<h2 id="orgf8e23eb"><span class="section-number-2">2</span> Sacs de chiffres restant à placer.</h2>
+<div id="outline-container-orgd2fff90" class="outline-2">
+<h2 id="orgd2fff90"><span class="section-number-2">2</span> Sacs de chiffres restant à placer.</h2>
 <div class="outline-text-2" id="text-2">
 <div class="org-src-container">
 <pre class="src src-python"><span class="linenr"> 1: </span><span style="color: #a020f0;">class</span> <span style="color: #228b22;">sac</span>:
@@ -375,7 +375,7 @@ for the JavaScript code in this tag.
 <span class="linenr">44: </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   ma_pioche = pioche()</span>
 <span class="linenr">45: </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   print(ma_pioche)            # affiche la pioche (contenu des 9 sacs de pioche)</span>
 <span class="linenr">46: </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   print(ma_pioche.contenu)    # affiche la pioche sous forme de liste</span>
-<span class="linenr">47: </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   print(ma_pioche.[1])        # affiche le contenu du premier sac de pioche</span>
+<span class="linenr">47: </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   print(ma_pioche[1])        # affiche le contenu du premier sac de pioche</span>
 <span class="linenr">48: </span>
 <span class="linenr">49: </span>
 <span class="linenr">50: </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   """</span>
@@ -431,8 +431,8 @@ for the JavaScript code in this tag.
 </div>
 </div>
 
-<div id="outline-container-org1272adf" class="outline-2">
-<h2 id="org1272adf"><span class="section-number-2">3</span> Cases et grille</h2>
+<div id="outline-container-org534b653" class="outline-2">
+<h2 id="org534b653"><span class="section-number-2">3</span> Cases et grille</h2>
 <div class="outline-text-2" id="text-3">
 <p>
 La grille comporte 81 cases.
@@ -476,8 +476,8 @@ La grille comporte 81 cases.
 <span class="linenr"> 33: </span><span style="background-color: #f2f2f2;"> </span>   <span style="color: #8b2252;">"""</span>
 <span class="linenr"> 34: </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   Classe repr&#233;sentant une case.</span>
 <span class="linenr"> 35: </span>
-<span class="linenr"> 36: </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   Une case non vide a un `contenu` qui est affich&#233; quand on tape le nom</span>
-<span class="linenr"> 37: </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   de la case dans l'interpr&#233;teur.</span>
+<span class="linenr"> 36: </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   Une case non vide a un `contenu`, le symbole qui est affich&#233; quand on tape</span>
+<span class="linenr"> 37: </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   le nom de la case dans l'interpr&#233;teur.</span>
 <span class="linenr"> 38: </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   Une case vide &#224; des pr&#233;tendants (valeurs possibles de la case).</span>
 <span class="linenr"> 39: </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   Une case a une `couleur` &#224; choisir parmi `SDcolors`.</span>
 <span class="linenr"> 40: </span>
@@ -649,7 +649,7 @@ La grille comporte 81 cases.
 </div>
 <div id="postamble" class="status">
 <p class="author">Auteur: Raoul HATTERER &amp; Jean-Luc COSSALTER</p>
-<p class="date">Created: 2019-04-28 dim. 00:01</p>
+<p class="date">Created: 2019-04-28 dim. 00:12</p>
 <p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
 </div>
 </body>
