@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="fr" xml:lang="fr">
 <head>
-<!-- 2019-04-28 dim. 00:12 -->
+<!-- 2019-04-30 mar. 13:26 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Diplôme Inter-Universitaire</title>
@@ -250,15 +250,31 @@ for the JavaScript code in this tag.
 <h2>Table des matières</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#orgca638aa">1. Choix du niveau</a></li>
-<li><a href="#orgd2fff90">2. Sacs de chiffres restant à placer.</a></li>
-<li><a href="#org534b653">3. Cases et grille</a></li>
+<li><a href="#org2d78d4e">1. Choix du niveau</a></li>
+<li><a href="#orge2ed95a">2. Où le joueur doit-il prendre les chiffres à placer sur la grille?</a>
+<ul>
+<li><a href="#orgedede1c">2.1. Sacs de chiffres (restant à placer sur la grille)</a></li>
+<li><a href="#orgf234706">2.2. La pioche</a></li>
+</ul>
+</li>
+<li><a href="#org254eb97">3. Cases et grille</a>
+<ul>
+<li><a href="#org6a42db6">3.1. Définissons ce qu'est une case</a></li>
+<li><a href="#org2d51082">3.2. Construisons la grille</a></li>
+</ul>
+</li>
+<li><a href="#org00edf74">4. Exemple de fonctionnement</a></li>
 </ul>
 </div>
 </div>
 
-<div id="outline-container-orgca638aa" class="outline-2">
-<h2 id="orgca638aa"><span class="section-number-2">1</span> Choix du niveau</h2>
+
+
+
+
+
+<div id="outline-container-org2d78d4e" class="outline-2">
+<h2 id="org2d78d4e"><span class="section-number-2">1</span> Choix du niveau</h2>
 <div class="outline-text-2" id="text-1">
 <table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
 
@@ -325,331 +341,363 @@ for the JavaScript code in this tag.
 </div>
 </div>
 
-<div id="outline-container-orgd2fff90" class="outline-2">
-<h2 id="orgd2fff90"><span class="section-number-2">2</span> Sacs de chiffres restant à placer.</h2>
+<div id="outline-container-orge2ed95a" class="outline-2">
+<h2 id="orge2ed95a"><span class="section-number-2">2</span> Où le joueur doit-il prendre les chiffres à placer sur la grille?</h2>
 <div class="outline-text-2" id="text-2">
+<p>
+Chaque fois que le joueur doit prendre un symbole à placer sur la grille, il va le piocher dans un des 9 sacs contenant chacun des symboles identiques. 
+</p>
+</div>
+
+<div id="outline-container-orgedede1c" class="outline-3">
+<h3 id="orgedede1c"><span class="section-number-3">2.1</span> Sacs de chiffres (restant à placer sur la grille)</h3>
+<div class="outline-text-3" id="text-2-1">
+<p>
+Un sac contient des symboles identiques.
+</p>
+
 <div class="org-src-container">
 <pre class="src src-python"><span class="linenr"> 1: </span><span style="color: #a020f0;">class</span> <span style="color: #228b22;">sac</span>:
 <span class="linenr"> 2: </span><span style="background-color: #f2f2f2;"> </span>   <span style="color: #8b2252;">"""</span>
 <span class="linenr"> 3: </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   Classe repr&#233;sentant un sac. Un sac contient des symboles identiques.</span>
 <span class="linenr"> 4: </span>
-<span class="linenr"> 5: </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   Un sac contient &#224; l'origine 9 symboles identiques.</span>
-<span class="linenr"> 6: </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   &#192; l'initialisation de la grille, un certain nombre de ces symboles est</span>
-<span class="linenr"> 7: </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   pr&#233;lev&#233; pour les placer sur la grille.</span>
-<span class="linenr"> 8: </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   Au cours du jeu, tant qu'il reste des symboles dans un sac, le joueur peut</span>
-<span class="linenr"> 9: </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   en piocher pour les placer sur la grille.</span>
-<span class="linenr">10: </span>
-<span class="linenr">11: </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   Attributs:</span>
-<span class="linenr">12: </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   ---------</span>
-<span class="linenr">13: </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   symbole : symbole plac&#233; dans le sacs</span>
-<span class="linenr">14: </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   cardinal : nombre de symboles que le sac contient</span>
-<span class="linenr">15: </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   """</span>
-<span class="linenr">16: </span><span style="background-color: #f2f2f2;"> </span>   <span style="color: #a020f0;">def</span> <span style="color: #0000ff;">__init__</span>(<span style="color: #a020f0;">self</span>, symbole):
-<span class="linenr">17: </span><span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="color: #8b2252;">"""</span>
-<span class="linenr">18: </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   Constructeur de sac contenant 9 symboles identiques</span>
-<span class="linenr">19: </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   """</span>
-<span class="linenr">20: </span><span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="color: #a020f0;">self</span>.symbole = symbole
-<span class="linenr">21: </span><span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="color: #a020f0;">self</span>.cardinal = 9  <span style="color: #b22222;"># </span><span style="color: #b22222;">nombre d'&#233;l&#233;ments dans le sac</span>
-<span class="linenr">22: </span>
-<span class="linenr">23: </span><span style="background-color: #f2f2f2;"> </span>   <span style="color: #a020f0;">def</span> <span style="color: #0000ff;">__repr__</span>(<span style="color: #a020f0;">self</span>):
-<span class="linenr">24: </span><span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="color: #8b2252;">"""</span>
-<span class="linenr">25: </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   Repr&#233;sentation d'un sac lorsque l'on tape son nom dans l'interpr&#233;teur.</span>
-<span class="linenr">26: </span>
-<span class="linenr">27: </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   Le contenu du sac est renvoy&#233;.</span>
-<span class="linenr">28: </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   """</span>
-<span class="linenr">29: </span><span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="color: #a020f0;">if</span> <span style="color: #a020f0;">self</span>.cardinal == 0:
-<span class="linenr">30: </span><span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="color: #a020f0;">return</span> <span style="color: #8b2252;">"sac vide"</span>
-<span class="linenr">31: </span><span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="color: #a020f0;">elif</span> <span style="color: #a020f0;">self</span>.cardinal == 1:
-<span class="linenr">32: </span><span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="color: #a020f0;">return</span> <span style="color: #8b2252;">"contient 1 chiffre {}"</span>.<span style="color: #483d8b;">format</span>(<span style="color: #a020f0;">self</span>.symbole)
-<span class="linenr">33: </span><span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="color: #a020f0;">else</span>:
-<span class="linenr">34: </span><span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="color: #a020f0;">return</span> <span style="color: #8b2252;">"contient {} chiffres {}"</span>.<span style="color: #483d8b;">format</span>(<span style="color: #a020f0;">self</span>.cardinal, <span style="color: #a020f0;">self</span>.symbole)
-<span class="linenr">35: </span>
-<span class="linenr">36: </span>
-<span class="linenr">37: </span><span style="color: #a020f0;">class</span> <span style="color: #228b22;">pioche</span>():
-<span class="linenr">38: </span><span style="background-color: #f2f2f2;"> </span>   <span style="color: #8b2252;">"""</span>
-<span class="linenr">39: </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   Classe repr&#233;sentant 9 sacs contenant chacun des symboles identiques</span>
-<span class="linenr">40: </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   tous diff&#233;rents (1 sac avec que des "1", un autre avec que des "2", etc.)</span>
-<span class="linenr">41: </span>
-<span class="linenr">42: </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   exemple:</span>
-<span class="linenr">43: </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   -------</span>
-<span class="linenr">44: </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   ma_pioche = pioche()</span>
-<span class="linenr">45: </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   print(ma_pioche)            # affiche la pioche (contenu des 9 sacs de pioche)</span>
-<span class="linenr">46: </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   print(ma_pioche.contenu)    # affiche la pioche sous forme de liste</span>
-<span class="linenr">47: </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   print(ma_pioche[1])        # affiche le contenu du premier sac de pioche</span>
-<span class="linenr">48: </span>
-<span class="linenr">49: </span>
-<span class="linenr">50: </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   """</span>
-<span class="linenr">51: </span><span style="background-color: #f2f2f2;"> </span>   <span style="color: #a0522d;">NBR_SACS</span> = 9
-<span class="linenr">52: </span>
-<span class="linenr">53: </span><span style="background-color: #f2f2f2;"> </span>   <span style="color: #a020f0;">def</span> <span style="color: #0000ff;">__init__</span>(<span style="color: #a020f0;">self</span>):
-<span class="linenr">54: </span><span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="color: #8b2252;">"""</span>
-<span class="linenr">55: </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   Initialisation d'une liste contenant 9 sacs</span>
-<span class="linenr">56: </span>
-<span class="linenr">57: </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   chaque sac contenant chacun 9 symboles identiques</span>
-<span class="linenr">58: </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   """</span>
-<span class="linenr">59: </span><span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="color: #a020f0;">self</span>.contenu = [sac(num&#233;ro) <span style="color: #a020f0;">for</span> num&#233;ro <span style="color: #a020f0;">in</span> <span style="color: #483d8b;">range</span>(1, <span style="color: #a020f0;">self</span>.NBR_SACS+1)]
-<span class="linenr">60: </span>
-<span class="linenr">61: </span><span style="background-color: #f2f2f2;"> </span>   <span style="color: #a020f0;">def</span> <span style="color: #0000ff;">__getitem__</span>(<span style="color: #a020f0;">self</span>, index):
-<span class="linenr">62: </span><span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="color: #8b2252;">"""</span>
-<span class="linenr">63: </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   Permet d'obtenir le contenu d'un sac dans la pioche avec:</span>
-<span class="linenr">64: </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   ma_pioche[index] # o&#249; index est compris entre 1 et NBR_SACS.</span>
-<span class="linenr">65: </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   """</span>
-<span class="linenr">66: </span><span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="color: #a020f0;">return</span> <span style="color: #a020f0;">self</span>.contenu[index-1]
-<span class="linenr">67: </span>
-<span class="linenr">68: </span><span style="background-color: #f2f2f2;"> </span>   <span style="color: #a020f0;">def</span> <span style="color: #0000ff;">__setitem__</span>(<span style="color: #a020f0;">self</span>, index, sac):
-<span class="linenr">69: </span><span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="color: #8b2252;">"""</span>
-<span class="linenr">70: </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   Permet d'&#233;crire un sac dans la pioche.</span>
-<span class="linenr">71: </span>
-<span class="linenr">72: </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   exemple:</span>
-<span class="linenr">73: </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   -------</span>
-<span class="linenr">74: </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   ma_pioche[9] = sac(9)</span>
-<span class="linenr">75: </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   """</span>
-<span class="linenr">76: </span><span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="color: #a020f0;">if</span> index &lt; <span style="color: #a020f0;">self</span>.NBR_SACS+1:
-<span class="linenr">77: </span><span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="color: #a020f0;">self</span>.contenu[index-1] = sac
-<span class="linenr">78: </span><span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="color: #a020f0;">else</span>:
-<span class="linenr">79: </span><span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="color: #a020f0;">raise</span> <span style="color: #228b22;">IndexError</span>()
-<span class="linenr">80: </span>
-<span class="linenr">81: </span><span style="background-color: #f2f2f2;"> </span>   <span style="color: #a020f0;">def</span> <span style="color: #0000ff;">__len__</span>(<span style="color: #a020f0;">self</span>):
-<span class="linenr">82: </span><span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="color: #a020f0;">return</span> <span style="color: #a020f0;">self</span>.NBR_SACS
-<span class="linenr">83: </span>
-<span class="linenr">84: </span><span style="background-color: #f2f2f2;"> </span>   <span style="color: #a020f0;">def</span> <span style="color: #0000ff;">__repr__</span>(<span style="color: #a020f0;">self</span>):
-<span class="linenr">85: </span><span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="color: #8b2252;">"""</span>
-<span class="linenr">86: </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   Repr&#233;sentation de la pioche.</span>
-<span class="linenr">87: </span>
-<span class="linenr">88: </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   Le contenu des 9 sacs est renvoy&#233;.</span>
-<span class="linenr">89: </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   """</span>
-<span class="linenr">90: </span><span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="color: #a0522d;">affichage</span> = <span style="color: #8b2252;">""</span>
-<span class="linenr">91: </span><span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="color: #a020f0;">for</span> sac <span style="color: #a020f0;">in</span> <span style="color: #a020f0;">self</span>.contenu:
-<span class="linenr">92: </span><span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="color: #a0522d;">affichage</span> += sac.__repr__() + <span style="color: #8b2252;">"\n"</span>
-<span class="linenr">93: </span><span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="color: #a020f0;">return</span> affichage
-<span class="linenr">94: </span>
-<span class="linenr">95: </span>
-<span class="linenr">96: </span><span style="color: #a0522d;">pioche_sudoku</span> = pioche()
-<span class="linenr">97: </span><span style="color: #a020f0;">print</span>(pioche_sudoku)
+<span class="linenr"> 5: </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   Attributs:</span>
+<span class="linenr"> 6: </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   ---------</span>
+<span class="linenr"> 7: </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   symbole : symbole plac&#233; dans le sacs</span>
+<span class="linenr"> 8: </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   cardinal : nombre de symboles que le sac contient</span>
+<span class="linenr"> 9: </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   """</span>
+<span class="linenr">10: </span><span style="background-color: #f2f2f2;"> </span>   <span style="color: #a020f0;">def</span> <span style="color: #0000ff;">__init__</span>(<span style="color: #a020f0;">self</span>, symbole):
+<span class="linenr">11: </span><span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="color: #8b2252;">"""</span>
+<span class="linenr">12: </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   Constructeur de sac contenant 9 symboles identiques</span>
+<span class="linenr">13: </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   """</span>
+<span class="linenr">14: </span><span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="color: #a020f0;">self</span>.symbole = symbole
+<span class="linenr">15: </span><span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="color: #a020f0;">self</span>.cardinal = 9  <span style="color: #b22222;"># </span><span style="color: #b22222;">nombre d'&#233;l&#233;ments dans le sac</span>
+<span class="linenr">16: </span>
+<span class="linenr">17: </span><span style="background-color: #f2f2f2;"> </span>   <span style="color: #a020f0;">def</span> <span style="color: #0000ff;">__repr__</span>(<span style="color: #a020f0;">self</span>):
+<span class="linenr">18: </span><span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="color: #8b2252;">"""</span>
+<span class="linenr">19: </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   Repr&#233;sentation officielle d'un sac lorsque l'on tape son nom dans</span>
+<span class="linenr">20: </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   l'interpr&#233;teur.</span>
+<span class="linenr">21: </span>
+<span class="linenr">22: </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   Le contenu du sac est renvoy&#233;.</span>
+<span class="linenr">23: </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   """</span>
+<span class="linenr">24: </span><span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="color: #a020f0;">if</span> <span style="color: #a020f0;">self</span>.cardinal == 0:
+<span class="linenr">25: </span><span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="color: #a020f0;">return</span> <span style="color: #8b2252;">"sac vide"</span>
+<span class="linenr">26: </span><span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="color: #a020f0;">elif</span> <span style="color: #a020f0;">self</span>.cardinal == 1:
+<span class="linenr">27: </span><span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="color: #a020f0;">return</span> <span style="color: #8b2252;">"contient 1 chiffre {}"</span>.<span style="color: #483d8b;">format</span>(<span style="color: #a020f0;">self</span>.symbole)
+<span class="linenr">28: </span><span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="color: #a020f0;">else</span>:
+<span class="linenr">29: </span><span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="color: #a020f0;">return</span> <span style="color: #8b2252;">"contient {} chiffres {}"</span>.<span style="color: #483d8b;">format</span>(<span style="color: #a020f0;">self</span>.cardinal,
+<span class="linenr">30: </span><span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="color: #a020f0;">self</span>.symbole)
+<span class="linenr">31: </span>
+<span class="linenr">32: </span>
 </pre>
 </div>
 </div>
 </div>
 
-<div id="outline-container-org534b653" class="outline-2">
-<h2 id="org534b653"><span class="section-number-2">3</span> Cases et grille</h2>
+<div id="outline-container-orgf234706" class="outline-3">
+<h3 id="orgf234706"><span class="section-number-3">2.2</span> La pioche</h3>
+<div class="outline-text-3" id="text-2-2">
+<p>
+La pioche est composée de 9 sacs contenant chacun des symboles identiques tous différents: 1 sac avec que des "1", un autre avec que des "2", etc.
+</p>
+
+<ul class="org-ul">
+<li>À l'initialisation de la pioche, chaque sac contient  9 symboles identiques.</li>
+<li>À l'initialisation de la grille, un certain nombre de ces symboles est prélevé dans la pioche pour les placer sur la grille.</li>
+<li><p>
+Au cours du jeu, tant qu'il reste des symboles dans la pioche, le joueur peut en piocher pour les placer sur la grille.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-python"><span class="linenr">33: </span><span style="color: #a020f0;">class</span> <span style="color: #228b22;">pioche</span>():
+<span class="linenr">34: </span><span style="background-color: #f2f2f2;"> </span>   <span style="color: #8b2252;">"""</span>
+<span class="linenr">35: </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   Classe repr&#233;sentant 9 sacs contenant chacun des symboles identiques</span>
+<span class="linenr">36: </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   tous diff&#233;rents (1 sac avec que des "1", un autre avec que des "2", etc.)</span>
+<span class="linenr">37: </span>
+<span class="linenr">38: </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   &#192; l'initialisation de la grille, un certain nombre de ces symboles est</span>
+<span class="linenr">39: </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   pr&#233;lev&#233; pour les placer sur la grille.</span>
+<span class="linenr">40: </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   Au cours du jeu, tant qu'il reste des symboles dans un sac, le joueur peut</span>
+<span class="linenr">41: </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   en piocher pour les placer sur la grille.</span>
+<span class="linenr">42: </span>
+<span class="linenr">43: </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   exemple:</span>
+<span class="linenr">44: </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   -------</span>
+<span class="linenr">45: </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   ma_pioche = pioche()</span>
+<span class="linenr">46: </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   print(ma_pioche)         # affiche la pioche (contenu des 9 sacs de pioche)</span>
+<span class="linenr">47: </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   print(ma_pioche.contenu) # affiche la pioche sous forme de liste</span>
+<span class="linenr">48: </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   print(ma_pioche[1])      # affiche le contenu du premier sac de pioche</span>
+<span class="linenr">49: </span>
+<span class="linenr">50: </span>
+<span class="linenr">51: </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   """</span>
+<span class="linenr">52: </span><span style="background-color: #f2f2f2;"> </span>   <span style="color: #a0522d;">NBR_SACS</span> = 9
+<span class="linenr">53: </span>
+<span class="linenr">54: </span><span style="background-color: #f2f2f2;"> </span>   <span style="color: #a020f0;">def</span> <span style="color: #0000ff;">__init__</span>(<span style="color: #a020f0;">self</span>):
+<span class="linenr">55: </span><span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="color: #8b2252;">"""</span>
+<span class="linenr">56: </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   Initialisation d'une liste contenant 9 sacs</span>
+<span class="linenr">57: </span>
+<span class="linenr">58: </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   chaque sac contenant chacun 9 symboles identiques</span>
+<span class="linenr">59: </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   """</span>
+<span class="linenr">60: </span><span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="color: #a020f0;">self</span>.contenu = [sac(num&#233;ro) <span style="color: #a020f0;">for</span> num&#233;ro <span style="color: #a020f0;">in</span> <span style="color: #483d8b;">range</span>(1, <span style="color: #a020f0;">self</span>.NBR_SACS+1)]
+<span class="linenr">61: </span>
+<span class="linenr">62: </span><span style="background-color: #f2f2f2;"> </span>   <span style="color: #a020f0;">def</span> <span style="color: #0000ff;">__getitem__</span>(<span style="color: #a020f0;">self</span>, index):
+<span class="linenr">63: </span><span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="color: #8b2252;">"""</span>
+<span class="linenr">64: </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   Permet d'obtenir le contenu d'un sac dans la pioche avec:</span>
+<span class="linenr">65: </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   ma_pioche[index] # o&#249; index est compris entre 1 et NBR_SACS.</span>
+<span class="linenr">66: </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   """</span>
+<span class="linenr">67: </span><span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="color: #a020f0;">return</span> <span style="color: #a020f0;">self</span>.contenu[index-1]
+<span class="linenr">68: </span>
+<span class="linenr">69: </span><span style="background-color: #f2f2f2;"> </span>   <span style="color: #a020f0;">def</span> <span style="color: #0000ff;">__setitem__</span>(<span style="color: #a020f0;">self</span>, index, sac):
+<span class="linenr">70: </span><span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="color: #8b2252;">"""</span>
+<span class="linenr">71: </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   Permet d'&#233;crire un sac dans la pioche.</span>
+<span class="linenr">72: </span>
+<span class="linenr">73: </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   exemple:</span>
+<span class="linenr">74: </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   -------</span>
+<span class="linenr">75: </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   ma_pioche[9] = sac(9)</span>
+<span class="linenr">76: </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   """</span>
+<span class="linenr">77: </span><span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="color: #a020f0;">if</span> index &lt; <span style="color: #a020f0;">self</span>.NBR_SACS+1:
+<span class="linenr">78: </span><span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="color: #a020f0;">self</span>.contenu[index-1] = sac
+<span class="linenr">79: </span><span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="color: #a020f0;">else</span>:
+<span class="linenr">80: </span><span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="color: #a020f0;">raise</span> <span style="color: #228b22;">IndexError</span>()
+<span class="linenr">81: </span>
+<span class="linenr">82: </span><span style="background-color: #f2f2f2;"> </span>   <span style="color: #a020f0;">def</span> <span style="color: #0000ff;">__len__</span>(<span style="color: #a020f0;">self</span>):
+<span class="linenr">83: </span><span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="color: #a020f0;">return</span> <span style="color: #a020f0;">self</span>.NBR_SACS
+<span class="linenr">84: </span>
+<span class="linenr">85: </span><span style="background-color: #f2f2f2;"> </span>   <span style="color: #a020f0;">def</span> <span style="color: #0000ff;">__repr__</span>(<span style="color: #a020f0;">self</span>):
+<span class="linenr">86: </span><span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="color: #8b2252;">"""</span>
+<span class="linenr">87: </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   Repr&#233;sentation de la pioche.</span>
+<span class="linenr">88: </span>
+<span class="linenr">89: </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   Le contenu des 9 sacs est renvoy&#233;.</span>
+<span class="linenr">90: </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   """</span>
+<span class="linenr">91: </span><span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="color: #a0522d;">affichage</span> = <span style="color: #8b2252;">""</span>
+<span class="linenr">92: </span><span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="color: #a020f0;">for</span> sac <span style="color: #a020f0;">in</span> <span style="color: #a020f0;">self</span>.contenu:
+<span class="linenr">93: </span><span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="color: #a0522d;">affichage</span> += sac.__repr__() + <span style="color: #8b2252;">"\n"</span>
+<span class="linenr">94: </span><span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="color: #a020f0;">return</span> affichage
+<span class="linenr">95: </span>
+<span class="linenr">96: </span>
+</pre>
+</div></li>
+</ul>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org254eb97" class="outline-2">
+<h2 id="org254eb97"><span class="section-number-2">3</span> Cases et grille</h2>
 <div class="outline-text-2" id="text-3">
 <p>
 La grille comporte 81 cases.
 </p>
+</div>
 
-
-
+<div id="outline-container-org6a42db6" class="outline-3">
+<h3 id="org6a42db6"><span class="section-number-3">3.1</span> Définissons ce qu'est une case</h3>
+<div class="outline-text-3" id="text-3-1">
 <div class="org-src-container">
-<pre class="src src-python"><span class="linenr">  1: </span><span style="color: #a020f0;">class</span> <span style="color: #228b22;">SDcolors</span>:
-<span class="linenr">  2: </span><span style="background-color: #f2f2f2;"> </span>   <span style="color: #8b2252;">"""</span>
-<span class="linenr">  3: </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   Gestion basique de la couleur dans le Terminal</span>
-<span class="linenr">  4: </span>
-<span class="linenr">  5: </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   Remarque: Toujours terminer par RESET pour revenir &#224; la couleur de base.</span>
-<span class="linenr">  6: </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   """</span>
-<span class="linenr">  7: </span><span style="background-color: #f2f2f2;"> </span>   <span style="color: #a0522d;">RESET</span> = <span style="color: #8b2252;">'\033[0m'</span>
-<span class="linenr">  8: </span><span style="background-color: #f2f2f2;"> </span>   <span style="color: #a0522d;">BOLD</span> = <span style="color: #8b2252;">'\033[1m'</span>
-<span class="linenr">  9: </span><span style="background-color: #f2f2f2;"> </span>   <span style="color: #a0522d;">ITALIC</span> = <span style="color: #8b2252;">'\033[3m'</span>
-<span class="linenr"> 10: </span><span style="background-color: #f2f2f2;"> </span>   <span style="color: #a0522d;">UNDERLINE</span> = <span style="color: #8b2252;">'\033[4m'</span>
-<span class="linenr"> 11: </span><span style="background-color: #f2f2f2;"> </span>   <span style="color: #a0522d;">GREEN</span> = <span style="color: #8b2252;">'\033[5m'</span>
-<span class="linenr"> 12: </span><span style="background-color: #f2f2f2;"> </span>   <span style="color: #a0522d;">ORANGE</span> = <span style="color: #8b2252;">'\033[6m'</span>
-<span class="linenr"> 13: </span><span style="background-color: #f2f2f2;"> </span>   <span style="color: #a0522d;">RED</span> = <span style="color: #8b2252;">'\033[7m'</span>
-<span class="linenr"> 14: </span><span style="background-color: #f2f2f2;"> </span>   <span style="color: #a0522d;">BLACK</span> = <span style="color: #8b2252;">'\033[30m'</span>
-<span class="linenr"> 15: </span><span style="background-color: #f2f2f2;"> </span>   <span style="color: #a0522d;">BROWN</span> = <span style="color: #8b2252;">'\033[31m'</span>
-<span class="linenr"> 16: </span><span style="background-color: #f2f2f2;"> </span>   <span style="color: #a0522d;">LIGHTGREEN</span> = <span style="color: #8b2252;">'\033[32m'</span>
-<span class="linenr"> 17: </span><span style="background-color: #f2f2f2;"> </span>   <span style="color: #a0522d;">GOLD</span> = <span style="color: #8b2252;">'\033[33m'</span>
-<span class="linenr"> 18: </span><span style="background-color: #f2f2f2;"> </span>   <span style="color: #a0522d;">BLUE</span> = <span style="color: #8b2252;">'\033[34m'</span>
-<span class="linenr"> 19: </span><span style="background-color: #f2f2f2;"> </span>   <span style="color: #a0522d;">PURPLE</span> = <span style="color: #8b2252;">'\033[35m'</span>
-<span class="linenr"> 20: </span><span style="background-color: #f2f2f2;"> </span>   <span style="color: #a0522d;">CYAN</span> = <span style="color: #8b2252;">'\033[36m'</span>
-<span class="linenr"> 21: </span><span style="background-color: #f2f2f2;"> </span>   <span style="color: #a0522d;">SNOW</span> = <span style="color: #8b2252;">'\033[37m'</span>
-<span class="linenr"> 22: </span><span style="background-color: #f2f2f2;"> </span>   <span style="color: #a0522d;">BLACKBG</span> = <span style="color: #8b2252;">'\033[40m'</span>
-<span class="linenr"> 23: </span><span style="background-color: #f2f2f2;"> </span>   <span style="color: #a0522d;">REDBG</span> = <span style="color: #8b2252;">'\033[41m'</span>
-<span class="linenr"> 24: </span><span style="background-color: #f2f2f2;"> </span>   <span style="color: #a0522d;">GREENBG</span> = <span style="color: #8b2252;">'\033[42m'</span>
-<span class="linenr"> 25: </span><span style="background-color: #f2f2f2;"> </span>   <span style="color: #a0522d;">GOLDBG</span> = <span style="color: #8b2252;">'\033[43m'</span>
-<span class="linenr"> 26: </span><span style="background-color: #f2f2f2;"> </span>   <span style="color: #a0522d;">BLUEBG</span> = <span style="color: #8b2252;">'\033[44m'</span>
-<span class="linenr"> 27: </span><span style="background-color: #f2f2f2;"> </span>   <span style="color: #a0522d;">PURPLEBG</span> = <span style="color: #8b2252;">'\033[45m'</span>
-<span class="linenr"> 28: </span><span style="background-color: #f2f2f2;"> </span>   <span style="color: #a0522d;">CYANBG</span> = <span style="color: #8b2252;">'\033[46m'</span>
-<span class="linenr"> 29: </span><span style="background-color: #f2f2f2;"> </span>   <span style="color: #a0522d;">SNOWBG</span> = <span style="color: #8b2252;">'\033[47m'</span>
-<span class="linenr"> 30: </span>
-<span class="linenr"> 31: </span>
-<span class="linenr"> 32: </span><span style="color: #a020f0;">class</span> <span style="color: #228b22;">case</span>:
-<span class="linenr"> 33: </span><span style="background-color: #f2f2f2;"> </span>   <span style="color: #8b2252;">"""</span>
-<span class="linenr"> 34: </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   Classe repr&#233;sentant une case.</span>
-<span class="linenr"> 35: </span>
-<span class="linenr"> 36: </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   Une case non vide a un `contenu`, le symbole qui est affich&#233; quand on tape</span>
-<span class="linenr"> 37: </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   le nom de la case dans l'interpr&#233;teur.</span>
-<span class="linenr"> 38: </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   Une case vide &#224; des pr&#233;tendants (valeurs possibles de la case).</span>
-<span class="linenr"> 39: </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   Une case a une `couleur` &#224; choisir parmi `SDcolors`.</span>
-<span class="linenr"> 40: </span>
-<span class="linenr"> 41: </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   exemple:</span>
-<span class="linenr"> 42: </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   -------</span>
-<span class="linenr"> 43: </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   ma_case = case()</span>
-<span class="linenr"> 44: </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   print(ma_case)</span>
-<span class="linenr"> 45: </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   """</span>
-<span class="linenr"> 46: </span><span style="background-color: #f2f2f2;"> </span>   <span style="color: #a020f0;">def</span> <span style="color: #0000ff;">__init__</span>(<span style="color: #a020f0;">self</span>):
-<span class="linenr"> 47: </span><span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="color: #a020f0;">self</span>.contenu = <span style="color: #008b8b;">None</span>
-<span class="linenr"> 48: </span><span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="color: #a020f0;">self</span>.couleur = SDcolors.BLACK
-<span class="linenr"> 49: </span><span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="color: #a020f0;">self</span>.pretendants = [1, 2, 3, 4, 5, 6, 7, 8, 9]
-<span class="linenr"> 50: </span>
-<span class="linenr"> 51: </span><span style="background-color: #f2f2f2;"> </span>   <span style="color: #a020f0;">def</span> <span style="color: #0000ff;">__repr__</span>(<span style="color: #a020f0;">self</span>):
-<span class="linenr"> 52: </span><span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="color: #8b2252;">"""</span>
-<span class="linenr"> 53: </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   Affichage d'une case.</span>
-<span class="linenr"> 54: </span>
-<span class="linenr"> 55: </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   Lorsque l'on tape son nom dans l'interpr&#233;teur</span>
-<span class="linenr"> 56: </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   son `contenu` est affich&#233;.</span>
-<span class="linenr"> 57: </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   """</span>
-<span class="linenr"> 58: </span><span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="color: #a020f0;">if</span> <span style="color: #a020f0;">self</span>.contenu <span style="color: #a020f0;">is</span> <span style="color: #008b8b;">None</span>:
-<span class="linenr"> 59: </span><span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="color: #a020f0;">return</span> <span style="color: #8b2252;">"0"</span>    <span style="color: #b22222;"># </span><span style="color: #b22222;">"&#9974;"</span>
-<span class="linenr"> 60: </span><span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="color: #a020f0;">else</span>:
-<span class="linenr"> 61: </span><span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="color: #a020f0;">return</span> <span style="color: #8b2252;">"{}"</span>.<span style="color: #483d8b;">format</span>(<span style="color: #a020f0;">self</span>.contenu)
-<span class="linenr"> 62: </span>
-<span class="linenr"> 63: </span>
-<span class="linenr"> 64: </span><span style="color: #a020f0;">class</span> <span style="color: #228b22;">grille</span>:
-<span class="linenr"> 65: </span><span style="background-color: #f2f2f2;"> </span>   <span style="color: #8b2252;">"""</span>
-<span class="linenr"> 66: </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   Classe repr&#233;sentant une grille de 9 x 9 cases.</span>
-<span class="linenr"> 67: </span>
-<span class="linenr"> 68: </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   Chacune des 81 cases est accessible via un index allant de 0 &#224; 80.</span>
-<span class="linenr"> 69: </span>
-<span class="linenr"> 70: </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   exemple:</span>
-<span class="linenr"> 71: </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   -------</span>
-<span class="linenr"> 72: </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   ma_grille = grille()</span>
-<span class="linenr"> 73: </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   print(ma_grille)            # affiche la grille 9 x 9 cases</span>
-<span class="linenr"> 74: </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   print(ma_grille.contenu)    # affiche la grille sous forme de liste</span>
-<span class="linenr"> 75: </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   print(ma_grille[0]) # affiche la premi&#232;re case (son index est 0)</span>
-<span class="linenr"> 76: </span>
-<span class="linenr"> 77: </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   options:</span>
-<span class="linenr"> 78: </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   -------</span>
-<span class="linenr"> 79: </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   Affichage en couleur (fonctionne uniquement dans le Terminal pas dans la</span>
-<span class="linenr"> 80: </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   console Python): ma_grille.affichage_en_couleur = True</span>
-<span class="linenr"> 81: </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   """</span>
-<span class="linenr"> 82: </span>
-<span class="linenr"> 83: </span><span style="background-color: #f2f2f2;"> </span>   <span style="color: #a0522d;">NBR_CASES</span> = 81
-<span class="linenr"> 84: </span>
-<span class="linenr"> 85: </span><span style="background-color: #f2f2f2;"> </span>   <span style="color: #a020f0;">def</span> <span style="color: #0000ff;">__init__</span>(<span style="color: #a020f0;">self</span>):
-<span class="linenr"> 86: </span><span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="color: #a0522d;">liste_cases</span> = <span style="color: #483d8b;">list</span>()
-<span class="linenr"> 87: </span><span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="color: #a020f0;">for</span> i <span style="color: #a020f0;">in</span> <span style="color: #483d8b;">range</span>(<span style="color: #a020f0;">self</span>.NBR_CASES):
-<span class="linenr"> 88: </span><span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   liste_cases.append(case())
-<span class="linenr"> 89: </span><span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="color: #a020f0;">self</span>.contenu = liste_cases
-<span class="linenr"> 90: </span><span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="color: #a020f0;">self</span>.affichage_en_couleur = <span style="color: #008b8b;">False</span>
-<span class="linenr"> 91: </span><span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="color: #a020f0;">self</span>.couleur_grille = SDcolors.SNOWBG
-<span class="linenr"> 92: </span>
-<span class="linenr"> 93: </span><span style="background-color: #f2f2f2;"> </span>   <span style="color: #a020f0;">def</span> <span style="color: #0000ff;">__getitem__</span>(<span style="color: #a020f0;">self</span>, index):
-<span class="linenr"> 94: </span><span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="color: #8b2252;">"""</span>
-<span class="linenr"> 95: </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   Permet d'obtenir le contenu d'une case de la grille avec:</span>
-<span class="linenr"> 96: </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   ma_grille[index] # o&#249; index est compris entre 0 et NBR_CASES-1.</span>
-<span class="linenr"> 97: </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   """</span>
-<span class="linenr"> 98: </span><span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="color: #a020f0;">return</span> <span style="color: #a020f0;">self</span>.contenu[index]
-<span class="linenr"> 99: </span>
-<span class="linenr">100: </span><span style="background-color: #f2f2f2;"> </span>   <span style="color: #a020f0;">def</span> <span style="color: #0000ff;">__setitem__</span>(<span style="color: #a020f0;">self</span>, index, symbole):
-<span class="linenr">101: </span><span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="color: #8b2252;">"""</span>
-<span class="linenr">102: </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   Permet d'&#233;crire dans le contenu d'une case de la grille.</span>
-<span class="linenr">103: </span>
-<span class="linenr">104: </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   exemple:</span>
-<span class="linenr">105: </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   -------</span>
-<span class="linenr">106: </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   ma_grille[0] = 5</span>
-<span class="linenr">107: </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   """</span>
-<span class="linenr">108: </span><span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="color: #a020f0;">if</span> index &lt; <span style="color: #a020f0;">self</span>.NBR_CASES:
-<span class="linenr">109: </span><span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="color: #a020f0;">self</span>.contenu[index]<span style="color: #a0522d;">.contenu</span> = symbole
-<span class="linenr">110: </span><span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="color: #a020f0;">else</span>:
-<span class="linenr">111: </span><span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="color: #a020f0;">raise</span> <span style="color: #228b22;">IndexError</span>()
-<span class="linenr">112: </span>
-<span class="linenr">113: </span><span style="background-color: #f2f2f2;"> </span>   <span style="color: #a020f0;">def</span> <span style="color: #0000ff;">__len__</span>(<span style="color: #a020f0;">self</span>):
-<span class="linenr">114: </span><span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="color: #a020f0;">return</span> <span style="color: #a020f0;">self</span>.NBR_CASES
-<span class="linenr">115: </span>
-<span class="linenr">116: </span><span style="background-color: #f2f2f2;"> </span>   <span style="color: #a020f0;">def</span> <span style="color: #0000ff;">__repr__</span>(<span style="color: #a020f0;">self</span>):
-<span class="linenr">117: </span><span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="color: #8b2252;">"""</span>
-<span class="linenr">118: </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   Affichage d'une grille.</span>
-<span class="linenr">119: </span>
-<span class="linenr">120: </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   Lorsque l'on tape son nom dans l'interpr&#233;teur</span>
-<span class="linenr">121: </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   son `contenu` est affich&#233; sous forme d'une grille 9 x 9.</span>
-<span class="linenr">122: </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   """</span>
-<span class="linenr">123: </span><span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="color: #a0522d;">affichage</span> = <span style="color: #8b2252;">""</span>
-<span class="linenr">124: </span><span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="color: #a0522d;">index</span> = 0
-<span class="linenr">125: </span><span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="color: #a020f0;">if</span> <span style="color: #a020f0;">self</span>.affichage_en_couleur :
-<span class="linenr">126: </span><span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="color: #a0522d;">couleur_on</span> = <span style="color: #a020f0;">self</span>.couleur_grille
-<span class="linenr">127: </span><span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="color: #a0522d;">couleur_off</span> = SDcolors.RESET
-<span class="linenr">128: </span><span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="color: #a020f0;">else</span> :
-<span class="linenr">129: </span><span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="color: #a0522d;">couleur_on</span>, <span style="color: #a0522d;">couleur_off</span> = <span style="color: #8b2252;">""</span>,<span style="color: #8b2252;">""</span>
-<span class="linenr">130: </span><span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="color: #a020f0;">for</span> une_case <span style="color: #a020f0;">in</span> <span style="color: #a020f0;">self</span>.contenu:
-<span class="linenr">131: </span><span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="color: #a0522d;">affichage</span> += une_case.__repr__()  <span style="color: #b22222;"># </span><span style="color: #b22222;">ajout de l'affichage d'une case</span>
-<span class="linenr">132: </span><span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="color: #a020f0;">if</span> index % 27 == 26 <span style="color: #a020f0;">and</span> index &lt; 80:
-<span class="linenr">133: </span><span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="color: #a0522d;">affichage</span> += <span style="color: #8b2252;">"\n"</span>+couleur_on + <span style="color: #8b2252;">" "</span>*19 + couleur_off + <span style="color: #8b2252;">"\n"</span>  <span style="color: #b22222;"># </span><span style="color: #b22222;">&#224; faire toutes les 3 lignes</span>
-<span class="linenr">134: </span><span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="color: #a020f0;">elif</span> index % 9 == 8:
-<span class="linenr">135: </span><span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="color: #a0522d;">affichage</span> += <span style="color: #8b2252;">"\n"</span>  <span style="color: #b22222;"># </span><span style="color: #b22222;">sinon &#224; faire toutes les lignes</span>
-<span class="linenr">136: </span><span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="color: #a020f0;">elif</span> index % 3 == 2:
-<span class="linenr">137: </span><span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="color: #a0522d;">affichage</span> += couleur_on + <span style="color: #8b2252;">"  "</span> + couleur_off  <span style="color: #b22222;"># </span><span style="color: #b22222;">sinon &#224; faire toutes les 3 colonnes</span>
-<span class="linenr">138: </span><span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="color: #a020f0;">elif</span> index % 9 <span style="color: #a020f0;">in</span> [0, 1, 3, 4, 6, 7]:
-<span class="linenr">139: </span><span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="color: #a0522d;">affichage</span> += <span style="color: #8b2252;">" "</span>
-<span class="linenr">140: </span><span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="color: #a0522d;">index</span> += 1
-<span class="linenr">141: </span><span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="color: #a020f0;">return</span> affichage
-<span class="linenr">142: </span>
-<span class="linenr">143: </span><span style="background-color: #f2f2f2;"> </span>   <span style="color: #a020f0;">def</span> <span style="color: #0000ff;">remplir_case</span>(<span style="color: #a020f0;">self</span>, index, valeur):
-<span class="linenr">144: </span><span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="color: #8b2252;">"""</span>
-<span class="linenr">145: </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   Rempli la case d'index compris entre 0 et 80 avec `valeur`.</span>
-<span class="linenr">146: </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   """</span>
-<span class="linenr">147: </span><span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="color: #a020f0;">if</span> <span style="color: #a020f0;">self</span>.autorisation_colonne(index) <span style="color: #a020f0;">and</span> <span style="color: #a020f0;">self</span>.autorisation_ligne(index) <span style="color: #a020f0;">and</span> <span style="color: #a020f0;">self</span>.autorisation_carr&#233;(index):
-<span class="linenr">148: </span><span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="color: #a020f0;">self</span>.__setitem__(index, valeur)
-<span class="linenr">149: </span><span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="color: #a020f0;">self</span>.r&#233;duire_pr&#233;tendants
-<span class="linenr">150: </span><span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="color: #a020f0;">self</span>.r&#233;duire_sac
-<span class="linenr">151: </span>
-<span class="linenr">152: </span><span style="background-color: #f2f2f2;"> </span>   <span style="color: #a020f0;">def</span> <span style="color: #0000ff;">autorisation_colonne</span>(<span style="color: #a020f0;">self</span>, index):
-<span class="linenr">153: </span><span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="color: #a020f0;">return</span> <span style="color: #008b8b;">True</span>
-<span class="linenr">154: </span>
-<span class="linenr">155: </span>
-<span class="linenr">156: </span><span style="background-color: #f2f2f2;"> </span>   <span style="color: #a020f0;">def</span> <span style="color: #0000ff;">autorisation_ligne</span>(<span style="color: #a020f0;">self</span>, index):
-<span class="linenr">157: </span><span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="color: #a020f0;">return</span> <span style="color: #008b8b;">True</span>
-<span class="linenr">158: </span>
-<span class="linenr">159: </span><span style="background-color: #f2f2f2;"> </span>   <span style="color: #a020f0;">def</span> <span style="color: #0000ff;">autorisation_carr&#233;</span>(<span style="color: #a020f0;">self</span>, index):
-<span class="linenr">160: </span><span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="color: #a020f0;">return</span> <span style="color: #008b8b;">True</span>
-<span class="linenr">161: </span>
-<span class="linenr">162: </span><span style="background-color: #f2f2f2;"> </span>   <span style="color: #a020f0;">def</span> <span style="color: #0000ff;">r&#233;duire_pr&#233;tendants</span>(<span style="color: #a020f0;">self</span>, index):
-<span class="linenr">163: </span><span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="color: #a020f0;">pass</span>
+<pre class="src src-python"><span class="linenr"> 97: </span><span style="color: #a020f0;">class</span> <span style="color: #228b22;">case</span>:
+<span class="linenr"> 98: </span><span style="background-color: #f2f2f2;"> </span>   <span style="color: #8b2252;">"""</span>
+<span class="linenr"> 99: </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   Classe repr&#233;sentant une case.</span>
+<span class="linenr">100: </span>
+<span class="linenr">101: </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   Une case non vide a un `contenu`, le symbole qui est affich&#233; quand on tape</span>
+<span class="linenr">102: </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   le nom de la case dans l'interpr&#233;teur.</span>
+<span class="linenr">103: </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   Une case vide &#224; des pr&#233;tendants (valeurs possibles de la case).</span>
+<span class="linenr">104: </span>
+<span class="linenr">105: </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   exemple:</span>
+<span class="linenr">106: </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   -------</span>
+<span class="linenr">107: </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   ma_case = case()</span>
+<span class="linenr">108: </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   print(ma_case)</span>
+<span class="linenr">109: </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   """</span>
+<span class="linenr">110: </span><span style="background-color: #f2f2f2;"> </span>   <span style="color: #a020f0;">def</span> <span style="color: #0000ff;">__init__</span>(<span style="color: #a020f0;">self</span>):
+<span class="linenr">111: </span><span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="color: #a020f0;">self</span>.contenu = <span style="color: #008b8b;">None</span>
+<span class="linenr">112: </span><span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="color: #a020f0;">self</span>.pretendants = [1, 2, 3, 4, 5, 6, 7, 8, 9]
+<span class="linenr">113: </span>
+<span class="linenr">114: </span><span style="background-color: #f2f2f2;"> </span>   <span style="color: #a020f0;">def</span> <span style="color: #0000ff;">__repr__</span>(<span style="color: #a020f0;">self</span>):
+<span class="linenr">115: </span><span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="color: #8b2252;">"""</span>
+<span class="linenr">116: </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   Affichage d'une case.</span>
+<span class="linenr">117: </span>
+<span class="linenr">118: </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   Lorsque l'on tape son nom dans l'interpr&#233;teur</span>
+<span class="linenr">119: </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   son `contenu` est affich&#233;.</span>
+<span class="linenr">120: </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   """</span>
+<span class="linenr">121: </span><span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="color: #a020f0;">if</span> <span style="color: #a020f0;">self</span>.contenu <span style="color: #a020f0;">is</span> <span style="color: #008b8b;">None</span>:
+<span class="linenr">122: </span><span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="color: #a020f0;">return</span> <span style="color: #8b2252;">"0"</span>    <span style="color: #b22222;"># </span><span style="color: #b22222;">"&#9974;"</span>
+<span class="linenr">123: </span><span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="color: #a020f0;">else</span>:
+<span class="linenr">124: </span><span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="color: #a020f0;">return</span> <span style="color: #8b2252;">"{}"</span>.<span style="color: #483d8b;">format</span>(<span style="color: #a020f0;">self</span>.contenu)
+<span class="linenr">125: </span>
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org2d51082" class="outline-3">
+<h3 id="org2d51082"><span class="section-number-3">3.2</span> Construisons la grille</h3>
+<div class="outline-text-3" id="text-3-2">
+<div class="org-src-container">
+<pre class="src src-python"><span class="linenr">126: </span><span style="color: #a020f0;">class</span> <span style="color: #228b22;">grille</span>:
+<span class="linenr">127: </span><span style="background-color: #f2f2f2;"> </span>   <span style="color: #8b2252;">"""</span>
+<span class="linenr">128: </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   Classe repr&#233;sentant une grille de 9 x 9 cases.</span>
+<span class="linenr">129: </span>
+<span class="linenr">130: </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   Chacune des 81 cases est accessible via un index allant de 0 &#224; 80.</span>
+<span class="linenr">131: </span>
+<span class="linenr">132: </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   exemple:</span>
+<span class="linenr">133: </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   -------</span>
+<span class="linenr">134: </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   ma_grille = grille()</span>
+<span class="linenr">135: </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   print(ma_grille)            # affiche la grille 9 x 9 cases</span>
+<span class="linenr">136: </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   print(ma_grille.contenu)    # affiche la grille sous forme de liste</span>
+<span class="linenr">137: </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   print(ma_grille[0]) # affiche la premi&#232;re case (son index est 0)</span>
+<span class="linenr">138: </span>
+<span class="linenr">139: </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   options:</span>
+<span class="linenr">140: </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   -------</span>
+<span class="linenr">141: </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   Affichage en couleur (fonctionne uniquement dans le Terminal pas dans la</span>
+<span class="linenr">142: </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   console Python): ma_grille.affichage_en_couleur = True</span>
+<span class="linenr">143: </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   """</span>
+<span class="linenr">144: </span>
+<span class="linenr">145: </span><span style="background-color: #f2f2f2;"> </span>   <span style="color: #a0522d;">COT&#201;</span> = 9
+<span class="linenr">146: </span><span style="background-color: #f2f2f2;"> </span>   <span style="color: #a0522d;">NBR_CASES</span> = COT&#201; * COT&#201;
+<span class="linenr">147: </span>
+<span class="linenr">148: </span><span style="background-color: #f2f2f2;"> </span>   <span style="color: #a020f0;">def</span> <span style="color: #0000ff;">__init__</span>(<span style="color: #a020f0;">self</span>):
+<span class="linenr">149: </span><span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="color: #a0522d;">liste_cases</span> = <span style="color: #483d8b;">list</span>()
+<span class="linenr">150: </span><span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="color: #a020f0;">for</span> i <span style="color: #a020f0;">in</span> <span style="color: #483d8b;">range</span>(<span style="color: #a020f0;">self</span>.NBR_CASES):
+<span class="linenr">151: </span><span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   liste_cases.append(case())
+<span class="linenr">152: </span><span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="color: #a020f0;">self</span>.contenu = liste_cases
+<span class="linenr">153: </span>
+<span class="linenr">154: </span><span style="background-color: #f2f2f2;"> </span>   <span style="color: #a020f0;">def</span> <span style="color: #0000ff;">__getitem__</span>(<span style="color: #a020f0;">self</span>, index):
+<span class="linenr">155: </span><span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="color: #8b2252;">"""</span>
+<span class="linenr">156: </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   Permet d'obtenir le contenu d'une case de la grille avec:</span>
+<span class="linenr">157: </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   ma_grille[index] # o&#249; index est compris entre 0 et NBR_CASES-1.</span>
+<span class="linenr">158: </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   """</span>
+<span class="linenr">159: </span><span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="color: #a020f0;">return</span> <span style="color: #a020f0;">self</span>.contenu[index]
+<span class="linenr">160: </span>
+<span class="linenr">161: </span><span style="background-color: #f2f2f2;"> </span>   <span style="color: #a020f0;">def</span> <span style="color: #0000ff;">__setitem__</span>(<span style="color: #a020f0;">self</span>, index, symbole):
+<span class="linenr">162: </span><span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="color: #8b2252;">"""</span>
+<span class="linenr">163: </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   Permet d'&#233;crire dans le contenu d'une case de la grille.</span>
 <span class="linenr">164: </span>
-<span class="linenr">165: </span><span style="background-color: #f2f2f2;"> </span>   <span style="color: #a020f0;">def</span> <span style="color: #0000ff;">r&#233;duire_sac</span>(<span style="color: #a020f0;">self</span>, index):
-<span class="linenr">166: </span><span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="color: #a020f0;">pass</span>
-<span class="linenr">167: </span>
-<span class="linenr">168: </span><span style="background-color: #f2f2f2;"> </span>   <span style="color: #a020f0;">def</span> <span style="color: #0000ff;">colonne</span>(<span style="color: #a020f0;">self</span>, index):
-<span class="linenr">169: </span><span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="color: #8b2252;">"""</span>
-<span class="linenr">170: </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   Retourne le num&#233;ro de colonne de la case d'index compris entre 0 et 80.</span>
-<span class="linenr">171: </span>
-<span class="linenr">172: </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   Les 9 colonnes sont num&#233;rot&#233;es de 1 &#224; 9.</span>
-<span class="linenr">173: </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   """</span>
-<span class="linenr">174: </span><span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="color: #a020f0;">return</span> index % 9 + 1
-<span class="linenr">175: </span>
-<span class="linenr">176: </span><span style="background-color: #f2f2f2;"> </span>   <span style="color: #a020f0;">def</span> <span style="color: #0000ff;">ligne</span>(<span style="color: #a020f0;">self</span>, index):
-<span class="linenr">177: </span><span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="color: #8b2252;">"""</span>
-<span class="linenr">178: </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   Retourne le num&#233;ro de ligne de la case d'index compris entre 0 et 80.</span>
-<span class="linenr">179: </span>
-<span class="linenr">180: </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   Les 9 lignes sont num&#233;rot&#233;es de 1 &#224; 9.</span>
-<span class="linenr">181: </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   """</span>
-<span class="linenr">182: </span><span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="color: #a020f0;">return</span> index//9 + 1
-<span class="linenr">183: </span>
-<span class="linenr">184: </span>
-<span class="linenr">185: </span><span style="color: #a0522d;">grille_sudoku</span> = grille()
-<span class="linenr">186: </span><span style="color: #a020f0;">print</span>(grille_sudoku)
+<span class="linenr">165: </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   exemple:</span>
+<span class="linenr">166: </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   -------</span>
+<span class="linenr">167: </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   ma_grille[0] = 5</span>
+<span class="linenr">168: </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   """</span>
+<span class="linenr">169: </span><span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="color: #a020f0;">if</span> index &lt; <span style="color: #a020f0;">self</span>.NBR_CASES:
+<span class="linenr">170: </span><span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="color: #a020f0;">self</span>.contenu[index]<span style="color: #a0522d;">.contenu</span> = symbole
+<span class="linenr">171: </span><span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="color: #a020f0;">else</span>:
+<span class="linenr">172: </span><span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="color: #a020f0;">raise</span> <span style="color: #228b22;">IndexError</span>()
+<span class="linenr">173: </span>
+<span class="linenr">174: </span><span style="background-color: #f2f2f2;"> </span>   <span style="color: #a020f0;">def</span> <span style="color: #0000ff;">__len__</span>(<span style="color: #a020f0;">self</span>):
+<span class="linenr">175: </span><span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="color: #a020f0;">return</span> <span style="color: #a020f0;">self</span>.NBR_CASES
+<span class="linenr">176: </span>
+<span class="linenr">177: </span><span style="background-color: #f2f2f2;"> </span>   <span style="color: #a020f0;">def</span> <span style="color: #0000ff;">__repr__</span>(<span style="color: #a020f0;">self</span>):
+<span class="linenr">178: </span><span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="color: #8b2252;">"""</span>
+<span class="linenr">179: </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   Affichage d'une grille.</span>
+<span class="linenr">180: </span>
+<span class="linenr">181: </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   Lorsque l'on tape son nom dans l'interpr&#233;teur</span>
+<span class="linenr">182: </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   son `contenu` est affich&#233; sous forme d'une grille 9 x 9.</span>
+<span class="linenr">183: </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   """</span>
+<span class="linenr">184: </span><span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="color: #a0522d;">affichage</span> = <span style="color: #8b2252;">""</span>
+<span class="linenr">185: </span><span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="color: #a0522d;">index</span> = 0
+<span class="linenr">186: </span><span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="color: #a020f0;">for</span> une_case <span style="color: #a020f0;">in</span> <span style="color: #a020f0;">self</span>.contenu:
+<span class="linenr">187: </span><span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="color: #a0522d;">affichage</span> += une_case.__repr__()  <span style="color: #b22222;"># </span><span style="color: #b22222;">ajout de l'affichage d'une case</span>
+<span class="linenr">188: </span><span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="color: #a020f0;">if</span> index % 27 == 26 <span style="color: #a020f0;">and</span> index &lt; 80:
+<span class="linenr">189: </span><span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="color: #a0522d;">affichage</span> += <span style="color: #8b2252;">"\n\n"</span>  <span style="color: #b22222;"># </span><span style="color: #b22222;">&#224; faire toutes les 3 lignes</span>
+<span class="linenr">190: </span><span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="color: #a020f0;">elif</span> index % 9 == 8:
+<span class="linenr">191: </span><span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="color: #a0522d;">affichage</span> += <span style="color: #8b2252;">"\n"</span>  <span style="color: #b22222;"># </span><span style="color: #b22222;">sinon &#224; faire toutes les lignes</span>
+<span class="linenr">192: </span><span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="color: #a020f0;">elif</span> index % 3 == 2:
+<span class="linenr">193: </span><span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="color: #a0522d;">affichage</span> += <span style="color: #8b2252;">"  "</span>   <span style="color: #b22222;"># </span><span style="color: #b22222;">sinon &#224; faire toutes les 3 colonnes</span>
+<span class="linenr">194: </span><span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="color: #a020f0;">elif</span> index % 9 <span style="color: #a020f0;">in</span> [0, 1, 3, 4, 6, 7]:
+<span class="linenr">195: </span><span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="color: #a0522d;">affichage</span> += <span style="color: #8b2252;">" "</span>
+<span class="linenr">196: </span>
+<span class="linenr">197: </span><span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="color: #a0522d;">index</span> += 1
+<span class="linenr">198: </span><span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="color: #a020f0;">return</span> affichage
+<span class="linenr">199: </span>
+<span class="linenr">200: </span><span style="background-color: #f2f2f2;"> </span>   <span style="color: #a020f0;">def</span> <span style="color: #0000ff;">remplir_case</span>(<span style="color: #a020f0;">self</span>, index, valeur):
+<span class="linenr">201: </span><span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="color: #8b2252;">"""</span>
+<span class="linenr">202: </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   Rempli la case d'index compris entre 0 et 80 avec `valeur`.</span>
+<span class="linenr">203: </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   """</span>
+<span class="linenr">204: </span><span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="color: #a020f0;">if</span> (<span style="color: #a020f0;">self</span>.&#233;criture_autoris&#233;e(<span style="color: #a020f0;">self</span>, index)):
+<span class="linenr">205: </span><span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="color: #a020f0;">self</span>.__setitem__(index, valeur)
+<span class="linenr">206: </span><span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="color: #a020f0;">self</span>.r&#233;duire_pr&#233;tendants
+<span class="linenr">207: </span><span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="color: #a020f0;">self</span>.r&#233;duire_sac
+<span class="linenr">208: </span>
+<span class="linenr">209: </span><span style="background-color: #f2f2f2;"> </span>   <span style="color: #a020f0;">def</span> <span style="color: #0000ff;">&#233;criture_autoris&#233;e</span>(<span style="color: #a020f0;">self</span>, index):
+<span class="linenr">210: </span><span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="color: #a020f0;">return</span> <span style="color: #a020f0;">self</span>.autorisation_colonne(index)\
+<span class="linenr">211: </span><span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="color: #a020f0;">and</span> <span style="color: #a020f0;">self</span>.autorisation_ligne(index)\
+<span class="linenr">212: </span><span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="color: #a020f0;">and</span> <span style="color: #a020f0;">self</span>.autorisation_carr&#233;(index)
+<span class="linenr">213: </span>
+<span class="linenr">214: </span><span style="background-color: #f2f2f2;"> </span>   <span style="color: #a020f0;">def</span> <span style="color: #0000ff;">autorisation_colonne</span>(<span style="color: #a020f0;">self</span>, index):
+<span class="linenr">215: </span><span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="color: #a020f0;">return</span> <span style="color: #008b8b;">True</span>
+<span class="linenr">216: </span>
+<span class="linenr">217: </span><span style="background-color: #f2f2f2;"> </span>   <span style="color: #a020f0;">def</span> <span style="color: #0000ff;">autorisation_ligne</span>(<span style="color: #a020f0;">self</span>, index):
+<span class="linenr">218: </span><span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="color: #a020f0;">return</span> <span style="color: #008b8b;">True</span>
+<span class="linenr">219: </span>
+<span class="linenr">220: </span><span style="background-color: #f2f2f2;"> </span>   <span style="color: #a020f0;">def</span> <span style="color: #0000ff;">autorisation_carr&#233;</span>(<span style="color: #a020f0;">self</span>, index):
+<span class="linenr">221: </span><span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="color: #a020f0;">return</span> <span style="color: #008b8b;">True</span>
+<span class="linenr">222: </span>
+<span class="linenr">223: </span><span style="background-color: #f2f2f2;"> </span>   <span style="color: #a020f0;">def</span> <span style="color: #0000ff;">r&#233;duire_pr&#233;tendants</span>(<span style="color: #a020f0;">self</span>, index):
+<span class="linenr">224: </span><span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="color: #a020f0;">pass</span>
+<span class="linenr">225: </span>
+<span class="linenr">226: </span><span style="background-color: #f2f2f2;"> </span>   <span style="color: #a020f0;">def</span> <span style="color: #0000ff;">r&#233;duire_sac</span>(<span style="color: #a020f0;">self</span>, index):
+<span class="linenr">227: </span><span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="color: #a020f0;">pass</span>
+<span class="linenr">228: </span>
+<span class="linenr">229: </span><span style="background-color: #f2f2f2;"> </span>   <span style="color: #a020f0;">def</span> <span style="color: #0000ff;">getcolonne</span>(<span style="color: #a020f0;">self</span>, index):
+<span class="linenr">230: </span><span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="color: #8b2252;">"""</span>
+<span class="linenr">231: </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   Retourne le num&#233;ro de colonne de la case d'index compris entre 0 et 80.</span>
+<span class="linenr">232: </span>
+<span class="linenr">233: </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   Les 9 colonnes sont num&#233;rot&#233;es de 1 &#224; 9.</span>
+<span class="linenr">234: </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   """</span>
+<span class="linenr">235: </span><span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="color: #a020f0;">return</span> index % 9 + 1
+<span class="linenr">236: </span>
+<span class="linenr">237: </span><span style="background-color: #f2f2f2;"> </span>   <span style="color: #a020f0;">def</span> <span style="color: #0000ff;">getligne</span>(<span style="color: #a020f0;">self</span>, index):
+<span class="linenr">238: </span><span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="color: #8b2252;">"""</span>
+<span class="linenr">239: </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   Retourne le num&#233;ro de ligne de la case d'index compris entre 0 et 80.</span>
+<span class="linenr">240: </span>
+<span class="linenr">241: </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   Les 9 lignes sont num&#233;rot&#233;es de 1 &#224; 9.</span>
+<span class="linenr">242: </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   """</span>
+<span class="linenr">243: </span><span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="color: #a020f0;">return</span> index//9 + 1
+<span class="linenr">244: </span>
+<span class="linenr">245: </span><span style="background-color: #f2f2f2;"> </span>   <span style="color: #a020f0;">def</span> <span style="color: #0000ff;">getbloc</span>(<span style="color: #a020f0;">self</span>, index):
+<span class="linenr">246: </span><span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="color: #8b2252;">"""</span>
+<span class="linenr">247: </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   Retourne le num&#233;ro du bloc 3 x 3 auquel appartient la case d'index</span>
+<span class="linenr">248: </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   compris entre 0 et 80.</span>
+<span class="linenr">249: </span>
+<span class="linenr">250: </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   Il y a 9 blocs 3 x 3 d'index compris entre 0 et 8.</span>
+<span class="linenr">251: </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   """</span>
+<span class="linenr">252: </span><span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="color: #a020f0;">return</span> (<span style="color: #a020f0;">self</span>.getcolonne(index)-1)//3 + ((<span style="color: #a020f0;">self</span>.getligne(index)-1)//3)*3
+<span class="linenr">253: </span>
+<span class="linenr">254: </span>
+</pre>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org00edf74" class="outline-2">
+<h2 id="org00edf74"><span class="section-number-2">4</span> Exemple de fonctionnement</h2>
+<div class="outline-text-2" id="text-4">
+<div class="org-src-container">
+<pre class="src src-python"><span class="linenr">255: </span><span style="color: #a020f0;">if</span> <span style="color: #483d8b;">__name__</span> == <span style="color: #8b2252;">'__main__'</span>:
+<span class="linenr">256: </span><span style="background-color: #f2f2f2;"> </span>   <span style="color: #b22222;"># </span><span style="color: #b22222;">emacs: you will need to use a prefix argument (i.e. C-u C-c C-c)</span>
+<span class="linenr">257: </span><span style="background-color: #f2f2f2;"> </span>   <span style="color: #b22222;"># </span><span style="color: #b22222;">to run the following:</span>
+<span class="linenr">258: </span><span style="background-color: #f2f2f2;"> </span>   <span style="color: #a020f0;">print</span>(<span style="color: #8b2252;">"Jeu en d&#233;veloppement (pas encore fonctionnel)."</span>)
+<span class="linenr">259: </span><span style="background-color: #f2f2f2;"> </span>   <span style="color: #a0522d;">grille_sudoku</span> = grille()
+<span class="linenr">260: </span><span style="background-color: #f2f2f2;"> </span>   <span style="color: #a020f0;">print</span>(grille_sudoku)
 </pre>
 </div>
 
 <pre class="example">
-0 0 0  0 0 0  0 0 0
-0 0 0  0 0 0  0 0 0
-0 0 0  0 0 0  0 0 0
-                   
-0 0 0  0 0 0  0 0 0
-0 0 0  0 0 0  0 0 0
-0 0 0  0 0 0  0 0 0
-                   
+Jeu en développement (pas encore fonctionnel).
 0 0 0  0 0 0  0 0 0
 0 0 0  0 0 0  0 0 0
 0 0 0  0 0 0  0 0 0
 
+0 0 0  0 0 0  0 0 0
+0 0 0  0 0 0  0 0 0
+0 0 0  0 0 0  0 0 0
+
+0 0 0  0 0 0  0 0 0
+0 0 0  0 0 0  0 0 0
+0 0 0  0 0 0  0 0 0
 </pre>
 </div>
 </div>
 </div>
 <div id="postamble" class="status">
 <p class="author">Auteur: Raoul HATTERER &amp; Jean-Luc COSSALTER</p>
-<p class="date">Created: 2019-04-28 dim. 00:12</p>
+<p class="date">Created: 2019-04-30 mar. 13:26</p>
 <p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
 </div>
 </body>
