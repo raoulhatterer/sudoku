@@ -129,7 +129,7 @@
 
              chaque sac contenant chacun 9 symboles identiques
              """
-             self.contenu = [sac(numéro) for numéro in range(1, self.NBR_SACS+1)]
+             self.contenu = [sac(numero) for numero in range(1, self.NBR_SACS+1)]
 
          def __getitem__(self, index):
              """
@@ -228,47 +228,71 @@
         print(ma_grille)            # affiche la grille 9 x 9 cases
         print(ma_grille.contenu)    # affiche la grille sous forme de liste
         print(ma_grille[0]) # affiche la première case (son index est 0)
-
-        options:
-        -------
-        Affichage en couleur (fonctionne uniquement dans le Terminal pas dans la
-        console Python): ma_grille.affichage_en_couleur = True
         """
-
-        COTÉ = 9
-        NBR_CASES = COTÉ * COTÉ
+        LARGEUR_BLOC = 3
+        LARGEUR_GRILLE = LARGEUR_BLOC * LARGEUR_BLOC
+        NBR_CASES = LARGEUR_GRILLE * LARGEUR_GRILLE
 
         def __init__(self):
             liste_cases = list()
             for index in range(self.NBR_CASES):
                 une_case = case()
-                cousines_en_ligne = [i for i in range(
-                    self.COTÉ*self.getligne(index),
-                    self.COTÉ*self.getligne(index)+self.COTÉ)]
-                une_case.cousines = cousines_en_ligne
-                cousines_en_colonne = [i for i in range(self.getcolonne(index),
-                                                        self.NBR_CASES, self.COTÉ)]
-                une_case.cousines.extend(cousines_en_colonne)
-                cousines_en_bloc = list()
-                if self.getbloc(index) < 3:
-                    première_triplette = [i for i in range(
-                        self.getbloc(index)*3, self.getbloc(index)*3+3)]
-                elif self.getbloc(index) < 6:
-                    première_triplette = [i for i in range(
-                        18+self.getbloc(index)*3, 21+self.getbloc(index)*3)]
-                else:
-                    première_triplette = [i for i in range(
-                        36+self.getbloc(index)*3, 39+self.getbloc(index)*3)]
-                for i in range(3):
-                    cousines_en_bloc.extend(list(map(lambda x: x+9*i,
-                                                     première_triplette)))
-                une_case.cousines.extend(cousines_en_bloc)
+                une_case.cousines = self.get_cousines(index)
                 liste_cases.append(une_case)
             self.contenu = liste_cases
 
+        def get_cousines(self, index):
+            """
+            Retourne une liste avec les index des 27 cases qui sont soit dans la
+            même ligne, soit dans la même colonne, soit dans le même bloc
+            carré 3x3 que la case d'index donné.
+            """
+            cousines = list()
+            cousines.extend(self.get_cousines_en_ligne(index))
+            cousines.extend(self.get_cousines_en_colonne(index))
+            cousines.extend(self.get_cousines_en_bloc(index))
+            return cousines
+
+        def get_cousines_en_bloc(self, index):
+            """
+            Retourne une liste avec les index des 9 cases qui sont dans le même
+            bloc carré 3x3 que la case d'index donné.
+            """
+            cousines_en_bloc = list()
+            if self.getbloc(index) < 3:                    # 3 premiers blocs
+                premiere_triplette = [i for i in range(
+                    self.getbloc(index)*3, self.getbloc(index)*3+3)]
+            elif self.getbloc(index) < 6:                  # 3 blocs suivants
+                premiere_triplette = [i for i in range(
+                    18+self.getbloc(index)*3, 21+self.getbloc(index)*3)]
+            else:                                          # 3 derniers blocs
+                premiere_triplette = [i for i in range(
+                    36+self.getbloc(index)*3, 39+self.getbloc(index)*3)]
+            for i in range(3):
+                cousines_en_bloc.extend(list(map(lambda x: x+9*i,
+                                                 premiere_triplette)))
+            return cousines_en_bloc
+
+        def get_cousines_en_colonne(self, index):
+            """
+            Retourne une liste avec les index des 9 cases qui sont dans la même
+            colonne que la case d'index donné.
+            """
+            return [i for i in range(self.getcolonne(index),
+                                     self.NBR_CASES, self.LARGEUR_GRILLE)]
+
+        def get_cousines_en_ligne(self, index):
+            """
+            Retourne une liste avec les index des 9 cases qui sont dans la même
+            ligne que la case d'index donné.
+            """
+            return [i for i in range(
+                self.LARGEUR_GRILLE * self.getligne(index),
+                self.LARGEUR_GRILLE * self.getligne(index) + self.LARGEUR_GRILLE)]
+
         def __getitem__(self, index):
             """
-            Permet d'obtenir le contenu d'une case de la grille avec:
+            Permet d'obtenir le symbole d'une case de la grille avec:
             ma_grille[index] # où index est compris entre 0 et NBR_CASES-1.
             """
             return self.contenu[index]
@@ -316,15 +340,15 @@
             """
             Rempli la case d'index compris entre 0 et 80 avec `valeur`.
             """
-            if (self.écriture_autorisée(index)):
+            if (self.ecriture_autorisee(index)):
                 self.__setitem__(index, valeur)
-                self.réduire_prétendants
-                self.réduire_sac
+                self.reduire_pretendants
+                self.reduire_sac
 
-        def écriture_autorisée(self, index):
+        def ecriture_autorisee(self, index):
             return self.autorisation_colonne(index)\
                 and self.autorisation_ligne(index)\
-                and self.autorisation_carré(index)
+                and self.autorisation_bloc(index)
 
         def autorisation_colonne(self, index):
             return True
@@ -332,13 +356,13 @@
         def autorisation_ligne(self, index):
             return True
 
-        def autorisation_carré(self, index):
+        def autorisation_bloc(self, index):
             return True
 
-        def réduire_prétendants(self, index):
+        def reduire_pretendants(self, index):
             pass
 
-        def réduire_sac(self, index):
+        def reduire_sac(self, index):
             pass
 
         def getcolonne(self, index):
@@ -369,6 +393,13 @@
         def marquer_cousines(self, index):
             """
             Montre les cases cousines de la case d'index donné.
+            Attention cette méthode est destructive.
+
+            exemple:
+            -------
+            grille_test = grille()
+            grille_test.marquer_cousines(50)
+            print(grille_test)
             """
             for cousine in self.contenu[index].cousines:
                 self.remplir_case_avec(cousine, "*")
@@ -386,7 +417,7 @@
         # to run the following:
         print("Jeu en développement (pas encore fonctionnel).")
 
-        for i in range(80):
+        for i in range(81):
             grille_sudoku = grille()
             grille_sudoku.marquer_cousines(i)
             print("Cases cousines de", i)
