@@ -110,6 +110,8 @@ class case:
     Une case non vide a un `contenu`, le symbole qui est affiché quand on tape
     le nom de la case dans l'interpréteur.
     Une case vide à des prétendants (valeurs possibles de la case).
+    Une case a des cases cousines qui sont soit dans la même ligne, soit dans
+    la même colonne soit dans le même carré (3 x 3).
 
     exemple:
     -------
@@ -119,6 +121,7 @@ class case:
     def __init__(self):
         self.contenu = None
         self.pretendants = [1, 2, 3, 4, 5, 6, 7, 8, 9]
+        self.cousines = None
 
     def __repr__(self):
         """
@@ -156,9 +159,31 @@ class grille:
 
     def __init__(self):
         liste_cases = list()
-        for i in range(self.NBR_CASES):
-            liste_cases.append(case())
-            self.contenu = liste_cases
+        for index in range(self.NBR_CASES):
+            une_case = case()
+            cousines_en_ligne = [i for i in range(
+                self.COTÉ*self.getligne(index),
+                self.COTÉ*self.getligne(index)+self.COTÉ)]
+            une_case.cousines = cousines_en_ligne
+            cousines_en_colonne = [i for i in range(self.getcolonne(index),
+                                                    self.NBR_CASES, self.COTÉ)]
+            une_case.cousines.extend(cousines_en_colonne)
+            cousines_en_bloc = list()
+            if self.getbloc(index) < 3:
+                première_triplette = [i for i in range(
+                    self.getbloc(index)*3, self.getbloc(index)*3+3)]
+            elif self.getbloc(index) < 6:
+                première_triplette = [i for i in range(
+                    18+self.getbloc(index)*3, 21+self.getbloc(index)*3)]
+            else:
+                première_triplette = [i for i in range(
+                    36+self.getbloc(index)*3, 39+self.getbloc(index)*3)]
+            for i in range(3):
+                cousines_en_bloc.extend(list(map(lambda x: x+9*i,
+                                                 première_triplette)))
+            une_case.cousines.extend(cousines_en_bloc)
+            liste_cases.append(une_case)
+        self.contenu = liste_cases
 
     def __getitem__(self, index):
         """
@@ -206,11 +231,11 @@ class grille:
             index += 1
         return affichage
 
-    def remplir_case(self, index, valeur):
+    def remplir_case_avec(self, index, valeur):
         """
         Rempli la case d'index compris entre 0 et 80 avec `valeur`.
         """
-        if (self.écriture_autorisée(self, index)):
+        if (self.écriture_autorisée(index)):
             self.__setitem__(index, valeur)
             self.réduire_prétendants
             self.réduire_sac
@@ -239,17 +264,17 @@ class grille:
         """
         Retourne le numéro de colonne de la case d'index compris entre 0 et 80.
 
-        Les 9 colonnes sont numérotées de 1 à 9.
+        Les 9 colonnes sont numérotées de 0 à 8.
         """
-        return index % 9 + 1
+        return index % 9
 
     def getligne(self, index):
         """
         Retourne le numéro de ligne de la case d'index compris entre 0 et 80.
 
-        Les 9 lignes sont numérotées de 1 à 9.
+        Les 9 lignes sont numérotées de 0 à 8.
         """
-        return index//9 + 1
+        return index//9
 
     def getbloc(self, index):
         """
@@ -258,28 +283,23 @@ class grille:
 
         Il y a 9 blocs 3 x 3 d'index compris entre 0 et 8.
         """
-        return (self.getcolonne(index)-1)//3 + ((self.getligne(index)-1)//3)*3
+        return self.getcolonne(index)//3 + (self.getligne(index)//3)*3
+
+    def marquer_cousines(self, index):
+        """
+        Montre les cases cousines de la case d'index donné.
+        """
+        for i in self.contenu[index].cousines:
+            grille_sudoku[i] = '*'
 
 
 if __name__ == '__main__':
     # emacs: you will need to use a prefix argument (i.e. C-u C-c C-c)
     # to run the following:
     print("Jeu en développement (pas encore fonctionnel).")
-    print("Exemple de sac")
-    mon_sac = sac(7)
-    print(mon_sac)
 
-    print("Exemple de pioche:")
-    pioche_sudoku = pioche()
-    print(pioche_sudoku)
-
-    print("Exemple de grille")
-    grille_sudoku = grille()
-
-    print(grille_sudoku.contenu)
-
-    print(grille_sudoku)
-    for index in range(81):
-        print(index, grille_sudoku.getcolonne(index),
-              grille_sudoku.getligne(index),
-              "\t"+str(grille_sudoku.getbloc(index)))
+    for i in range(80):
+        grille_sudoku = grille()
+        grille_sudoku.marquer_cousines(i)
+        print("Cases voisines de",i)
+        print(grille_sudoku)
