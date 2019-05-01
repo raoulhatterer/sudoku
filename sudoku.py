@@ -135,6 +135,7 @@ class case:
         else:
             return "{}".format(self.contenu)
 
+
 class grille:
     """
     Classe représentant une grille de 9 x 9 cases.
@@ -178,15 +179,15 @@ class grille:
         bloc carré 3x3 que la case d'index donné.
         """
         cousines_en_bloc = list()
-        if self.getbloc(index) < 3:                    # 3 premiers blocs
+        if self.get_bloc(index) < 3:                    # 3 premiers blocs
             premiere_triplette = [i for i in range(
-                self.getbloc(index)*3, self.getbloc(index)*3+3)]
-        elif self.getbloc(index) < 6:                  # 3 blocs suivants
+                self.get_bloc(index)*3, self.get_bloc(index)*3+3)]
+        elif self.get_bloc(index) < 6:                  # 3 blocs suivants
             premiere_triplette = [i for i in range(
-                18+self.getbloc(index)*3, 21+self.getbloc(index)*3)]
+                18+self.get_bloc(index)*3, 21+self.get_bloc(index)*3)]
         else:                                          # 3 derniers blocs
             premiere_triplette = [i for i in range(
-                36+self.getbloc(index)*3, 39+self.getbloc(index)*3)]
+                36+self.get_bloc(index)*3, 39+self.get_bloc(index)*3)]
         for i in range(3):
             cousines_en_bloc.extend(list(map(lambda x: x+9*i,
                                              premiere_triplette)))
@@ -197,7 +198,7 @@ class grille:
         Retourne une liste avec les index des 9 cases qui sont dans la même
         colonne que la case d'index donné.
         """
-        return [i for i in range(self.getcolonne(index),
+        return [i for i in range(self.get_colonne(index),
                                  self.NBR_CASES, self.LARGEUR_GRILLE)]
 
     def get_cousines_en_ligne(self, index):
@@ -206,8 +207,8 @@ class grille:
         ligne que la case d'index donné.
         """
         return [i for i in range(
-            self.LARGEUR_GRILLE * self.getligne(index),
-            self.LARGEUR_GRILLE * self.getligne(index) + self.LARGEUR_GRILLE)]
+            self.LARGEUR_GRILLE * self.get_ligne(index),
+            self.LARGEUR_GRILLE * self.get_ligne(index) + self.LARGEUR_GRILLE)]
 
     def __getitem__(self, index):
         """
@@ -259,23 +260,23 @@ class grille:
         """
         Rempli la case d'index compris entre 0 et 80 avec `valeur`.
         """
-        if (self.ecriture_autorisee(index)):
+        if (self.get_autorisation_ecriture(index)):
             self.__setitem__(index, valeur)
             self.reduire_pretendants
             self.reduire_sac
 
-    def ecriture_autorisee(self, index):
-        return self.autorisation_colonne(index)\
-            and self.autorisation_ligne(index)\
-            and self.autorisation_bloc(index)
+    def get_autorisation_ecriture(self, index):
+        return self.get_autorisation_colonne(index)\
+            and self.get_autorisation_ligne(index)\
+            and self.get_autorisation_bloc(index)
 
-    def autorisation_colonne(self, index):
+    def get_autorisation_colonne(self, index):
         return True
 
-    def autorisation_ligne(self, index):
+    def get_autorisation_ligne(self, index):
         return True
 
-    def autorisation_bloc(self, index):
+    def get_autorisation_bloc(self, index):
         return True
 
     def reduire_pretendants(self, index):
@@ -284,7 +285,7 @@ class grille:
     def reduire_sac(self, index):
         pass
 
-    def getcolonne(self, index):
+    def get_colonne(self, index):
         """
         Retourne le numéro de colonne de la case d'index compris entre 0 et 80.
 
@@ -292,7 +293,7 @@ class grille:
         """
         return index % 9
 
-    def getligne(self, index):
+    def get_ligne(self, index):
         """
         Retourne le numéro de ligne de la case d'index compris entre 0 et 80.
 
@@ -300,14 +301,14 @@ class grille:
         """
         return index//9
 
-    def getbloc(self, index):
+    def get_bloc(self, index):
         """
         Retourne le numéro du bloc 3 x 3 auquel appartient la case d'index
         compris entre 0 et 80.
 
         Il y a 9 blocs 3 x 3 d'index compris entre 0 et 8.
         """
-        return self.getcolonne(index)//3 + (self.getligne(index)//3)*3
+        return self.get_colonne(index)//3 + (self.get_ligne(index)//3)*3
 
     def marquer_cousines(self, index):
         """
