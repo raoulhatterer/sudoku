@@ -289,8 +289,8 @@ class grille:
         """
         Montre les cases cousines de la case d'index donné.
         """
-        for i in self.contenu[index].cousines:
-            grille_sudoku[i] = '*'
+        for cousine in self.contenu[index].cousines:
+            self.remplir_case_avec(cousine, "*")
 
 
 if __name__ == '__main__':
@@ -301,5 +301,5 @@ if __name__ == '__main__':
     for i in range(80):
         grille_sudoku = grille()
         grille_sudoku.marquer_cousines(i)
-        print("Cases voisines de",i)
+        print("Cases cousines de", i)
         print(grille_sudoku)

@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="fr" xml:lang="fr">
 <head>
-<!-- 2019-05-01 mer. 02:07 -->
+<!-- 2019-05-01 mer. 02:56 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Diplôme Inter-Universitaire</title>
@@ -250,20 +250,20 @@ for the JavaScript code in this tag.
 <h2>Table des matières</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#orgc7ca790">1. Choix du niveau</a></li>
-<li><a href="#orgdf34ed2">2. Où le joueur doit-il prendre les chiffres à placer sur la grille?</a>
+<li><a href="#org27fcd6a">1. Choix du niveau</a></li>
+<li><a href="#orga628b9d">2. Où le joueur doit-il prendre les chiffres à placer sur la grille?</a>
 <ul>
-<li><a href="#orgb4822cb">2.1. Sacs de chiffres (restant à placer sur la grille)</a></li>
-<li><a href="#orgf957112">2.2. La pioche</a></li>
+<li><a href="#org148aa0f">2.1. Sacs de chiffres (restant à placer sur la grille)</a></li>
+<li><a href="#orgd8ac596">2.2. La pioche</a></li>
 </ul>
 </li>
-<li><a href="#orge785b5a">3. Cases et grille</a>
+<li><a href="#orge391650">3. Cases et grille</a>
 <ul>
-<li><a href="#org766a532">3.1. Définissons ce qu'est une case</a></li>
-<li><a href="#org3f01a11">3.2. Construisons la grille</a></li>
+<li><a href="#orgd038269">3.1. Définissons ce qu'est une case</a></li>
+<li><a href="#org0731ac0">3.2. Construisons la grille</a></li>
 </ul>
 </li>
-<li><a href="#orgc088b7a">4. Exemple de fonctionnement</a></li>
+<li><a href="#org385b009">4. Exemple de fonctionnement</a></li>
 </ul>
 </div>
 </div>
@@ -273,8 +273,8 @@ for the JavaScript code in this tag.
 
 
 
-<div id="outline-container-orgc7ca790" class="outline-2">
-<h2 id="orgc7ca790"><span class="section-number-2">1</span> Choix du niveau</h2>
+<div id="outline-container-org27fcd6a" class="outline-2">
+<h2 id="org27fcd6a"><span class="section-number-2">1</span> Choix du niveau</h2>
 <div class="outline-text-2" id="text-1">
 <table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
 
@@ -341,16 +341,16 @@ for the JavaScript code in this tag.
 </div>
 </div>
 
-<div id="outline-container-orgdf34ed2" class="outline-2">
-<h2 id="orgdf34ed2"><span class="section-number-2">2</span> Où le joueur doit-il prendre les chiffres à placer sur la grille?</h2>
+<div id="outline-container-orga628b9d" class="outline-2">
+<h2 id="orga628b9d"><span class="section-number-2">2</span> Où le joueur doit-il prendre les chiffres à placer sur la grille?</h2>
 <div class="outline-text-2" id="text-2">
 <p>
 Chaque fois que le joueur doit prendre un symbole à placer sur la grille, il va le piocher dans un des 9 sacs contenant chacun des symboles identiques. 
 </p>
 </div>
 
-<div id="outline-container-orgb4822cb" class="outline-3">
-<h3 id="orgb4822cb"><span class="section-number-3">2.1</span> Sacs de chiffres (restant à placer sur la grille)</h3>
+<div id="outline-container-org148aa0f" class="outline-3">
+<h3 id="org148aa0f"><span class="section-number-3">2.1</span> Sacs de chiffres (restant à placer sur la grille)</h3>
 <div class="outline-text-3" id="text-2-1">
 <p>
 Un sac contient des symboles identiques.
@@ -394,8 +394,8 @@ Un sac contient des symboles identiques.
 </div>
 </div>
 
-<div id="outline-container-orgf957112" class="outline-3">
-<h3 id="orgf957112"><span class="section-number-3">2.2</span> La pioche</h3>
+<div id="outline-container-orgd8ac596" class="outline-3">
+<h3 id="orgd8ac596"><span class="section-number-3">2.2</span> La pioche</h3>
 <div class="outline-text-3" id="text-2-2">
 <p>
 La pioche est composée de 9 sacs contenant chacun des symboles identiques tous différents: 1 sac avec que des "1", un autre avec que des "2", etc.
@@ -480,16 +480,16 @@ Au cours du jeu, tant qu'il reste des symboles dans la pioche, le joueur peut en
 </div>
 </div>
 
-<div id="outline-container-orge785b5a" class="outline-2">
-<h2 id="orge785b5a"><span class="section-number-2">3</span> Cases et grille</h2>
+<div id="outline-container-orge391650" class="outline-2">
+<h2 id="orge391650"><span class="section-number-2">3</span> Cases et grille</h2>
 <div class="outline-text-2" id="text-3">
 <p>
 La grille comporte 81 cases.
 </p>
 </div>
 
-<div id="outline-container-org766a532" class="outline-3">
-<h3 id="org766a532"><span class="section-number-3">3.1</span> Définissons ce qu'est une case</h3>
+<div id="outline-container-orgd038269" class="outline-3">
+<h3 id="orgd038269"><span class="section-number-3">3.1</span> Définissons ce qu'est une case</h3>
 <div class="outline-text-3" id="text-3-1">
 <div class="org-src-container">
 <pre class="src src-python"><span class="linenr"> 97: </span><span style="color: #a020f0;">class</span> <span style="color: #228b22;">case</span>:
@@ -529,8 +529,8 @@ La grille comporte 81 cases.
 </div>
 </div>
 
-<div id="outline-container-org3f01a11" class="outline-3">
-<h3 id="org3f01a11"><span class="section-number-3">3.2</span> Construisons la grille</h3>
+<div id="outline-container-org0731ac0" class="outline-3">
+<h3 id="org0731ac0"><span class="section-number-3">3.2</span> Construisons la grille</h3>
 <div class="outline-text-3" id="text-3-2">
 <div class="org-src-container">
 <pre class="src src-python"><span class="linenr">129: </span><span style="color: #a020f0;">class</span> <span style="color: #228b22;">grille</span>:
@@ -687,8 +687,8 @@ La grille comporte 81 cases.
 <span class="linenr">280: </span><span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="color: #8b2252;">"""</span>
 <span class="linenr">281: </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   Montre les cases cousines de la case d'index donn&#233;.</span>
 <span class="linenr">282: </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   """</span>
-<span class="linenr">283: </span><span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="color: #a020f0;">for</span> i <span style="color: #a020f0;">in</span> <span style="color: #a020f0;">self</span>.contenu[index].cousines:
-<span class="linenr">284: </span><span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="color: #a0522d;">grille_sudoku</span>[i] = <span style="color: #8b2252;">'*'</span>
+<span class="linenr">283: </span><span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="color: #a020f0;">for</span> cousine <span style="color: #a020f0;">in</span> <span style="color: #a020f0;">self</span>.contenu[index].cousines:
+<span class="linenr">284: </span><span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="color: #a020f0;">self</span>.remplir_case_avec(cousine, <span style="color: #8b2252;">"*"</span>)
 <span class="linenr">285: </span>
 <span class="linenr">286: </span>
 </pre>
@@ -697,8 +697,8 @@ La grille comporte 81 cases.
 </div>
 </div>
 
-<div id="outline-container-orgc088b7a" class="outline-2">
-<h2 id="orgc088b7a"><span class="section-number-2">4</span> Exemple de fonctionnement</h2>
+<div id="outline-container-org385b009" class="outline-2">
+<h2 id="org385b009"><span class="section-number-2">4</span> Exemple de fonctionnement</h2>
 <div class="outline-text-2" id="text-4">
 <div class="org-src-container">
 <pre class="src src-python"><span class="linenr">287: </span><span style="color: #a020f0;">if</span> <span style="color: #483d8b;">__name__</span> == <span style="color: #8b2252;">'__main__'</span>:
@@ -709,1059 +709,16 @@ La grille comporte 81 cases.
 <span class="linenr">292: </span><span style="background-color: #f2f2f2;"> </span>   <span style="color: #a020f0;">for</span> i <span style="color: #a020f0;">in</span> <span style="color: #483d8b;">range</span>(80):
 <span class="linenr">293: </span><span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="color: #a0522d;">grille_sudoku</span> = grille()
 <span class="linenr">294: </span><span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   grille_sudoku.marquer_cousines(i)
-<span class="linenr">295: </span><span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="color: #a020f0;">print</span>(<span style="color: #8b2252;">"Cases voisines de"</span>,i)
+<span class="linenr">295: </span><span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="color: #a020f0;">print</span>(<span style="color: #8b2252;">"Cases cousines de"</span>, i)
 <span class="linenr">296: </span><span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="color: #a020f0;">print</span>(grille_sudoku)
 </pre>
 </div>
-
-<pre class="example">
-Jeu en développement (pas encore fonctionnel).
-Cases voisines de 0
-* * *  * * *  * * *
-* * *  0 0 0  0 0 0
-* * *  0 0 0  0 0 0
-
-* 0 0  0 0 0  0 0 0
-* 0 0  0 0 0  0 0 0
-* 0 0  0 0 0  0 0 0
-
-* 0 0  0 0 0  0 0 0
-* 0 0  0 0 0  0 0 0
-* 0 0  0 0 0  0 0 0
-
-Cases voisines de 1
-* * *  * * *  * * *
-* * *  0 0 0  0 0 0
-* * *  0 0 0  0 0 0
-
-0 * 0  0 0 0  0 0 0
-0 * 0  0 0 0  0 0 0
-0 * 0  0 0 0  0 0 0
-
-0 * 0  0 0 0  0 0 0
-0 * 0  0 0 0  0 0 0
-0 * 0  0 0 0  0 0 0
-
-Cases voisines de 2
-* * *  * * *  * * *
-* * *  0 0 0  0 0 0
-* * *  0 0 0  0 0 0
-
-0 0 *  0 0 0  0 0 0
-0 0 *  0 0 0  0 0 0
-0 0 *  0 0 0  0 0 0
-
-0 0 *  0 0 0  0 0 0
-0 0 *  0 0 0  0 0 0
-0 0 *  0 0 0  0 0 0
-
-Cases voisines de 3
-* * *  * * *  * * *
-0 0 0  * * *  0 0 0
-0 0 0  * * *  0 0 0
-
-0 0 0  * 0 0  0 0 0
-0 0 0  * 0 0  0 0 0
-0 0 0  * 0 0  0 0 0
-
-0 0 0  * 0 0  0 0 0
-0 0 0  * 0 0  0 0 0
-0 0 0  * 0 0  0 0 0
-
-Cases voisines de 4
-* * *  * * *  * * *
-0 0 0  * * *  0 0 0
-0 0 0  * * *  0 0 0
-
-0 0 0  0 * 0  0 0 0
-0 0 0  0 * 0  0 0 0
-0 0 0  0 * 0  0 0 0
-
-0 0 0  0 * 0  0 0 0
-0 0 0  0 * 0  0 0 0
-0 0 0  0 * 0  0 0 0
-
-Cases voisines de 5
-* * *  * * *  * * *
-0 0 0  * * *  0 0 0
-0 0 0  * * *  0 0 0
-
-0 0 0  0 0 *  0 0 0
-0 0 0  0 0 *  0 0 0
-0 0 0  0 0 *  0 0 0
-
-0 0 0  0 0 *  0 0 0
-0 0 0  0 0 *  0 0 0
-0 0 0  0 0 *  0 0 0
-
-Cases voisines de 6
-* * *  * * *  * * *
-0 0 0  0 0 0  * * *
-0 0 0  0 0 0  * * *
-
-0 0 0  0 0 0  * 0 0
-0 0 0  0 0 0  * 0 0
-0 0 0  0 0 0  * 0 0
-
-0 0 0  0 0 0  * 0 0
-0 0 0  0 0 0  * 0 0
-0 0 0  0 0 0  * 0 0
-
-Cases voisines de 7
-* * *  * * *  * * *
-0 0 0  0 0 0  * * *
-0 0 0  0 0 0  * * *
-
-0 0 0  0 0 0  0 * 0
-0 0 0  0 0 0  0 * 0
-0 0 0  0 0 0  0 * 0
-
-0 0 0  0 0 0  0 * 0
-0 0 0  0 0 0  0 * 0
-0 0 0  0 0 0  0 * 0
-
-Cases voisines de 8
-* * *  * * *  * * *
-0 0 0  0 0 0  * * *
-0 0 0  0 0 0  * * *
-
-0 0 0  0 0 0  0 0 *
-0 0 0  0 0 0  0 0 *
-0 0 0  0 0 0  0 0 *
-
-0 0 0  0 0 0  0 0 *
-0 0 0  0 0 0  0 0 *
-0 0 0  0 0 0  0 0 *
-
-Cases voisines de 9
-* * *  0 0 0  0 0 0
-* * *  * * *  * * *
-* * *  0 0 0  0 0 0
-
-* 0 0  0 0 0  0 0 0
-* 0 0  0 0 0  0 0 0
-* 0 0  0 0 0  0 0 0
-
-* 0 0  0 0 0  0 0 0
-* 0 0  0 0 0  0 0 0
-* 0 0  0 0 0  0 0 0
-
-Cases voisines de 10
-* * *  0 0 0  0 0 0
-* * *  * * *  * * *
-* * *  0 0 0  0 0 0
-
-0 * 0  0 0 0  0 0 0
-0 * 0  0 0 0  0 0 0
-0 * 0  0 0 0  0 0 0
-
-0 * 0  0 0 0  0 0 0
-0 * 0  0 0 0  0 0 0
-0 * 0  0 0 0  0 0 0
-
-Cases voisines de 11
-* * *  0 0 0  0 0 0
-* * *  * * *  * * *
-* * *  0 0 0  0 0 0
-
-0 0 *  0 0 0  0 0 0
-0 0 *  0 0 0  0 0 0
-0 0 *  0 0 0  0 0 0
-
-0 0 *  0 0 0  0 0 0
-0 0 *  0 0 0  0 0 0
-0 0 *  0 0 0  0 0 0
-
-Cases voisines de 12
-0 0 0  * * *  0 0 0
-* * *  * * *  * * *
-0 0 0  * * *  0 0 0
-
-0 0 0  * 0 0  0 0 0
-0 0 0  * 0 0  0 0 0
-0 0 0  * 0 0  0 0 0
-
-0 0 0  * 0 0  0 0 0
-0 0 0  * 0 0  0 0 0
-0 0 0  * 0 0  0 0 0
-
-Cases voisines de 13
-0 0 0  * * *  0 0 0
-* * *  * * *  * * *
-0 0 0  * * *  0 0 0
-
-0 0 0  0 * 0  0 0 0
-0 0 0  0 * 0  0 0 0
-0 0 0  0 * 0  0 0 0
-
-0 0 0  0 * 0  0 0 0
-0 0 0  0 * 0  0 0 0
-0 0 0  0 * 0  0 0 0
-
-Cases voisines de 14
-0 0 0  * * *  0 0 0
-* * *  * * *  * * *
-0 0 0  * * *  0 0 0
-
-0 0 0  0 0 *  0 0 0
-0 0 0  0 0 *  0 0 0
-0 0 0  0 0 *  0 0 0
-
-0 0 0  0 0 *  0 0 0
-0 0 0  0 0 *  0 0 0
-0 0 0  0 0 *  0 0 0
-
-Cases voisines de 15
-0 0 0  0 0 0  * * *
-* * *  * * *  * * *
-0 0 0  0 0 0  * * *
-
-0 0 0  0 0 0  * 0 0
-0 0 0  0 0 0  * 0 0
-0 0 0  0 0 0  * 0 0
-
-0 0 0  0 0 0  * 0 0
-0 0 0  0 0 0  * 0 0
-0 0 0  0 0 0  * 0 0
-
-Cases voisines de 16
-0 0 0  0 0 0  * * *
-* * *  * * *  * * *
-0 0 0  0 0 0  * * *
-
-0 0 0  0 0 0  0 * 0
-0 0 0  0 0 0  0 * 0
-0 0 0  0 0 0  0 * 0
-
-0 0 0  0 0 0  0 * 0
-0 0 0  0 0 0  0 * 0
-0 0 0  0 0 0  0 * 0
-
-Cases voisines de 17
-0 0 0  0 0 0  * * *
-* * *  * * *  * * *
-0 0 0  0 0 0  * * *
-
-0 0 0  0 0 0  0 0 *
-0 0 0  0 0 0  0 0 *
-0 0 0  0 0 0  0 0 *
-
-0 0 0  0 0 0  0 0 *
-0 0 0  0 0 0  0 0 *
-0 0 0  0 0 0  0 0 *
-
-Cases voisines de 18
-* * *  0 0 0  0 0 0
-* * *  0 0 0  0 0 0
-* * *  * * *  * * *
-
-* 0 0  0 0 0  0 0 0
-* 0 0  0 0 0  0 0 0
-* 0 0  0 0 0  0 0 0
-
-* 0 0  0 0 0  0 0 0
-* 0 0  0 0 0  0 0 0
-* 0 0  0 0 0  0 0 0
-
-Cases voisines de 19
-* * *  0 0 0  0 0 0
-* * *  0 0 0  0 0 0
-* * *  * * *  * * *
-
-0 * 0  0 0 0  0 0 0
-0 * 0  0 0 0  0 0 0
-0 * 0  0 0 0  0 0 0
-
-0 * 0  0 0 0  0 0 0
-0 * 0  0 0 0  0 0 0
-0 * 0  0 0 0  0 0 0
-
-Cases voisines de 20
-* * *  0 0 0  0 0 0
-* * *  0 0 0  0 0 0
-* * *  * * *  * * *
-
-0 0 *  0 0 0  0 0 0
-0 0 *  0 0 0  0 0 0
-0 0 *  0 0 0  0 0 0
-
-0 0 *  0 0 0  0 0 0
-0 0 *  0 0 0  0 0 0
-0 0 *  0 0 0  0 0 0
-
-Cases voisines de 21
-0 0 0  * * *  0 0 0
-0 0 0  * * *  0 0 0
-* * *  * * *  * * *
-
-0 0 0  * 0 0  0 0 0
-0 0 0  * 0 0  0 0 0
-0 0 0  * 0 0  0 0 0
-
-0 0 0  * 0 0  0 0 0
-0 0 0  * 0 0  0 0 0
-0 0 0  * 0 0  0 0 0
-
-Cases voisines de 22
-0 0 0  * * *  0 0 0
-0 0 0  * * *  0 0 0
-* * *  * * *  * * *
-
-0 0 0  0 * 0  0 0 0
-0 0 0  0 * 0  0 0 0
-0 0 0  0 * 0  0 0 0
-
-0 0 0  0 * 0  0 0 0
-0 0 0  0 * 0  0 0 0
-0 0 0  0 * 0  0 0 0
-
-Cases voisines de 23
-0 0 0  * * *  0 0 0
-0 0 0  * * *  0 0 0
-* * *  * * *  * * *
-
-0 0 0  0 0 *  0 0 0
-0 0 0  0 0 *  0 0 0
-0 0 0  0 0 *  0 0 0
-
-0 0 0  0 0 *  0 0 0
-0 0 0  0 0 *  0 0 0
-0 0 0  0 0 *  0 0 0
-
-Cases voisines de 24
-0 0 0  0 0 0  * * *
-0 0 0  0 0 0  * * *
-* * *  * * *  * * *
-
-0 0 0  0 0 0  * 0 0
-0 0 0  0 0 0  * 0 0
-0 0 0  0 0 0  * 0 0
-
-0 0 0  0 0 0  * 0 0
-0 0 0  0 0 0  * 0 0
-0 0 0  0 0 0  * 0 0
-
-Cases voisines de 25
-0 0 0  0 0 0  * * *
-0 0 0  0 0 0  * * *
-* * *  * * *  * * *
-
-0 0 0  0 0 0  0 * 0
-0 0 0  0 0 0  0 * 0
-0 0 0  0 0 0  0 * 0
-
-0 0 0  0 0 0  0 * 0
-0 0 0  0 0 0  0 * 0
-0 0 0  0 0 0  0 * 0
-
-Cases voisines de 26
-0 0 0  0 0 0  * * *
-0 0 0  0 0 0  * * *
-* * *  * * *  * * *
-
-0 0 0  0 0 0  0 0 *
-0 0 0  0 0 0  0 0 *
-0 0 0  0 0 0  0 0 *
-
-0 0 0  0 0 0  0 0 *
-0 0 0  0 0 0  0 0 *
-0 0 0  0 0 0  0 0 *
-
-Cases voisines de 27
-* 0 0  0 0 0  0 0 0
-* 0 0  0 0 0  0 0 0
-* 0 0  0 0 0  0 0 0
-
-* * *  * * *  * * *
-* * *  0 0 0  0 0 0
-* * *  0 0 0  0 0 0
-
-* 0 0  0 0 0  0 0 0
-* 0 0  0 0 0  0 0 0
-* 0 0  0 0 0  0 0 0
-
-Cases voisines de 28
-0 * 0  0 0 0  0 0 0
-0 * 0  0 0 0  0 0 0
-0 * 0  0 0 0  0 0 0
-
-* * *  * * *  * * *
-* * *  0 0 0  0 0 0
-* * *  0 0 0  0 0 0
-
-0 * 0  0 0 0  0 0 0
-0 * 0  0 0 0  0 0 0
-0 * 0  0 0 0  0 0 0
-
-Cases voisines de 29
-0 0 *  0 0 0  0 0 0
-0 0 *  0 0 0  0 0 0
-0 0 *  0 0 0  0 0 0
-
-* * *  * * *  * * *
-* * *  0 0 0  0 0 0
-* * *  0 0 0  0 0 0
-
-0 0 *  0 0 0  0 0 0
-0 0 *  0 0 0  0 0 0
-0 0 *  0 0 0  0 0 0
-
-Cases voisines de 30
-0 0 0  * 0 0  0 0 0
-0 0 0  * 0 0  0 0 0
-0 0 0  * 0 0  0 0 0
-
-* * *  * * *  * * *
-0 0 0  * * *  0 0 0
-0 0 0  * * *  0 0 0
-
-0 0 0  * 0 0  0 0 0
-0 0 0  * 0 0  0 0 0
-0 0 0  * 0 0  0 0 0
-
-Cases voisines de 31
-0 0 0  0 * 0  0 0 0
-0 0 0  0 * 0  0 0 0
-0 0 0  0 * 0  0 0 0
-
-* * *  * * *  * * *
-0 0 0  * * *  0 0 0
-0 0 0  * * *  0 0 0
-
-0 0 0  0 * 0  0 0 0
-0 0 0  0 * 0  0 0 0
-0 0 0  0 * 0  0 0 0
-
-Cases voisines de 32
-0 0 0  0 0 *  0 0 0
-0 0 0  0 0 *  0 0 0
-0 0 0  0 0 *  0 0 0
-
-* * *  * * *  * * *
-0 0 0  * * *  0 0 0
-0 0 0  * * *  0 0 0
-
-0 0 0  0 0 *  0 0 0
-0 0 0  0 0 *  0 0 0
-0 0 0  0 0 *  0 0 0
-
-Cases voisines de 33
-0 0 0  0 0 0  * 0 0
-0 0 0  0 0 0  * 0 0
-0 0 0  0 0 0  * 0 0
-
-* * *  * * *  * * *
-0 0 0  0 0 0  * * *
-0 0 0  0 0 0  * * *
-
-0 0 0  0 0 0  * 0 0
-0 0 0  0 0 0  * 0 0
-0 0 0  0 0 0  * 0 0
-
-Cases voisines de 34
-0 0 0  0 0 0  0 * 0
-0 0 0  0 0 0  0 * 0
-0 0 0  0 0 0  0 * 0
-
-* * *  * * *  * * *
-0 0 0  0 0 0  * * *
-0 0 0  0 0 0  * * *
-
-0 0 0  0 0 0  0 * 0
-0 0 0  0 0 0  0 * 0
-0 0 0  0 0 0  0 * 0
-
-Cases voisines de 35
-0 0 0  0 0 0  0 0 *
-0 0 0  0 0 0  0 0 *
-0 0 0  0 0 0  0 0 *
-
-* * *  * * *  * * *
-0 0 0  0 0 0  * * *
-0 0 0  0 0 0  * * *
-
-0 0 0  0 0 0  0 0 *
-0 0 0  0 0 0  0 0 *
-0 0 0  0 0 0  0 0 *
-
-Cases voisines de 36
-* 0 0  0 0 0  0 0 0
-* 0 0  0 0 0  0 0 0
-* 0 0  0 0 0  0 0 0
-
-* * *  0 0 0  0 0 0
-* * *  * * *  * * *
-* * *  0 0 0  0 0 0
-
-* 0 0  0 0 0  0 0 0
-* 0 0  0 0 0  0 0 0
-* 0 0  0 0 0  0 0 0
-
-Cases voisines de 37
-0 * 0  0 0 0  0 0 0
-0 * 0  0 0 0  0 0 0
-0 * 0  0 0 0  0 0 0
-
-* * *  0 0 0  0 0 0
-* * *  * * *  * * *
-* * *  0 0 0  0 0 0
-
-0 * 0  0 0 0  0 0 0
-0 * 0  0 0 0  0 0 0
-0 * 0  0 0 0  0 0 0
-
-Cases voisines de 38
-0 0 *  0 0 0  0 0 0
-0 0 *  0 0 0  0 0 0
-0 0 *  0 0 0  0 0 0
-
-* * *  0 0 0  0 0 0
-* * *  * * *  * * *
-* * *  0 0 0  0 0 0
-
-0 0 *  0 0 0  0 0 0
-0 0 *  0 0 0  0 0 0
-0 0 *  0 0 0  0 0 0
-
-Cases voisines de 39
-0 0 0  * 0 0  0 0 0
-0 0 0  * 0 0  0 0 0
-0 0 0  * 0 0  0 0 0
-
-0 0 0  * * *  0 0 0
-* * *  * * *  * * *
-0 0 0  * * *  0 0 0
-
-0 0 0  * 0 0  0 0 0
-0 0 0  * 0 0  0 0 0
-0 0 0  * 0 0  0 0 0
-
-Cases voisines de 40
-0 0 0  0 * 0  0 0 0
-0 0 0  0 * 0  0 0 0
-0 0 0  0 * 0  0 0 0
-
-0 0 0  * * *  0 0 0
-* * *  * * *  * * *
-0 0 0  * * *  0 0 0
-
-0 0 0  0 * 0  0 0 0
-0 0 0  0 * 0  0 0 0
-0 0 0  0 * 0  0 0 0
-
-Cases voisines de 41
-0 0 0  0 0 *  0 0 0
-0 0 0  0 0 *  0 0 0
-0 0 0  0 0 *  0 0 0
-
-0 0 0  * * *  0 0 0
-* * *  * * *  * * *
-0 0 0  * * *  0 0 0
-
-0 0 0  0 0 *  0 0 0
-0 0 0  0 0 *  0 0 0
-0 0 0  0 0 *  0 0 0
-
-Cases voisines de 42
-0 0 0  0 0 0  * 0 0
-0 0 0  0 0 0  * 0 0
-0 0 0  0 0 0  * 0 0
-
-0 0 0  0 0 0  * * *
-* * *  * * *  * * *
-0 0 0  0 0 0  * * *
-
-0 0 0  0 0 0  * 0 0
-0 0 0  0 0 0  * 0 0
-0 0 0  0 0 0  * 0 0
-
-Cases voisines de 43
-0 0 0  0 0 0  0 * 0
-0 0 0  0 0 0  0 * 0
-0 0 0  0 0 0  0 * 0
-
-0 0 0  0 0 0  * * *
-* * *  * * *  * * *
-0 0 0  0 0 0  * * *
-
-0 0 0  0 0 0  0 * 0
-0 0 0  0 0 0  0 * 0
-0 0 0  0 0 0  0 * 0
-
-Cases voisines de 44
-0 0 0  0 0 0  0 0 *
-0 0 0  0 0 0  0 0 *
-0 0 0  0 0 0  0 0 *
-
-0 0 0  0 0 0  * * *
-* * *  * * *  * * *
-0 0 0  0 0 0  * * *
-
-0 0 0  0 0 0  0 0 *
-0 0 0  0 0 0  0 0 *
-0 0 0  0 0 0  0 0 *
-
-Cases voisines de 45
-* 0 0  0 0 0  0 0 0
-* 0 0  0 0 0  0 0 0
-* 0 0  0 0 0  0 0 0
-
-* * *  0 0 0  0 0 0
-* * *  0 0 0  0 0 0
-* * *  * * *  * * *
-
-* 0 0  0 0 0  0 0 0
-* 0 0  0 0 0  0 0 0
-* 0 0  0 0 0  0 0 0
-
-Cases voisines de 46
-0 * 0  0 0 0  0 0 0
-0 * 0  0 0 0  0 0 0
-0 * 0  0 0 0  0 0 0
-
-* * *  0 0 0  0 0 0
-* * *  0 0 0  0 0 0
-* * *  * * *  * * *
-
-0 * 0  0 0 0  0 0 0
-0 * 0  0 0 0  0 0 0
-0 * 0  0 0 0  0 0 0
-
-Cases voisines de 47
-0 0 *  0 0 0  0 0 0
-0 0 *  0 0 0  0 0 0
-0 0 *  0 0 0  0 0 0
-
-* * *  0 0 0  0 0 0
-* * *  0 0 0  0 0 0
-* * *  * * *  * * *
-
-0 0 *  0 0 0  0 0 0
-0 0 *  0 0 0  0 0 0
-0 0 *  0 0 0  0 0 0
-
-Cases voisines de 48
-0 0 0  * 0 0  0 0 0
-0 0 0  * 0 0  0 0 0
-0 0 0  * 0 0  0 0 0
-
-0 0 0  * * *  0 0 0
-0 0 0  * * *  0 0 0
-* * *  * * *  * * *
-
-0 0 0  * 0 0  0 0 0
-0 0 0  * 0 0  0 0 0
-0 0 0  * 0 0  0 0 0
-
-Cases voisines de 49
-0 0 0  0 * 0  0 0 0
-0 0 0  0 * 0  0 0 0
-0 0 0  0 * 0  0 0 0
-
-0 0 0  * * *  0 0 0
-0 0 0  * * *  0 0 0
-* * *  * * *  * * *
-
-0 0 0  0 * 0  0 0 0
-0 0 0  0 * 0  0 0 0
-0 0 0  0 * 0  0 0 0
-
-Cases voisines de 50
-0 0 0  0 0 *  0 0 0
-0 0 0  0 0 *  0 0 0
-0 0 0  0 0 *  0 0 0
-
-0 0 0  * * *  0 0 0
-0 0 0  * * *  0 0 0
-* * *  * * *  * * *
-
-0 0 0  0 0 *  0 0 0
-0 0 0  0 0 *  0 0 0
-0 0 0  0 0 *  0 0 0
-
-Cases voisines de 51
-0 0 0  0 0 0  * 0 0
-0 0 0  0 0 0  * 0 0
-0 0 0  0 0 0  * 0 0
-
-0 0 0  0 0 0  * * *
-0 0 0  0 0 0  * * *
-* * *  * * *  * * *
-
-0 0 0  0 0 0  * 0 0
-0 0 0  0 0 0  * 0 0
-0 0 0  0 0 0  * 0 0
-
-Cases voisines de 52
-0 0 0  0 0 0  0 * 0
-0 0 0  0 0 0  0 * 0
-0 0 0  0 0 0  0 * 0
-
-0 0 0  0 0 0  * * *
-0 0 0  0 0 0  * * *
-* * *  * * *  * * *
-
-0 0 0  0 0 0  0 * 0
-0 0 0  0 0 0  0 * 0
-0 0 0  0 0 0  0 * 0
-
-Cases voisines de 53
-0 0 0  0 0 0  0 0 *
-0 0 0  0 0 0  0 0 *
-0 0 0  0 0 0  0 0 *
-
-0 0 0  0 0 0  * * *
-0 0 0  0 0 0  * * *
-* * *  * * *  * * *
-
-0 0 0  0 0 0  0 0 *
-0 0 0  0 0 0  0 0 *
-0 0 0  0 0 0  0 0 *
-
-Cases voisines de 54
-* 0 0  0 0 0  0 0 0
-* 0 0  0 0 0  0 0 0
-* 0 0  0 0 0  0 0 0
-
-* 0 0  0 0 0  0 0 0
-* 0 0  0 0 0  0 0 0
-* 0 0  0 0 0  0 0 0
-
-* * *  * * *  * * *
-* * *  0 0 0  0 0 0
-* * *  0 0 0  0 0 0
-
-Cases voisines de 55
-0 * 0  0 0 0  0 0 0
-0 * 0  0 0 0  0 0 0
-0 * 0  0 0 0  0 0 0
-
-0 * 0  0 0 0  0 0 0
-0 * 0  0 0 0  0 0 0
-0 * 0  0 0 0  0 0 0
-
-* * *  * * *  * * *
-* * *  0 0 0  0 0 0
-* * *  0 0 0  0 0 0
-
-Cases voisines de 56
-0 0 *  0 0 0  0 0 0
-0 0 *  0 0 0  0 0 0
-0 0 *  0 0 0  0 0 0
-
-0 0 *  0 0 0  0 0 0
-0 0 *  0 0 0  0 0 0
-0 0 *  0 0 0  0 0 0
-
-* * *  * * *  * * *
-* * *  0 0 0  0 0 0
-* * *  0 0 0  0 0 0
-
-Cases voisines de 57
-0 0 0  * 0 0  0 0 0
-0 0 0  * 0 0  0 0 0
-0 0 0  * 0 0  0 0 0
-
-0 0 0  * 0 0  0 0 0
-0 0 0  * 0 0  0 0 0
-0 0 0  * 0 0  0 0 0
-
-* * *  * * *  * * *
-0 0 0  * * *  0 0 0
-0 0 0  * * *  0 0 0
-
-Cases voisines de 58
-0 0 0  0 * 0  0 0 0
-0 0 0  0 * 0  0 0 0
-0 0 0  0 * 0  0 0 0
-
-0 0 0  0 * 0  0 0 0
-0 0 0  0 * 0  0 0 0
-0 0 0  0 * 0  0 0 0
-
-* * *  * * *  * * *
-0 0 0  * * *  0 0 0
-0 0 0  * * *  0 0 0
-
-Cases voisines de 59
-0 0 0  0 0 *  0 0 0
-0 0 0  0 0 *  0 0 0
-0 0 0  0 0 *  0 0 0
-
-0 0 0  0 0 *  0 0 0
-0 0 0  0 0 *  0 0 0
-0 0 0  0 0 *  0 0 0
-
-* * *  * * *  * * *
-0 0 0  * * *  0 0 0
-0 0 0  * * *  0 0 0
-
-Cases voisines de 60
-0 0 0  0 0 0  * 0 0
-0 0 0  0 0 0  * 0 0
-0 0 0  0 0 0  * 0 0
-
-0 0 0  0 0 0  * 0 0
-0 0 0  0 0 0  * 0 0
-0 0 0  0 0 0  * 0 0
-
-* * *  * * *  * * *
-0 0 0  0 0 0  * * *
-0 0 0  0 0 0  * * *
-
-Cases voisines de 61
-0 0 0  0 0 0  0 * 0
-0 0 0  0 0 0  0 * 0
-0 0 0  0 0 0  0 * 0
-
-0 0 0  0 0 0  0 * 0
-0 0 0  0 0 0  0 * 0
-0 0 0  0 0 0  0 * 0
-
-* * *  * * *  * * *
-0 0 0  0 0 0  * * *
-0 0 0  0 0 0  * * *
-
-Cases voisines de 62
-0 0 0  0 0 0  0 0 *
-0 0 0  0 0 0  0 0 *
-0 0 0  0 0 0  0 0 *
-
-0 0 0  0 0 0  0 0 *
-0 0 0  0 0 0  0 0 *
-0 0 0  0 0 0  0 0 *
-
-* * *  * * *  * * *
-0 0 0  0 0 0  * * *
-0 0 0  0 0 0  * * *
-
-Cases voisines de 63
-* 0 0  0 0 0  0 0 0
-* 0 0  0 0 0  0 0 0
-* 0 0  0 0 0  0 0 0
-
-* 0 0  0 0 0  0 0 0
-* 0 0  0 0 0  0 0 0
-* 0 0  0 0 0  0 0 0
-
-* * *  0 0 0  0 0 0
-* * *  * * *  * * *
-* * *  0 0 0  0 0 0
-
-Cases voisines de 64
-0 * 0  0 0 0  0 0 0
-0 * 0  0 0 0  0 0 0
-0 * 0  0 0 0  0 0 0
-
-0 * 0  0 0 0  0 0 0
-0 * 0  0 0 0  0 0 0
-0 * 0  0 0 0  0 0 0
-
-* * *  0 0 0  0 0 0
-* * *  * * *  * * *
-* * *  0 0 0  0 0 0
-
-Cases voisines de 65
-0 0 *  0 0 0  0 0 0
-0 0 *  0 0 0  0 0 0
-0 0 *  0 0 0  0 0 0
-
-0 0 *  0 0 0  0 0 0
-0 0 *  0 0 0  0 0 0
-0 0 *  0 0 0  0 0 0
-
-* * *  0 0 0  0 0 0
-* * *  * * *  * * *
-* * *  0 0 0  0 0 0
-
-Cases voisines de 66
-0 0 0  * 0 0  0 0 0
-0 0 0  * 0 0  0 0 0
-0 0 0  * 0 0  0 0 0
-
-0 0 0  * 0 0  0 0 0
-0 0 0  * 0 0  0 0 0
-0 0 0  * 0 0  0 0 0
-
-0 0 0  * * *  0 0 0
-* * *  * * *  * * *
-0 0 0  * * *  0 0 0
-
-Cases voisines de 67
-0 0 0  0 * 0  0 0 0
-0 0 0  0 * 0  0 0 0
-0 0 0  0 * 0  0 0 0
-
-0 0 0  0 * 0  0 0 0
-0 0 0  0 * 0  0 0 0
-0 0 0  0 * 0  0 0 0
-
-0 0 0  * * *  0 0 0
-* * *  * * *  * * *
-0 0 0  * * *  0 0 0
-
-Cases voisines de 68
-0 0 0  0 0 *  0 0 0
-0 0 0  0 0 *  0 0 0
-0 0 0  0 0 *  0 0 0
-
-0 0 0  0 0 *  0 0 0
-0 0 0  0 0 *  0 0 0
-0 0 0  0 0 *  0 0 0
-
-0 0 0  * * *  0 0 0
-* * *  * * *  * * *
-0 0 0  * * *  0 0 0
-
-Cases voisines de 69
-0 0 0  0 0 0  * 0 0
-0 0 0  0 0 0  * 0 0
-0 0 0  0 0 0  * 0 0
-
-0 0 0  0 0 0  * 0 0
-0 0 0  0 0 0  * 0 0
-0 0 0  0 0 0  * 0 0
-
-0 0 0  0 0 0  * * *
-* * *  * * *  * * *
-0 0 0  0 0 0  * * *
-
-Cases voisines de 70
-0 0 0  0 0 0  0 * 0
-0 0 0  0 0 0  0 * 0
-0 0 0  0 0 0  0 * 0
-
-0 0 0  0 0 0  0 * 0
-0 0 0  0 0 0  0 * 0
-0 0 0  0 0 0  0 * 0
-
-0 0 0  0 0 0  * * *
-* * *  * * *  * * *
-0 0 0  0 0 0  * * *
-
-Cases voisines de 71
-0 0 0  0 0 0  0 0 *
-0 0 0  0 0 0  0 0 *
-0 0 0  0 0 0  0 0 *
-
-0 0 0  0 0 0  0 0 *
-0 0 0  0 0 0  0 0 *
-0 0 0  0 0 0  0 0 *
-
-0 0 0  0 0 0  * * *
-* * *  * * *  * * *
-0 0 0  0 0 0  * * *
-
-Cases voisines de 72
-* 0 0  0 0 0  0 0 0
-* 0 0  0 0 0  0 0 0
-* 0 0  0 0 0  0 0 0
-
-* 0 0  0 0 0  0 0 0
-* 0 0  0 0 0  0 0 0
-* 0 0  0 0 0  0 0 0
-
-* * *  0 0 0  0 0 0
-* * *  0 0 0  0 0 0
-* * *  * * *  * * *
-
-Cases voisines de 73
-0 * 0  0 0 0  0 0 0
-0 * 0  0 0 0  0 0 0
-0 * 0  0 0 0  0 0 0
-
-0 * 0  0 0 0  0 0 0
-0 * 0  0 0 0  0 0 0
-0 * 0  0 0 0  0 0 0
-
-* * *  0 0 0  0 0 0
-* * *  0 0 0  0 0 0
-* * *  * * *  * * *
-
-Cases voisines de 74
-0 0 *  0 0 0  0 0 0
-0 0 *  0 0 0  0 0 0
-0 0 *  0 0 0  0 0 0
-
-0 0 *  0 0 0  0 0 0
-0 0 *  0 0 0  0 0 0
-0 0 *  0 0 0  0 0 0
-
-* * *  0 0 0  0 0 0
-* * *  0 0 0  0 0 0
-* * *  * * *  * * *
-
-Cases voisines de 75
-0 0 0  * 0 0  0 0 0
-0 0 0  * 0 0  0 0 0
-0 0 0  * 0 0  0 0 0
-
-0 0 0  * 0 0  0 0 0
-0 0 0  * 0 0  0 0 0
-0 0 0  * 0 0  0 0 0
-
-0 0 0  * * *  0 0 0
-0 0 0  * * *  0 0 0
-* * *  * * *  * * *
-
-Cases voisines de 76
-0 0 0  0 * 0  0 0 0
-0 0 0  0 * 0  0 0 0
-0 0 0  0 * 0  0 0 0
-
-0 0 0  0 * 0  0 0 0
-0 0 0  0 * 0  0 0 0
-0 0 0  0 * 0  0 0 0
-
-0 0 0  * * *  0 0 0
-0 0 0  * * *  0 0 0
-* * *  * * *  * * *
-
-Cases voisines de 77
-0 0 0  0 0 *  0 0 0
-0 0 0  0 0 *  0 0 0
-0 0 0  0 0 *  0 0 0
-
-0 0 0  0 0 *  0 0 0
-0 0 0  0 0 *  0 0 0
-0 0 0  0 0 *  0 0 0
-
-0 0 0  * * *  0 0 0
-0 0 0  * * *  0 0 0
-* * *  * * *  * * *
-
-Cases voisines de 78
-0 0 0  0 0 0  * 0 0
-0 0 0  0 0 0  * 0 0
-0 0 0  0 0 0  * 0 0
-
-0 0 0  0 0 0  * 0 0
-0 0 0  0 0 0  * 0 0
-0 0 0  0 0 0  * 0 0
-
-0 0 0  0 0 0  * * *
-0 0 0  0 0 0  * * *
-* * *  * * *  * * *
-
-Cases voisines de 79
-0 0 0  0 0 0  0 * 0
-0 0 0  0 0 0  0 * 0
-0 0 0  0 0 0  0 * 0
-
-0 0 0  0 0 0  0 * 0
-0 0 0  0 0 0  0 * 0
-0 0 0  0 0 0  0 * 0
-
-0 0 0  0 0 0  * * *
-0 0 0  0 0 0  * * *
-* * *  * * *  * * *
-</pre>
 </div>
 </div>
 </div>
 <div id="postamble" class="status">
 <p class="author">Auteur: Raoul HATTERER &amp; Jean-Luc COSSALTER</p>
-<p class="date">Created: 2019-05-01 mer. 02:07</p>
+<p class="date">Created: 2019-05-01 mer. 02:56</p>
 <p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
 </div>
 </body>
