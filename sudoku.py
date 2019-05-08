@@ -6,6 +6,9 @@
 # import pdb
 # pdb.set_trace()
 
+# Chargement du module tkinter
+from tkinter import Tk, Frame, Button
+
 
 class sac:
     """
@@ -325,13 +328,57 @@ class grille:
             self.remplir_case_avec(cousine, "*")
 
 
-if __name__ == '__main__':
-    # emacs: you will need to use a prefix argument (i.e. C-u C-c C-c)
-    # to run the following:
-    print("Jeu en développement (pas encore fonctionnel).")
+root = Tk()
+root.title('grid test')
 
-    for i in range(81):
-        grille_sudoku = grille()
-        grille_sudoku.marquer_cousines(i)
-        print("Cases cousines de", i)
-        print(grille_sudoku)
+# création des conteneurs principaux
+haut_frame = Frame(root, name='en_tete', bg='cyan', width=640, height=50)
+gauche_frame = Frame(root, name='gauche', bg='blue', height=400)
+centre_frame = Frame(root, name='grille_sudoku', bg='white')
+droite_frame = Frame(root, name='droite', bg='red')
+bas_frame = Frame(root, name='pied_de_page', bg='lavender', height=60)
+
+
+# Disposition des conteneurs principaux
+
+haut_frame.grid(row=0, columnspan=3,  sticky="nsew")
+gauche_frame.grid(row=1, column=0, sticky="nsew")
+centre_frame.grid(row=1, column=1,  sticky="nsew")
+droite_frame.grid(row=1, column=2,  sticky="nsew")
+bas_frame.grid(row=2, columnspan=3, sticky="nsew")
+
+root.grid_rowconfigure(1, weight=1)     # la ligne centrale est prioritaire.
+root.grid_columnconfigure(0, weight=1)  # gauche_frame centre_frame
+root.grid_columnconfigure(1, weight=1)  # et droite_frame se partagent
+root.grid_columnconfigure(2, weight=1)  # l'espace horizontal à égalité
+
+# Disposition du conteneur centre_frame qui contient la grille de sudoku
+for row in range(9):
+    centre_frame.rowconfigure(row, weight=1)
+
+for column in range(9):
+    centre_frame.columnconfigure(column, weight=1)
+
+
+# Création et disposition des 81 boutons faisant office de case de la grille
+# de Sudoku dans centre_frame.
+index = 0
+for j in range(9):
+    for i in range(9):
+        Button(centre_frame,
+               name='{}'.format(index),
+               text='{}'.format(index)).grid(row=j, column=i, sticky="nsew")
+        index += 1
+
+
+# Disposition du conteneur bas_frame
+bas_frame.columnconfigure(0, weight=1)
+
+# Création du bouton quitter dans bas_frame
+bouton_quitter = Button(bas_frame, text='Quitter', command=root.quit)
+
+# Disposition du bouton quitter
+bouton_quitter.grid(sticky="nsew")
+
+root.mainloop()
+root.destroy()
