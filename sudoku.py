@@ -10,7 +10,7 @@
 from tkinter import Tk, Frame, Button
 
 
-class sac:
+class Sac:
     """
     Classe représentant un sac. Un sac contient des symboles identiques.
 
@@ -42,7 +42,7 @@ class sac:
                                                     self.symbole)
 
 
-class pioche():
+class Pioche():
     """
     Classe représentant 9 sacs contenant chacun des symboles identiques
     tous différents (1 sac avec que des "1", un autre avec que des "2", etc.)
@@ -54,7 +54,7 @@ class pioche():
 
     exemple:
     -------
-    ma_pioche = pioche()
+    ma_pioche = Pioche()
     print(ma_pioche)         # affiche la pioche (contenu des 9 sacs de pioche)
     print(ma_pioche.contenu) # affiche la pioche sous forme de liste
     print(ma_pioche[1])      # affiche le contenu du premier sac de pioche
@@ -106,7 +106,7 @@ class pioche():
         return affichage
 
 
-class case:
+class Case:
     """
     Classe représentant une case.
 
@@ -118,7 +118,7 @@ class case:
 
     exemple:
     -------
-    ma_case = case()
+    ma_case = Case()
     print(ma_case)
     """
     def __init__(self):
@@ -139,7 +139,7 @@ class case:
             return "{}".format(self.contenu)
 
 
-class grille:
+class Grille:
     """
     Classe représentant une grille de 9 x 9 cases.
 
@@ -147,7 +147,7 @@ class grille:
 
     exemple:
     -------
-    ma_grille = grille()
+    ma_grille = Grille()
     print(ma_grille)            # affiche la grille 9 x 9 cases
     print(ma_grille.contenu)    # affiche la grille sous forme de liste
     print(ma_grille[0]) # affiche la première case (son index est 0)
