@@ -106,7 +106,7 @@ class Pioche():
         return affichage
 
 
-class Case:
+class Case(Button):
     """
     Classe représentant une case.
 
@@ -116,19 +116,29 @@ class Case:
     Une case a des cases cousines qui sont soit dans la même ligne, soit dans
     la même colonne soit dans le même carré (3 x 3).
 
-    exemple:
-    -------
-    ma_case = Case()
-    print(ma_case)
+    Une case se configure comme une bouton.
+
+    exemple :
+    >>> root = Tk()
+    >>> ma_case = Case(root, text="une case")
+    >>> ma_case.pack()
+    >>> ma_case.pretendants
+    [1, 2, 3, 4, 5, 6, 7, 8, 9]
+    >>> ma_case
+    0
     """
-    def __init__(self):
+    def __init__(self, master, *args, **kwargs):
+        """
+        Construit un widget case avec comme parent MASTER.
+        """
+        super().__init__(master, *args, **kwargs)      # ce qui relève de la classe Button
         self.contenu = None
         self.pretendants = [1, 2, 3, 4, 5, 6, 7, 8, 9]
         self.cousines = None
 
     def __repr__(self):
         """
-        Affichage d'une case.
+        Affichage d'une case dans l'interpréteur.
 
         Lorsque l'on tape son nom dans l'interpréteur
         son `contenu` est affiché.
@@ -159,7 +169,7 @@ class Grille:
     def __init__(self):
         liste_cases = list()
         for index in range(self.NBR_CASES):
-            une_case = case()
+            une_case = Case()
             une_case.cousines = self.get_cousines(index)
             liste_cases.append(une_case)
         self.contenu = liste_cases
@@ -365,7 +375,7 @@ for column in range(9):
 index = 0
 for j in range(9):
     for i in range(9):
-        Button(centre_frame,
+        Case(centre_frame,
                name='{}'.format(index),
                text='{}'.format(index)).grid(row=j, column=i, sticky="nsew")
         index += 1
