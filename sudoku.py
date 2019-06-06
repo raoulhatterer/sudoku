@@ -119,6 +119,7 @@ class Case(Button):
     Une case se configure comme une bouton.
 
     exemple :
+    -------
     >>> root = Tk()
     >>> ma_case = Case(root, text="une case")
     >>> ma_case.pack()
@@ -127,14 +128,15 @@ class Case(Button):
     >>> ma_case
     0
     """
-    def __init__(self, master, *args, **kwargs):
+
+    def __init__(self, master, cousines, *args, **kwargs):
         """
-        Construit un widget case avec comme parent MASTER.
+        Construit un widget case avec comme cadre MASTER.
         """
         super().__init__(master, *args, **kwargs)      # ce qui relève de la classe Button
         self.contenu = None
         self.pretendants = [1, 2, 3, 4, 5, 6, 7, 8, 9]
-        self.cousines = None
+        self.cousines = cousines
 
     def __repr__(self):
         """
@@ -144,7 +146,7 @@ class Case(Button):
         son `contenu` est affiché.
         """
         if self.contenu is None:
-            return "0"    # "⛶"
+            return "0"    # la case est vide "⛶"
         else:
             return "{}".format(self.contenu)
 
@@ -153,26 +155,62 @@ class Grille:
     """
     Classe représentant une grille de 9 x 9 cases.
 
-    Chacune des 81 cases est accessible via un index allant de 0 à 80.
+    Chacune des 81 cases est accessible via un nom qui est l'index allant de 0 à 80.
+
+    Les cases sont des widgets tkinter. Il faut donc donner un cadre à la grille.
+ 
 
     exemple:
     -------
-    ma_grille = Grille()
+    root = Tk()
+    ma_grille = Grille(root)
     print(ma_grille)            # affiche la grille 9 x 9 cases
     print(ma_grille.contenu)    # affiche la grille sous forme de liste
     print(ma_grille[0]) # affiche la première case (son index est 0)
     """
+
     LARGEUR_BLOC = 3
     LARGEUR_GRILLE = LARGEUR_BLOC * LARGEUR_BLOC
     NBR_CASES = LARGEUR_GRILLE * LARGEUR_GRILLE
 
-    def __init__(self):
-        liste_cases = list()
-        for index in range(self.NBR_CASES):
-            une_case = Case()
-            une_case.cousines = self.get_cousines(index)
-            liste_cases.append(une_case)
-        self.contenu = liste_cases
+    def __init__(self, cadre):
+        self.cadre = cadre
+        
+        # Disposition du conteneur cadre qui contient la grille de sudoku
+        for row in range(self.LARGEUR_GRILLE):
+            cadre.rowconfigure(row, weight=1)
+        for column in range(self.LARGEUR_GRILLE):
+            cadre.columnconfigure(column, weight=1)
+
+        index = 0
+        for j in range(self.LARGEUR_GRILLE):
+            for i in range(self.LARGEUR_GRILLE):
+                Case(cadre,
+                     self.get_cousines(index),
+                     name='{}'.format(index),
+                     text='{}'.format(index)).grid(row=j, column=i, sticky="nsew" )
+                index += 1
+
+#        self.contenu = liste_cases  
+        # for index in range(self.NBR_CASES):
+        #     une_case = Case(cadre)
+        #     une_case.cousines = self.get_cousines(index)
+        #     liste_cases.append(une_case)
+
+    def get_case(self, index):
+        """
+        Retourne la case d'index donné.
+
+        exemple:
+        -------
+        grille_sudoku = Grille(centre_frame)
+        print(grille_sudoku.get_case(15).cousines)
+        print(grille_sudoku.get_case(15).contenu)
+        print(grille_sudoku.get_case(15).pretendants)
+
+        """
+        return root.nametowidget(str(self.cadre)+"."+str(index))
+        
 
     def get_cousines(self, index):
         """
@@ -225,10 +263,12 @@ class Grille:
 
     def __getitem__(self, index):
         """
-        Permet d'obtenir le symbole d'une case de la grille avec:
+        Permet d'obtenir le symbole d'une case de la grille 
+
+        avec:
         ma_grille[index] # où index est compris entre 0 et NBR_CASES-1.
         """
-        return self.contenu[index]
+        return self.contenu[index].__repr__()
 
     def __setitem__(self, index, symbole):
         """
@@ -269,7 +309,7 @@ class Grille:
             index += 1
         return affichage
 
-    def remplir_case_avec(self, index, valeur):
+    def essaye_remplir_case_avec(self, index, valeur):
         """
         Rempli la case d'index compris entre 0 et 80 avec `valeur`.
         """
@@ -277,6 +317,9 @@ class Grille:
             self.__setitem__(index, valeur)
             self.reduire_pretendants
             self.reduire_sac
+            return True
+        else:
+            return False
 
     def get_autorisation_ecriture(self, index):
         return self.get_autorisation_colonne(index)\
@@ -335,11 +378,11 @@ class Grille:
         print(grille_test)
         """
         for cousine in self.contenu[index].cousines:
-            self.remplir_case_avec(cousine, "*")
+            self.essaye_remplir_case_avec(cousine, "*")
 
 
 root = Tk()
-root.title('grid test')
+root.title('Sudoku')
 
 # création des conteneurs principaux
 haut_frame = Frame(root, name='en_tete', bg='cyan', width=640, height=50)
@@ -362,23 +405,13 @@ root.grid_columnconfigure(0, weight=1)  # gauche_frame centre_frame
 root.grid_columnconfigure(1, weight=1)  # et droite_frame se partagent
 root.grid_columnconfigure(2, weight=1)  # l'espace horizontal à égalité
 
-# Disposition du conteneur centre_frame qui contient la grille de sudoku
-for row in range(9):
-    centre_frame.rowconfigure(row, weight=1)
-
-for column in range(9):
-    centre_frame.columnconfigure(column, weight=1)
+grille_sudoku = Grille(centre_frame)
+print(grille_sudoku.get_case(15).cousines)
+print(grille_sudoku.get_case(15).contenu)
+print(grille_sudoku.get_case(15).pretendants)
 
 
-# Création et disposition des 81 boutons faisant office de case de la grille
-# de Sudoku dans centre_frame.
-index = 0
-for j in range(9):
-    for i in range(9):
-        Case(centre_frame,
-               name='{}'.format(index),
-               text='{}'.format(index)).grid(row=j, column=i, sticky="nsew")
-        index += 1
+
 
 
 # Disposition du conteneur bas_frame
@@ -386,6 +419,7 @@ bas_frame.columnconfigure(0, weight=1)
 
 # Création du bouton quitter dans bas_frame
 bouton_quitter = Button(bas_frame, text='Quitter', command=root.quit)
+
 
 # Disposition du bouton quitter
 bouton_quitter.grid(sticky="nsew")
