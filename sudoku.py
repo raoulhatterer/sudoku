@@ -277,12 +277,15 @@ class Grille:
 
     def __setitem__(self, index, symbole):
         """
-        Permet d'écrire dans le contenu d'une case de la grille.
+        Permet d'écrire un symbole dans le contenu d'une case de la grille.
 
+        Le symbole doit être de type str.
         exemple:
         -------
-        ma_grille[0] = 5
+        ma_grille[0] = '5'
         """
+        if not(isinstance(symbole,str)):
+            raise TypeError()
         if index < self.NBR_CASES:
             self.get_case(index).contenu = symbole
         else:
