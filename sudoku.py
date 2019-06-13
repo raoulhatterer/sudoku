@@ -114,14 +114,16 @@ class Case(Button):
     le nom de la case dans l'interpréteur.
     Une case vide à des prétendants (valeurs possibles de la case).
     Une case a des cases cousines qui sont soit dans la même ligne, soit dans
-    la même colonne soit dans le même carré (3 x 3).
+    la même colonne soit dans le même carré (3 x 3). Une case conserve les
+    index de ses cousines.
 
     Une case se configure comme une bouton.
 
     exemple :
     -------
     >>> root = Tk()
-    >>> ma_case = Case(root, text="une case")
+    >>> index_cousines = list()
+    >>> ma_case = Case(root, index_cousines, text="une case")
     >>> ma_case.pack()
     >>> ma_case.pretendants
     [1, 2, 3, 4, 5, 6, 7, 8, 9]
@@ -129,14 +131,14 @@ class Case(Button):
     0
     """
 
-    def __init__(self, master, cousines, *args, **kwargs):
+    def __init__(self, master, index_cousines, *args, **kwargs):
         """
         Construit un widget case avec comme cadre MASTER.
         """
         super().__init__(master, *args, **kwargs)      # ce qui relève de la classe Button
         self.contenu = None
         self.pretendants = [1, 2, 3, 4, 5, 6, 7, 8, 9]
-        self.cousines = cousines
+        self.index_cousines = index_cousines
 
     def __repr__(self):
         """
@@ -148,7 +150,7 @@ class Case(Button):
         if self.contenu is None:
             return "0"    # la case est vide "⛶"
         else:
-            return "{}".format(self.contenu)
+            return self.contenu
 
 
 class Grille:
@@ -162,10 +164,16 @@ class Grille:
 
     exemple:
     -------
-    root = Tk()
-    ma_grille = Grille(root)
+    >>> root = Tk()
+    >>> mon_cadre = Frame(root)
+    >>> mon_cadre.pack()
+    >>> ma_grille = Grille(mon_cadre)
+    >>> ma_case = ma_grille.get_case(0)
+    >>> ma_case.pretendants
+    [1, 2, 3, 4, 5, 6, 7, 8, 9]
+
+
     print(ma_grille)            # affiche la grille 9 x 9 cases
-    print(ma_grille.contenu)    # affiche la grille sous forme de liste
     print(ma_grille[0]) # affiche la première case (son index est 0)
     """
 
@@ -186,16 +194,10 @@ class Grille:
         for j in range(self.LARGEUR_GRILLE):
             for i in range(self.LARGEUR_GRILLE):
                 Case(cadre,
-                     self.get_cousines(index),
+                     self.get_index_cousines(index),
                      name='{}'.format(index),
-                     text='{}'.format(index)).grid(row=j, column=i, sticky="nsew" )
+                     text='{}'.format(index)).grid(row=j, column=i, sticky="nsew")
                 index += 1
-
-#        self.contenu = liste_cases  
-        # for index in range(self.NBR_CASES):
-        #     une_case = Case(cadre)
-        #     une_case.cousines = self.get_cousines(index)
-        #     liste_cases.append(une_case)
 
     def get_case(self, index):
         """
@@ -203,28 +205,31 @@ class Grille:
 
         exemple:
         -------
-        grille_sudoku = Grille(centre_frame)
-        print(grille_sudoku.get_case(15).cousines)
-        print(grille_sudoku.get_case(15).contenu)
-        print(grille_sudoku.get_case(15).pretendants)
+
+        >>> root = Tk()
+        >>> mon_cadre = Frame(root)
+        >>> grille_sudoku = Grille(mon_cadre)
+        >>> print(grille_sudoku.get_case(15).index_cousines)
+        >>> print(grille_sudoku.get_case(15).contenu)
+        >>> print(grille_sudoku.get_case(15).pretendants)
 
         """
         return root.nametowidget(str(self.cadre)+"."+str(index))
         
 
-    def get_cousines(self, index):
+    def get_index_cousines(self, index): 
         """
         Retourne une liste avec les index des 27 cases qui sont soit dans la
         même ligne, soit dans la même colonne, soit dans le même bloc
         carré 3x3 que la case d'index donné.
         """
         cousines = list()
-        cousines.extend(self.get_cousines_en_ligne(index))
-        cousines.extend(self.get_cousines_en_colonne(index))
-        cousines.extend(self.get_cousines_en_bloc(index))
+        cousines.extend(self.get_index_cousines_en_ligne(index))
+        cousines.extend(self.get_index_cousines_en_colonne(index))
+        cousines.extend(self.get_index_cousines_en_bloc(index))
         return cousines
 
-    def get_cousines_en_bloc(self, index):
+    def get_index_cousines_en_bloc(self, index):
         """
         Retourne une liste avec les index des 9 cases qui sont dans le même
         bloc carré 3x3 que la case d'index donné.
@@ -244,7 +249,7 @@ class Grille:
                                              premiere_triplette)))
         return cousines_en_bloc
 
-    def get_cousines_en_colonne(self, index):
+    def get_index_cousines_en_colonne(self, index):
         """
         Retourne une liste avec les index des 9 cases qui sont dans la même
         colonne que la case d'index donné.
@@ -252,7 +257,7 @@ class Grille:
         return [i for i in range(self.get_colonne(index),
                                  self.NBR_CASES, self.LARGEUR_GRILLE)]
 
-    def get_cousines_en_ligne(self, index):
+    def get_index_cousines_en_ligne(self, index):
         """
         Retourne une liste avec les index des 9 cases qui sont dans la même
         ligne que la case d'index donné.
@@ -268,7 +273,7 @@ class Grille:
         avec:
         ma_grille[index] # où index est compris entre 0 et NBR_CASES-1.
         """
-        return self.contenu[index].__repr__()
+        return self.get_case(index).__repr__()
 
     def __setitem__(self, index, symbole):
         """
@@ -279,7 +284,7 @@ class Grille:
         ma_grille[0] = 5
         """
         if index < self.NBR_CASES:
-            self.contenu[index].contenu = symbole
+            self.get_case(index).contenu = symbole
         else:
             raise IndexError()
 
@@ -295,8 +300,12 @@ class Grille:
         """
         affichage = ""
         index = 0
-        for une_case in self.contenu:
-            affichage += une_case.__repr__()  # ajout de l'affichage d'une case
+        for index in range(self.NBR_CASES): 
+            une_case = self.get_case(index)
+            if une_case.contenu is None:
+                affichage += '0'
+            else:
+                affichage += une_case.contenu  # ajout de l'affichage d'une case
             if index % 27 == 26 and index < 80:
                 affichage += "\n\n"  # à faire toutes les 3 lignes
             elif index % 9 == 8:
@@ -406,13 +415,9 @@ root.grid_columnconfigure(1, weight=1)  # et droite_frame se partagent
 root.grid_columnconfigure(2, weight=1)  # l'espace horizontal à égalité
 
 grille_sudoku = Grille(centre_frame)
-print(grille_sudoku.get_case(15).cousines)
+print(grille_sudoku.get_case(15).index_cousines)
 print(grille_sudoku.get_case(15).contenu)
 print(grille_sudoku.get_case(15).pretendants)
-
-
-
-
 
 # Disposition du conteneur bas_frame
 bas_frame.columnconfigure(0, weight=1)
