@@ -3,14 +3,14 @@
 # Auteur : Raoul HATTERER
 
 # Pour debugger:
-# import pdb
-# pdb.set_trace()
+import pdb
+pdb.set_trace()
 
 # Chargement du module tkinter
 from tkinter import Tk, Frame, Button
 
 
-class Sac:
+class Sac(Button):
     """
     Classe représentant un sac. Un sac contient des symboles identiques.
 
@@ -18,11 +18,25 @@ class Sac:
     ---------
     symbole : symbole placé dans le sacs
     cardinal : nombre de symboles que le sac contient
+
+    Une case se configure comme une bouton.
+
+    exemple:
+    -------
+    >>> root = Tk()
+    >>> mon_cadre = Frame(root)
+    >>> mon_cadre.pack()
+    >>> mon_sac = Sac(mon_cadre,'5')
+    >>> mon_sac
+    contient 9 chiffres 5
     """
-    def __init__(self, symbole):
+    def __init__(self, master, symbole, *args, **kwargs):
         """
-        Constructeur de sac contenant 9 symboles identiques
+        Construit un widget 'sac' avec comme cadre MASTER
+
+        contenant 9 symboles identiques
         """
+        super().__init__(master, *args, **kwargs)      # ce qui relève de la classe Button
         self.symbole = symbole
         self.cardinal = 9  # nombre d'éléments dans le sac
 
@@ -42,69 +56,75 @@ class Sac:
                                                     self.symbole)
 
 
-class Pioche():
+class Pioche:
     """
-    Classe représentant 9 sacs contenant chacun des symboles identiques
-    tous différents (1 sac avec que des "1", un autre avec que des "2", etc.)
+    Classe représentant 9 sacs contenant chacun des symboles identiques tous 
+    différents (1 sac avec que des "1", un autre avec que des "2", etc.)
 
     À l'initialisation de la grille, un certain nombre de ces symboles est
     prélevé pour les placer sur la grille.
     Au cours du jeu, tant qu'il reste des symboles dans un sac, le joueur peut
     en piocher pour les placer sur la grille.
 
+    Les sacs sont des widgets tkinter. Il faut donc donner un cadre à la pioche.
+
     exemple:
     -------
-    ma_pioche = Pioche()
-    print(ma_pioche)         # affiche la pioche (contenu des 9 sacs de pioche)
-    print(ma_pioche.contenu) # affiche la pioche sous forme de liste
-    print(ma_pioche[1])      # affiche le contenu du premier sac de pioche
+    >>> root = Tk()
+    >>> mon_cadre = Frame(root)
+    >>> mon_cadre.pack()
+    >>> ma_pioche = Pioche()
+    >>> print(ma_pioche)         # affiche la pioche (contenu des 9 sacs de pioche)
+    >>> print(ma_pioche.contenu) # affiche la pioche sous forme de liste
+    >>> print(ma_pioche[1])      # affiche le contenu du premier sac de pioche
 
 
     """
+
     NBR_SACS = 9
 
-    def __init__(self):
+    def __init__(self, cadre):
         """
         Initialisation d'une liste contenant 9 sacs
-
         chaque sac contenant chacun 9 symboles identiques
         """
-        self.contenu = [sac(numero) for numero in range(1, self.NBR_SACS+1)]
 
-    def __getitem__(self, index):
-        """
-        Permet d'obtenir le contenu d'un sac dans la pioche avec:
-        ma_pioche[index] # où index est compris entre 1 et NBR_SACS.
-        """
-        return self.contenu[index-1]
+        self.cadre = cadre
 
-    def __setitem__(self, index, sac):
+        # Disposition du conteneur cadre qui contient la pioche
+        for column in range(1, self.NBR_SACS+1):
+            cadre.columnconfigure(column, weight=1)
+        for index in range(1, self.NBR_SACS+1):
+            Sac(cadre,
+                index,
+                name='{}'.format(index),
+                text='{}'.format(index)).grid(row=0, column=index, sticky="nsew")
+
+        # self.contenu = [sac(numero) for numero in range(1, self.NBR_SACS+1)]
+
+
+    def get_sac(self, index):
         """
-        Permet d'écrire un sac dans la pioche.
+        Retourne le sac d'index donné.
 
         exemple:
         -------
-        ma_pioche[9] = sac(9)
+
+        >>> root = Tk()
+        >>> mon_cadre = Frame(root)
+        >>> pioche_sudoku = Pioche(mon_cadre)
+        >>> print(pioche_sudoku.get_sac(5))
+
         """
-        if index < self.NBR_SACS+1:
-            self.contenu[index-1] = sac
-        else:
-            raise IndexError()
+        return root.nametowidget(str(self.cadre)+"."+str(index))
 
-    def __len__(self):
-        return self.NBR_SACS
-
-    def __repr__(self):
-        """
-        Représentation de la pioche.
-
-        Le contenu des 9 sacs est renvoyé.
-        """
-        affichage = ""
-        for sac in self.contenu:
-            affichage += sac.__repr__() + "\n"
-        return affichage
-
+        
+        def __getitem__(self, index):
+            """
+            Permet d'obtenir le contenu d'un sac dans la pioche avec:
+            ma_pioche[index] # où index est compris entre 1 et NBR_SACS.
+            """
+            return self.get_sac(index).__repr__
 
 class Case(Button):
     """
@@ -168,7 +188,7 @@ class Grille:
     >>> mon_cadre = Frame(root)
     >>> mon_cadre.pack()
     >>> ma_grille = Grille(mon_cadre)
-    >>> ma_case = ma_grille.get_case(0)
+    >>> ma_case = ma_grille.get_case(0) # ou ma_case = ma_grille[0]
     >>> ma_case.pretendants
     [1, 2, 3, 4, 5, 6, 7, 8, 9]
 
@@ -189,7 +209,7 @@ class Grille:
             cadre.rowconfigure(row, weight=1)
         for column in range(self.LARGEUR_GRILLE):
             cadre.columnconfigure(column, weight=1)
-
+        # Affichage de la grille de sudoku
         index = 0
         for j in range(self.LARGEUR_GRILLE):
             for i in range(self.LARGEUR_GRILLE):
@@ -268,7 +288,7 @@ class Grille:
 
     def __getitem__(self, index):
         """
-        Permet d'obtenir le symbole d'une case de la grille 
+        Permet d'obtenir le symbole d'une case de la grille
 
         avec:
         ma_grille[index] # où index est compris entre 0 et NBR_CASES-1.
@@ -401,16 +421,17 @@ haut_frame = Frame(root, name='en_tete', bg='cyan', width=640, height=50)
 gauche_frame = Frame(root, name='gauche', bg='blue', height=400)
 centre_frame = Frame(root, name='grille_sudoku', bg='white')
 droite_frame = Frame(root, name='droite', bg='red')
+pioche_frame = Frame(root, name='pioche', bg='white', height=120)
 bas_frame = Frame(root, name='pied_de_page', bg='lavender', height=60)
 
 
 # Disposition des conteneurs principaux
-
 haut_frame.grid(row=0, columnspan=3,  sticky="nsew")
 gauche_frame.grid(row=1, column=0, sticky="nsew")
 centre_frame.grid(row=1, column=1,  sticky="nsew")
 droite_frame.grid(row=1, column=2,  sticky="nsew")
-bas_frame.grid(row=2, columnspan=3, sticky="nsew")
+pioche_frame.grid(row=2, columnspan=3, sticky="nsew")
+bas_frame.grid(row=3, columnspan=3, sticky="nsew")
 
 root.grid_rowconfigure(1, weight=1)     # la ligne centrale est prioritaire.
 root.grid_columnconfigure(0, weight=1)  # gauche_frame centre_frame
@@ -418,6 +439,8 @@ root.grid_columnconfigure(1, weight=1)  # et droite_frame se partagent
 root.grid_columnconfigure(2, weight=1)  # l'espace horizontal à égalité
 
 grille_sudoku = Grille(centre_frame)
+pioche_sudoku = Pioche(pioche_frame)
+
 print(grille_sudoku.get_case(15).index_cousines)
 print(grille_sudoku.get_case(15).contenu)
 print(grille_sudoku.get_case(15).pretendants)
