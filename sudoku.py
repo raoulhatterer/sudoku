@@ -144,7 +144,7 @@ class Pioche:
 
         >>> root = Tk()
         >>> mon_cadre = Frame(root)
-        >>> pioche_sudoku = Pioche(mon_cadre)
+        >>> ma_pioche = Pioche(mon_cadre)
         >>> ma_pioche.get_sac(1)
         contient 9 chiffres 1
         >>> print(pioche_sudoku.get_sac(5))
@@ -153,22 +153,37 @@ class Pioche:
         return root.nametowidget(str(self.cadre)+"."+str(index))
 
         
-        def __getitem__(self, index):
-            """
-            Permet d'obtenir le contenu d'un sac dans la pioche avec:
-            ma_pioche[index] # où index est compris entre 1 et NBR_SACS.
-            """
-            # return self.get_sac(index)
-            return self[index]        
+    def __getitem__(self, index):
+        """
+        Permet d'obtenir le contenu d'un sac dans la pioche avec:
+        ma_pioche[index] # où index est compris entre 1 et NBR_SACS.
 
-        def __repr__(self):
-            """
-            Représentation de la pioche
+        exemple:
+        -------
+        >>> for i in range(1,10):
+        ...     ma_pioche[i]
+        ... 
+        contient 9 chiffres 1
+        contient 9 chiffres 2
+        contient 9 chiffres 3
+        contient 9 chiffres 4
+        contient 9 chiffres 5
+        contient 9 chiffres 6
+        contient 9 chiffres 7
+        contient 9 chiffres 8
+        contient 9 chiffres 9
 
-            quand on tape son nom dans l'interpréteur.
-            """
-            for index in range(1,self.NBR_SACS):
-                print(self.__getitem__(index))
+        """
+        return self.get_sac(index)        
+
+    def __repr__(self):
+        """
+        Représentation de la pioche
+        
+        quand on tape son nom dans l'interpréteur.
+        """
+        for index in range(1,self.NBR_SACS):
+            print(self.__getitem__(index))
 
 class Case(Button):
     """
