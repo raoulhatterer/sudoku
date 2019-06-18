@@ -3,8 +3,8 @@
 # Auteur : Raoul HATTERER
 
 # Pour debugger:
-import pdb
-pdb.set_trace()
+# import pdb
+# pdb.set_trace()
 
 # Chargement du module tkinter
 from tkinter import Tk, Frame, Button
@@ -46,6 +46,11 @@ class Sac(Button):
         l'interpréteur.
 
         Le contenu du sac est renvoyé.
+
+        exemple:
+        -------
+        contient 9 chiffres 5
+
         """
         if self.cardinal == 0:
             return "sac vide"
@@ -73,11 +78,15 @@ class Pioche:
     >>> root = Tk()
     >>> mon_cadre = Frame(root)
     >>> mon_cadre.pack()
-    >>> ma_pioche = Pioche()
+    >>> ma_pioche = Pioche(mon_cadre) # affiche les neuf boutons tkinter de la pioche 
+    >>> ma_pioche.NBR_SACS
+    9
+    >>> ma_pioche.get_sac(3)
+    contient 9 chiffres 3
+
     >>> print(ma_pioche)         # affiche la pioche (contenu des 9 sacs de pioche)
     >>> print(ma_pioche.contenu) # affiche la pioche sous forme de liste
     >>> print(ma_pioche[1])      # affiche le contenu du premier sac de pioche
-
 
     """
 
@@ -90,6 +99,7 @@ class Pioche:
         """
 
         self.cadre = cadre
+    
 
         # Disposition du conteneur cadre qui contient la pioche
         for column in range(1, self.NBR_SACS+1):
@@ -102,6 +112,28 @@ class Pioche:
 
         # self.contenu = [sac(numero) for numero in range(1, self.NBR_SACS+1)]
 
+    def __iter__(self):
+        """
+        Rends la pioche itérable.
+        >>> root = Tk()
+        >>> mon_cadre = Frame(root)
+        >>> mon_cadre.pack()
+        >>> ma_pioche = Pioche(mon_cadre)
+        >>> i = iter(ma_pioche)
+        >>> next(i)
+        contient 9 chiffres 1
+        >>> next(i)
+        contient 9 chiffres 2
+        """
+        self.n = 1
+        return self
+
+    def __next__(self):
+        if self.n <= self.NBR_SACS:
+            self.n += 1
+            return self.get_sac(self.n-1)
+        else:
+            raise StopIteration
 
     def get_sac(self, index):
         """
@@ -113,6 +145,8 @@ class Pioche:
         >>> root = Tk()
         >>> mon_cadre = Frame(root)
         >>> pioche_sudoku = Pioche(mon_cadre)
+        >>> ma_pioche.get_sac(1)
+        contient 9 chiffres 1
         >>> print(pioche_sudoku.get_sac(5))
 
         """
@@ -124,7 +158,17 @@ class Pioche:
             Permet d'obtenir le contenu d'un sac dans la pioche avec:
             ma_pioche[index] # où index est compris entre 1 et NBR_SACS.
             """
-            return self.get_sac(index).__repr__
+            # return self.get_sac(index)
+            return self[index]        
+
+        def __repr__(self):
+            """
+            Représentation de la pioche
+
+            quand on tape son nom dans l'interpréteur.
+            """
+            for index in range(1,self.NBR_SACS):
+                print(self.__getitem__(index))
 
 class Case(Button):
     """
@@ -421,6 +465,7 @@ haut_frame = Frame(root, name='en_tete', bg='cyan', width=640, height=50)
 gauche_frame = Frame(root, name='gauche', bg='blue', height=400)
 centre_frame = Frame(root, name='grille_sudoku', bg='white')
 droite_frame = Frame(root, name='droite', bg='red')
+separation_verticale_frame = Frame(root, name='separation', bg='cyan', height=20)
 pioche_frame = Frame(root, name='pioche', bg='white', height=120)
 bas_frame = Frame(root, name='pied_de_page', bg='lavender', height=60)
 
@@ -430,10 +475,11 @@ haut_frame.grid(row=0, columnspan=3,  sticky="nsew")
 gauche_frame.grid(row=1, column=0, sticky="nsew")
 centre_frame.grid(row=1, column=1,  sticky="nsew")
 droite_frame.grid(row=1, column=2,  sticky="nsew")
-pioche_frame.grid(row=2, columnspan=3, sticky="nsew")
-bas_frame.grid(row=3, columnspan=3, sticky="nsew")
+separation_verticale_frame.grid(row=2, columnspan=3,  sticky="nsew")
+pioche_frame.grid(row=3, columnspan=3, sticky="nsew")
+bas_frame.grid(row=4, columnspan=3, sticky="nsew")
 
-root.grid_rowconfigure(1, weight=1)     # la ligne centrale est prioritaire.
+root.grid_rowconfigure(1, weight=1)     # la ligne qui contient la grille sudoku est prioritaire.
 root.grid_columnconfigure(0, weight=1)  # gauche_frame centre_frame
 root.grid_columnconfigure(1, weight=1)  # et droite_frame se partagent
 root.grid_columnconfigure(2, weight=1)  # l'espace horizontal à égalité
