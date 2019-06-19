@@ -7,7 +7,7 @@
 # pdb.set_trace()
 
 # Chargement du module tkinter
-from tkinter import Tk, Frame, Button
+from tkinter import Tk, Frame, Button, Label
 
 
 class Sac(Button):
@@ -78,14 +78,15 @@ class Pioche:
     >>> root = Tk()
     >>> mon_cadre = Frame(root)
     >>> mon_cadre.pack()
-    >>> ma_pioche = Pioche(mon_cadre) # affiche les neuf boutons tkinter de la pioche 
+    >>> ma_pioche = Pioche(mon_cadre) # affiche les neuf boutons tkinter de la pioche
     >>> ma_pioche.NBR_SACS
     9
     >>> ma_pioche.get_sac(3)
     contient 9 chiffres 3
+    >>> ma_pioche[3]
+    contient 9 chiffres 3
 
-    >>> print(ma_pioche)         # affiche la pioche (contenu des 9 sacs de pioche)
-    >>> print(ma_pioche.contenu) # affiche la pioche sous forme de liste
+
     >>> print(ma_pioche[1])      # affiche le contenu du premier sac de pioche
 
     """
@@ -109,8 +110,9 @@ class Pioche:
                 index,
                 name='{}'.format(index),
                 text='{}'.format(index)).grid(row=0, column=index, sticky="nsew")
-
-        # self.contenu = [sac(numero) for numero in range(1, self.NBR_SACS+1)]
+            Label(cadre,
+                  name='lbl{}'.format(index),
+                  text='{}'.format(self[index].cardinal)).grid(row=1, column=index, sticky="nsew")
 
     def __iter__(self):
         """
@@ -157,6 +159,7 @@ class Pioche:
         """
         Permet d'obtenir le contenu d'un sac dans la pioche avec:
         ma_pioche[index] # où index est compris entre 1 et NBR_SACS.
+
 
         exemple:
         -------
@@ -236,10 +239,10 @@ class Grille:
     """
     Classe représentant une grille de 9 x 9 cases.
 
-    Chacune des 81 cases est accessible via un nom qui est l'index allant de 0 à 80.
+    Chacune des 81 cases est accessible via un index allant de 0 à 80.
 
     Les cases sont des widgets tkinter. Il faut donc donner un cadre à la grille.
- 
+
 
     exemple:
     -------
@@ -262,7 +265,7 @@ class Grille:
 
     def __init__(self, cadre):
         self.cadre = cadre
-        
+
         # Disposition du conteneur cadre qui contient la grille de sudoku
         for row in range(self.LARGEUR_GRILLE):
             cadre.rowconfigure(row, weight=1)
@@ -476,11 +479,11 @@ root = Tk()
 root.title('Sudoku')
 
 # création des conteneurs principaux
-haut_frame = Frame(root, name='en_tete', bg='cyan', width=640, height=50)
-gauche_frame = Frame(root, name='gauche', bg='blue', height=400)
+haut_frame = Frame(root, name='en_tete', bg='lavender', width=640, height=50)
+gauche_frame = Frame(root, name='gauche', bg='lavender', height=400)
 centre_frame = Frame(root, name='grille_sudoku', bg='white')
-droite_frame = Frame(root, name='droite', bg='red')
-separation_verticale_frame = Frame(root, name='separation', bg='cyan', height=20)
+droite_frame = Frame(root, name='droite', bg='lavender')
+separation_verticale_frame = Frame(root, name='separation', bg='lavender', height=20)
 pioche_frame = Frame(root, name='pioche', bg='white', height=120)
 bas_frame = Frame(root, name='pied_de_page', bg='lavender', height=60)
 
