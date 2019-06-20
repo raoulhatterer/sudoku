@@ -492,6 +492,8 @@ def gestion_des_evenements(event):
     Identifie l'élément cliqué par le joueur.
     """
     print(event.widget)
+    if type(event.widget) == Case:
+        print(event.widget.index_cousines)
 
             
 root = Tk()
@@ -524,16 +526,11 @@ root.grid_columnconfigure(2, weight=1)  # l'espace horizontal à égalité
 grille_sudoku = Grille(cadre_central)
 pioche_sudoku = Pioche(cadre_pioche)
 
-print(grille_sudoku.get_case(15).index_cousines)
-print(grille_sudoku.get_case(15).contenu)
-print(grille_sudoku.get_case(15).pretendants)
-
 # Disposition du conteneur cadre_bas
 cadre_bas.columnconfigure(0, weight=1)
 
 # Création du bouton quitter dans cadre_bas
 bouton_quitter = Button(cadre_bas, text='Quitter', command=root.quit)
-
 
 # Disposition du bouton quitter
 bouton_quitter.grid(sticky="nsew")
