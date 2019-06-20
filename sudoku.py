@@ -7,7 +7,7 @@
 # pdb.set_trace()
 
 # Chargement du module tkinter
-from tkinter import Tk, Frame, Button, Label
+from tkinter import Tk, Frame, Button, Label, Event
 
 
 class Sac(Button):
@@ -283,7 +283,7 @@ class Grille:
                      text='{}'.format(index),
                      background= self.couleur_bloc(index)).grid(row=j, column=i, sticky="nsew")
                 index += 1
-
+    
     def couleur_bloc(self, index):
         """
         Retourne la couleur à donner à la case de la grille.
@@ -487,8 +487,16 @@ class Grille:
             self.essaye_remplir_case_avec(cousine, "*")
 
 
+def gestion_des_evenements(event):
+    """
+    Identifie l'élément cliqué par le joueur.
+    """
+    print (event.widget)
+
+            
 root = Tk()
 root.title('Sudoku')
+root.bind("<Button-1>", gestion_des_evenements)
 
 # création des conteneurs principaux
 haut_frame = Frame(root, name='en_tete', bg='lavender', width=640, height=50)
@@ -498,7 +506,6 @@ droite_frame = Frame(root, name='droite', bg='lavender')
 separation_verticale_frame = Frame(root, name='separation', bg='lavender', height=20)
 pioche_frame = Frame(root, name='pioche', bg='white', height=120)
 bas_frame = Frame(root, name='pied_de_page', bg='lavender', height=60)
-
 
 # Disposition des conteneurs principaux
 haut_frame.grid(row=0, columnspan=3,  sticky="nsew")
@@ -530,6 +537,9 @@ bouton_quitter = Button(bas_frame, text='Quitter', command=root.quit)
 
 # Disposition du bouton quitter
 bouton_quitter.grid(sticky="nsew")
+
+
+
 
 root.mainloop()
 root.destroy()
