@@ -262,6 +262,8 @@ class Grille:
     LARGEUR_BLOC = 3
     LARGEUR_GRILLE = LARGEUR_BLOC * LARGEUR_BLOC
     NBR_CASES = LARGEUR_GRILLE * LARGEUR_GRILLE
+    COULEUR_BLOCS_PAIRS = 'LightSteelBlue1'
+    COULEUR_BLOCS_IMPAIRS = 'LightSteelBlue2'
 
     def __init__(self, cadre):
         self.cadre = cadre
@@ -278,9 +280,19 @@ class Grille:
                 Case(cadre,
                      self.get_index_cousines(index),
                      name='{}'.format(index),
-                     text='{}'.format(index)).grid(row=j, column=i, sticky="nsew")
+                     text='{}'.format(index),
+                     background= self.couleur_bloc(index)).grid(row=j, column=i, sticky="nsew")
                 index += 1
 
+    def couleur_bloc(self, index):
+        """
+        Retourne la couleur à donner à la case de la grille.
+        """
+        if self.get_bloc(index)%2 :
+            return self.COULEUR_BLOCS_PAIRS
+        else:
+            return self.COULEUR_BLOCS_IMPAIRS
+                
     def get_case(self, index):
         """
         Retourne la case d'index donné.
