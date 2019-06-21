@@ -21,6 +21,7 @@ class Case(Button):
 
     attributs:
     ---------
+    index : dans la grille chaque case a un index compris entre 0 et 80.
     contenu : Une case non vide a un `contenu`, le symbole qui est affiché
     quand on tape le nom de la case dans l'interpréteur.
 
@@ -43,11 +44,12 @@ class Case(Button):
     0
     """
 
-    def __init__(self, master, index_cousines, *args, **kwargs):
+    def __init__(self, master, index, index_cousines, *args, **kwargs):
         """
         Construit un widget case avec comme cadre MASTER.
         """
         super().__init__(master, *args, **kwargs) # ce qui relève de la classe Button
+        self.index = index
         self.contenu = None
         self.pretendants = [1, 2, 3, 4, 5, 6, 7, 8, 9]
         self.index_cousines = index_cousines
@@ -89,11 +91,15 @@ class Grille:
     print(ma_grille[0]) # affiche la première case (son index est 0)
     """
 
+
     LARGEUR_BLOC = 3
     LARGEUR_GRILLE = LARGEUR_BLOC * LARGEUR_BLOC
     NBR_CASES = LARGEUR_GRILLE * LARGEUR_GRILLE
     COULEUR_BLOCS_PAIRS = 'LightSteelBlue1'
     COULEUR_BLOCS_IMPAIRS = 'LightSteelBlue2'
+    COULEUR_SELECTION_CASE = 'LightSteelBlue3'
+
+    
     symbole_selectionne = None
     
     def __init__(self, cadre):
@@ -109,10 +115,10 @@ class Grille:
         for j in range(self.LARGEUR_GRILLE):
             for i in range(self.LARGEUR_GRILLE):
                 Case(cadre,
+                     index,
                      self.get_index_cousines(index),
                      name='{}'.format(index),
-#                    text='{}'.format(index),
-                     text=' ',
+                     text=' ', # cases vides à l'initialisation
                      background= self.couleur_bloc(index)).grid(row=j, column=i, sticky="nsew")
                 index += 1
     
@@ -205,8 +211,13 @@ class Grille:
         -------
         ma_grille[0] = '5'
         """
+        print(index,type(index))
+        print(symbole,type(symbole))
+        if not(isinstance(index, int)):
+            raise TypeError()
         if not(isinstance(symbole, str)):
             raise TypeError()
+
         if index < self.NBR_CASES:
             self.get_case(index).contenu = symbole
         else:
@@ -248,8 +259,9 @@ class Grille:
         """
         if (self.get_autorisation_ecriture(index)):
             self.__setitem__(index, valeur)
-            self.reduire_pretendants
-            self.reduire_sac
+            afficher_contenu()
+            self.reduire_pretendants()
+            self.reduire_sac()
             return True
         else:
             return False
@@ -404,7 +416,7 @@ class Pioche:
         self.cadre = cadre
     
         # Disposition du conteneur cadre qui contient la pioche
-        for column in range(1, self.NBR_SACS+1):
+        for column in range(1, self.NBR_SACS+2):
             cadre.columnconfigure(column, weight=1)
         for index in range(1, self.NBR_SACS+1):
             Sac(cadre,
@@ -414,6 +426,8 @@ class Pioche:
             Label(cadre,
                   name='lbl{}'.format(index),
                   text='{}'.format(self[index].cardinal)).grid(row=1, column=index, sticky="nsew")
+        Button(cadre, name='x', text='X').grid(row=0, column=10, sticky="nsew")
+        
 
     def __iter__(self):
         """
@@ -492,10 +506,15 @@ class Pioche:
         for index in range(1,self.NBR_SACS):
             print(self.__getitem__(index))
 
-    def montre_sac(self, index_selection):
+    def affiche_pioche(self, index_selection):
         for index in range(1, self.NBR_SACS+1):
-            self.get_sac(index)['background']=self.COULEUR_INITIALE_SAC
-        self.get_sac(index_selection)['background']=self.COULEUR_SELECTION_SAC
+            self.get_sac(index)['background'] = self.COULEUR_INITIALE_SAC
+        if index_selection == 0:
+            pass # la sélection est effacée
+        elif index_selection <= 9:
+            self.get_sac(index_selection)['background'] = self.COULEUR_SELECTION_SAC
+        else:
+            raise IndexError
 
 
 ### Fonctions ###
@@ -523,6 +542,11 @@ def afficher_contenu():
             ma_case['text']=' '
         else:
             ma_case['text']=ma_case.contenu
+            if ma_case.contenu == grille_sudoku.symbole_selectionne:
+                ma_case['background']=grille_sudoku.COULEUR_SELECTION_CASE
+            else:
+                ma_case['background']=grille_sudoku.couleur_bloc(index)
+                
 
 
 def gestion_des_evenements_on_press(event):
@@ -536,11 +560,24 @@ def gestion_des_evenements_on_press(event):
     print(event.widget)
     if event.widget['text']=='Index des cases':
         reveler_index()
+    if event.widget['text']=='X':
+        grille_sudoku.symbole_selectionne = 'X'
+        label_symbole_selectionne['text']='Sélection: X'
+        afficher_contenu()
+        pioche_sudoku.affiche_pioche(0)  # efface la sélection
+        event.widget['background'] = 'red'
     if type(event.widget) == Case:
-        print(event.widget.index_cousines)
+        if grille_sudoku.symbole_selectionne == 'X':
+            pass
+        else:
+            grille_sudoku.essaye_remplir_case_avec(event.widget.index, grille_sudoku.symbole_selectionne)
+        
     if type(event.widget) == Sac:
+        root.nametowidget('.pioche.x')['background'] = COULEUR_PIOCHE
+        grille_sudoku.symbole_selectionne = event.widget.symbole
         label_symbole_selectionne['text']='Sélection: '+event.widget.symbole
-        pioche_sudoku.montre_sac(int(event.widget.symbole))
+        pioche_sudoku.affiche_pioche(int(event.widget.symbole))
+        afficher_contenu()# pour tenir compte du sac sélectionné
 
 
 def gestion_des_evenements_on_release(event):
@@ -577,6 +614,7 @@ def gestion_des_evenements_on_mouse_leave(event):
 COULEUR_CADRE_HAUT = 'lavender'
 COULEUR_CADRE_GAUCHE = 'lavender'
 COULEUR_CADRE_DROIT = 'lavender'
+COULEUR_PIOCHE = '#d9d9d9'
 COULEUR_CADRE_BAS = 'lavender'
 
 ### Applcation Tkinter ###
@@ -595,7 +633,7 @@ cadre_gauche = Frame(root, name='gauche', background=COULEUR_CADRE_GAUCHE, heigh
 cadre_central = Frame(root, name='grille_sudoku', background='white')
 cadre_droite = Frame(root, name='droite', background='lavender')
 cadre_separation_verticale = Frame(root, name='separation', background='lavender', height=20)
-cadre_pioche = Frame(root, name='pioche', background='white', height=120)
+cadre_pioche = Frame(root, name='pioche', background=COULEUR_PIOCHE, height=120)
 cadre_bas = Frame(root, name='pied_de_page', background=COULEUR_CADRE_BAS, height=60)
 
 # Disposition des conteneurs principaux
