@@ -109,7 +109,8 @@ class Grille:
                 Case(cadre,
                      self.get_index_cousines(index),
                      name='{}'.format(index),
-                     text='{}'.format(index),
+#                    text='{}'.format(index),
+                     text=' ',
                      background= self.couleur_bloc(index)).grid(row=j, column=i, sticky="nsew")
                 index += 1
     
@@ -195,14 +196,14 @@ class Grille:
 
     def __setitem__(self, index, symbole):
         """
-        Permet d'écrire un symbole dans le contenu d'une case de la grille.
+        Permet d'écrire facilement un symbole dans le contenu d'une case de la grille.
 
         Le symbole doit être de type str.
         exemple:
         -------
         ma_grille[0] = '5'
         """
-        if not(isinstance(symbole,str)):
+        if not(isinstance(symbole, str)):
             raise TypeError()
         if index < self.NBR_CASES:
             self.get_case(index).contenu = symbole
@@ -486,19 +487,64 @@ class Pioche:
         for index in range(1,self.NBR_SACS):
             print(self.__getitem__(index))
 
+def reveler_index():
+    """
+    Révèle l'index des cases (nombre variant de 0 à 80)
+    """
+    NBRE_CASES=81
+    for index in range(NBRE_CASES):
+        ma_case=grille_sudoku.get_case(index)
+        ma_case['text']=str(index)
 
-def gestion_des_evenements(event):
+def afficher_contenu():
+    """
+    Affiche le contenu des cases (nombre variant de 0 à 9)
+    """
+    NBRE_CASES=81
+    for index in range(NBRE_CASES):
+        ma_case=grille_sudoku.get_case(index)
+        if ma_case.contenu is None:
+            ma_case['text']=' '
+        else:
+            ma_case['text']=ma_case.contenu
+        
+
+def gestion_des_evenements_on_press(event):
     """
     Identifie l'élément cliqué par le joueur.
+
+    Réagit en conséquence:
+    - Si le bouton_index_cases est pressé l'index des cases sera affiché
     """
+    print(event)
     print(event.widget)
+    if event.widget['text']=='Index des cases':
+        reveler_index()
     if type(event.widget) == Case:
         print(event.widget.index_cousines)
+        
 
-            
+def gestion_des_evenements_on_release(event):
+    """
+    Identifie l'élément cliqué préalablement par le joueur.
+
+    Réagit en conséquence:
+    - Si le bouton_index_cases est relâché le contenu des cases est rétabli:
+    permet de révéler l'index des cases de façon temporaire.
+    """
+    print(event)
+    print(event.widget)
+    if event.widget['text'] == 'Index des cases':
+        afficher_contenu()
+
+
+
+
+        
 root = Tk()
 root.title('Sudoku')
-root.bind("<Button-1>", gestion_des_evenements)
+root.bind("<ButtonPress>", gestion_des_evenements_on_press)
+root.bind("<ButtonRelease>", gestion_des_evenements_on_release)
 
 # création des conteneurs principaux
 cadre_haut = Frame(root, name='en_tete', bg='lavender', width=640, height=50)
@@ -518,10 +564,16 @@ cadre_separation_verticale.grid(row=2, columnspan=3,  sticky="nsew")
 cadre_pioche.grid(row=3, columnspan=3, sticky="nsew")
 cadre_bas.grid(row=4, columnspan=3, sticky="nsew")
 
-root.grid_rowconfigure(1, weight=1)     # la ligne qui contient la grille sudoku est prioritaire.
+# Répartition de l'espace élastique vertical
+# la ligne qui contient la grille sudoku est prioritaire
+root.grid_rowconfigure(1, weight=1)
+# Répartition de l'espace élastique horizontal
 root.grid_columnconfigure(0, weight=1)  # cadre_gauche cadre_central
 root.grid_columnconfigure(1, weight=1)  # et cadre_droite se partagent
 root.grid_columnconfigure(2, weight=1)  # l'espace horizontal à égalité
+
+bouton_index_cases = Button(cadre_gauche, name='index_cases', text='Index des cases')
+bouton_index_cases.pack()
 
 grille_sudoku = Grille(cadre_central)
 pioche_sudoku = Pioche(cadre_pioche)
