@@ -10,6 +10,7 @@
 from tkinter import Tk, Frame, Button, Label, Event
 
 
+### Classes ###
 
 class Case(Button):
     """
@@ -93,7 +94,8 @@ class Grille:
     NBR_CASES = LARGEUR_GRILLE * LARGEUR_GRILLE
     COULEUR_BLOCS_PAIRS = 'LightSteelBlue1'
     COULEUR_BLOCS_IMPAIRS = 'LightSteelBlue2'
-
+    symbole_selectionne = None
+    
     def __init__(self, cadre):
         self.cadre = cadre
 
@@ -339,7 +341,7 @@ class Sac(Button):
         contenant 9 symboles identiques
         """
         super().__init__(master, *args, **kwargs) # ce qui relève de la classe Button
-        self.symbole = symbole
+        self.symbole = str(symbole)
         self.cardinal = 9  # nombre d'éléments dans le sac
 
     def __repr__(self):
@@ -357,9 +359,9 @@ class Sac(Button):
         if self.cardinal == 0:
             return "sac vide"
         elif self.cardinal == 1:
-            return "contient 1 chiffre {}".format(self.symbole)
+            return "contient 1 symbole {}".format(self.symbole)
         else:
-            return "contient {} chiffres {}".format(self.cardinal,
+            return "contient {} symboles {}".format(self.cardinal,
                                                     self.symbole)
 
 
@@ -384,13 +386,15 @@ class Pioche:
     >>> ma_pioche.NBR_SACS
     9
     >>> ma_pioche.get_sac(3)
-    contient 9 chiffres 3
+    contient 9 symboles 3
     >>> ma_pioche[3]
-    contient 9 chiffres 3
+    contient 9 symboles 3
     >>> print(ma_pioche[1])      # affiche le contenu du premier sac de pioche
     """
 
     NBR_SACS = 9
+    COULEUR_INITIALE_SAC = '#d9d9d9'
+    COULEUR_SELECTION_SAC = 'LightSteelBlue3'
 
     def __init__(self, cadre):
         """
@@ -420,9 +424,9 @@ class Pioche:
         >>> ma_pioche = Pioche(mon_cadre)
         >>> i = iter(ma_pioche)
         >>> next(i)
-        contient 9 chiffres 1
+        contient 9 symboles 1
         >>> next(i)
-        contient 9 chiffres 2
+        contient 9 symboles 2
         """
         self.n = 1
         return self
@@ -445,9 +449,10 @@ class Pioche:
         -------
         >>> root = Tk()
         >>> mon_cadre = Frame(root)
+        >>> mon_cadre.pack()
         >>> ma_pioche = Pioche(mon_cadre)
         >>> ma_pioche.get_sac(1)
-        contient 9 chiffres 1
+        contient 9 symboles 1
         >>> print(pioche_sudoku.get_sac(5))
 
         """
@@ -465,15 +470,15 @@ class Pioche:
         >>> for i in range(1,10):
         ...     ma_pioche[i]
         ... 
-        contient 9 chiffres 1
-        contient 9 chiffres 2
-        contient 9 chiffres 3
-        contient 9 chiffres 4
-        contient 9 chiffres 5
-        contient 9 chiffres 6
-        contient 9 chiffres 7
-        contient 9 chiffres 8
-        contient 9 chiffres 9
+        contient 9 symboles 1
+        contient 9 symboles 2
+        contient 9 symboles 3
+        contient 9 symboles 4
+        contient 9 symboles 5
+        contient 9 symboles 6
+        contient 9 symboles 7
+        contient 9 symboles 8
+        contient 9 symboles 9
 
         """
         return self.get_sac(index)        
@@ -487,9 +492,19 @@ class Pioche:
         for index in range(1,self.NBR_SACS):
             print(self.__getitem__(index))
 
+    def montre_sac(self, index_selection):
+        for index in range(1, self.NBR_SACS+1):
+            self.get_sac(index)['background']=self.COULEUR_INITIALE_SAC
+        self.get_sac(index_selection)['background']=self.COULEUR_SELECTION_SAC
+
+            
+### Fonctions ###
+
 def reveler_index():
     """
-    Révèle l'index des cases (nombre variant de 0 à 80)
+    Révèle l'index des 81 cases (nombre variant de 0 à 80)
+
+    à la place du contenu habituellement affiché.
     """
     NBRE_CASES=81
     for index in range(NBRE_CASES):
@@ -522,6 +537,9 @@ def gestion_des_evenements_on_press(event):
         reveler_index()
     if type(event.widget) == Case:
         print(event.widget.index_cousines)
+    if type(event.widget) == Sac:
+        label_symbole_selectionne['text']='Sélection: '+event.widget.symbole
+        pioche_sudoku.montre_sac(int(event.widget.symbole))
         
 
 def gestion_des_evenements_on_release(event):
@@ -538,22 +556,28 @@ def gestion_des_evenements_on_release(event):
         afficher_contenu()
 
 
+### Constantes ###
 
+COULEUR_CADRE_HAUT = 'lavender'
+COULEUR_CADRE_GAUCHE = 'lavender'
+COULEUR_CADRE_DROIT = 'lavender'
+COULEUR_CADRE_BAS = 'lavender'
 
-        
+### Applcation Tkinter ###
+
 root = Tk()
 root.title('Sudoku')
 root.bind("<ButtonPress>", gestion_des_evenements_on_press)
 root.bind("<ButtonRelease>", gestion_des_evenements_on_release)
 
 # création des conteneurs principaux
-cadre_haut = Frame(root, name='en_tete', bg='lavender', width=640, height=50)
-cadre_gauche = Frame(root, name='gauche', bg='lavender', height=400)
-cadre_central = Frame(root, name='grille_sudoku', bg='white')
-cadre_droite = Frame(root, name='droite', bg='lavender')
-cadre_separation_verticale = Frame(root, name='separation', bg='lavender', height=20)
-cadre_pioche = Frame(root, name='pioche', bg='white', height=120)
-cadre_bas = Frame(root, name='pied_de_page', bg='lavender', height=60)
+cadre_haut = Frame(root, name='en_tete', background=COULEUR_CADRE_HAUT, width=640, height=50)
+cadre_gauche = Frame(root, name='gauche', background=COULEUR_CADRE_GAUCHE, height=400)
+cadre_central = Frame(root, name='grille_sudoku', background='white')
+cadre_droite = Frame(root, name='droite', background='lavender')
+cadre_separation_verticale = Frame(root, name='separation', background='lavender', height=20)
+cadre_pioche = Frame(root, name='pioche', background='white', height=120)
+cadre_bas = Frame(root, name='pied_de_page', background=COULEUR_CADRE_BAS, height=60)
 
 # Disposition des conteneurs principaux
 cadre_haut.grid(row=0, columnspan=3,  sticky="nsew")
@@ -572,11 +596,14 @@ root.grid_columnconfigure(0, weight=1)  # cadre_gauche cadre_central
 root.grid_columnconfigure(1, weight=1)  # et cadre_droite se partagent
 root.grid_columnconfigure(2, weight=1)  # l'espace horizontal à égalité
 
-bouton_index_cases = Button(cadre_gauche, name='index_cases', text='Index des cases')
-bouton_index_cases.pack()
-
 grille_sudoku = Grille(cadre_central)
 pioche_sudoku = Pioche(cadre_pioche)
+
+bouton_index_cases = Button(cadre_gauche, name='index_cases', text='Index des cases')
+label_symbole_selectionne = Label(cadre_gauche, name='lbl_symbole_selectionne', text='Sélection: '+str(grille_sudoku.symbole_selectionne), background=COULEUR_CADRE_GAUCHE)
+bouton_index_cases.pack()
+print(bouton_index_cases['background'])
+label_symbole_selectionne.pack()
 
 # Disposition du conteneur cadre_bas
 cadre_bas.columnconfigure(0, weight=1)
