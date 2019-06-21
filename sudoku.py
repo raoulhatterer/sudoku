@@ -497,7 +497,7 @@ class Pioche:
             self.get_sac(index)['background']=self.COULEUR_INITIALE_SAC
         self.get_sac(index_selection)['background']=self.COULEUR_SELECTION_SAC
 
-            
+
 ### Fonctions ###
 
 def reveler_index():
@@ -511,6 +511,7 @@ def reveler_index():
         ma_case=grille_sudoku.get_case(index)
         ma_case['text']=str(index)
 
+
 def afficher_contenu():
     """
     Affiche le contenu des cases (nombre variant de 0 à 9)
@@ -522,7 +523,7 @@ def afficher_contenu():
             ma_case['text']=' '
         else:
             ma_case['text']=ma_case.contenu
-        
+
 
 def gestion_des_evenements_on_press(event):
     """
@@ -540,7 +541,7 @@ def gestion_des_evenements_on_press(event):
     if type(event.widget) == Sac:
         label_symbole_selectionne['text']='Sélection: '+event.widget.symbole
         pioche_sudoku.montre_sac(int(event.widget.symbole))
-        
+
 
 def gestion_des_evenements_on_release(event):
     """
@@ -556,6 +557,21 @@ def gestion_des_evenements_on_release(event):
         afficher_contenu()
 
 
+def gestion_des_evenements_on_mouse_over(event):
+    """
+    Identifie l'élément survolé par la souris.
+
+    Réagit en conséquence:
+    - Si la souris survole une case de la grille les prétendants sont affichés.
+    """
+    if type(event.widget) == Case:
+        print(event.widget.pretendants)
+        label_pretendants['text']=event.widget.pretendants
+
+
+def gestion_des_evenements_on_mouse_leave(event):
+    pass
+
 ### Constantes ###
 
 COULEUR_CADRE_HAUT = 'lavender'
@@ -567,8 +583,11 @@ COULEUR_CADRE_BAS = 'lavender'
 
 root = Tk()
 root.title('Sudoku')
+# Gestion des évènements 
 root.bind("<ButtonPress>", gestion_des_evenements_on_press)
 root.bind("<ButtonRelease>", gestion_des_evenements_on_release)
+root.bind("<Enter>", gestion_des_evenements_on_mouse_over)
+root.bind("<Leave>", gestion_des_evenements_on_mouse_leave)
 
 # création des conteneurs principaux
 cadre_haut = Frame(root, name='en_tete', background=COULEUR_CADRE_HAUT, width=640, height=50)
@@ -601,9 +620,10 @@ pioche_sudoku = Pioche(cadre_pioche)
 
 bouton_index_cases = Button(cadre_gauche, name='index_cases', text='Index des cases')
 label_symbole_selectionne = Label(cadre_gauche, name='lbl_symbole_selectionne', text='Sélection: '+str(grille_sudoku.symbole_selectionne), background=COULEUR_CADRE_GAUCHE)
+label_pretendants = Label(cadre_gauche, name='lbl_pretendants', text='Prétendants: ', background=COULEUR_CADRE_GAUCHE)
 bouton_index_cases.pack()
-print(bouton_index_cases['background'])
 label_symbole_selectionne.pack()
+label_pretendants.pack()
 
 # Disposition du conteneur cadre_bas
 cadre_bas.columnconfigure(0, weight=1)
@@ -614,5 +634,6 @@ bouton_quitter = Button(cadre_bas, text='Quitter', command=root.quit)
 # Disposition du bouton quitter
 bouton_quitter.grid(sticky="nsew")
 
+# Boucle du programme
 root.mainloop()
 root.destroy()
