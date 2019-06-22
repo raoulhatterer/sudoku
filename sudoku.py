@@ -21,7 +21,9 @@ class Case(Button):
 
     attributs:
     ---------
-    index : dans la grille chaque case a un index compris entre 0 et 80.
+    index : Chaque case a un index compris entre 0 et 80 qui indique
+    sa position dans la grille.
+
     contenu : Une case non vide a un `contenu`, le symbole qui est affiché
     quand on tape le nom de la case dans l'interpréteur.
 
@@ -36,7 +38,7 @@ class Case(Button):
     -------
     >>> root = Tk()
     >>> index_cousines = list()
-    >>> ma_case = Case(root, index_cousines, text="une case")
+    >>> ma_case = Case(root, 0, index_cousines, text="une case")
     >>> ma_case.pack()
     >>> ma_case.pretendants
     [1, 2, 3, 4, 5, 6, 7, 8, 9]
@@ -44,11 +46,19 @@ class Case(Button):
     0
     """
 
-    def __init__(self, master, index, index_cousines, *args, **kwargs):
+    def __init__(self, cadre, index, index_cousines, *args, **kwargs):
         """
-        Construit un widget case avec comme cadre MASTER.
+        Construit un widget 'case'
+
+        avec comme paramètres:
+        CADRE : le cadre de destination (transmis à la classe Button grâce à *args)
+        INDEX : la position dans la grille  (un nombre entier compris entre 0 et 80)
+        INDEX_COUSINES : la liste des index des cases cousines (cases de même
+        ligne, colonne ou carré 3x3)
+         *ARGS : arguments simples destinés à la classe Button
+        **KWARGS : arguments de type clé='valeur' transmis à la classe Button
         """
-        super().__init__(master, *args, **kwargs) # ce qui relève de la classe Button
+        super().__init__(cadre, *args, **kwargs) # ce qui relève de la classe Button
         self.index = index
         self.contenu = None
         self.pretendants = [1, 2, 3, 4, 5, 6, 7, 8, 9]
@@ -56,13 +66,18 @@ class Case(Button):
 
     def __repr__(self):
         """
-        Affichage d'une case dans l'interpréteur.
+        Permet l'affichage fainéant d'une case dans l'interpréteur.
 
-        Lorsque l'on tape son nom dans l'interpréteur
-        son `contenu` est affiché.
+        Lorsque l'on tape le nom d'une case dans l'interpréteur python
+        son `contenu` est affiché. À ceci près, que si son contenu est vide,
+        un zéro est affiché.
+
+        Remarque : la classe Grille a recours à l'affichage fainéant des cases
+        pour afficher joliment (sous forme de grille 9x9) une grille dans
+        l'interpréteur python.
         """
         if self.contenu is None:
-            return "0"    # la case est vide "⛶"
+            return "0"    # signifie que la case est vide "⛶"
         else:
             return self.contenu
 
@@ -73,8 +88,11 @@ class Grille:
 
     Chacune des 81 cases est accessible via un index allant de 0 à 80.
 
-    Les cases sont des widgets tkinter. Il faut donc donner un cadre à la grille.
+    Les cases sont des widgets tkinter. Il faut donc donner un cadre à la
+    grille.
 
+    L'affichage de la grille sera différent suivant qu'une case de la pioche
+    est sélectionnée ou non.
 
     exemple:
     -------
@@ -82,26 +100,43 @@ class Grille:
     >>> mon_cadre = Frame(root)
     >>> mon_cadre.pack()
     >>> ma_grille = Grille(mon_cadre)
-    >>> ma_case = ma_grille.get_case(0) # ou ma_case = ma_grille[0]
+    >>> ma_grille[0]
+    '0' # affichage fainéant du contenu d'une case
+    >>> print(ma_grille[0]) # affiche fainéant la première case (d'index 0)
+    0
+    >>> ma_case = ma_grille.get_case(0)
+    >>> type(ma_case)
+    <class '__main__.Case'>
+    >>> ma_case.contenu # n'affiche rien si le contenu est None
     >>> ma_case.pretendants
     [1, 2, 3, 4, 5, 6, 7, 8, 9]
+    >>> ma_grille
+    0 0 0  0 0 0  0 0 0
+    0 0 0  0 0 0  0 0 0
+    0 0 0  0 0 0  0 0 0
+    
+    0 0 0  0 0 0  0 0 0
+    0 0 0  0 0 0  0 0 0
+    0 0 0  0 0 0  0 0 0
+    
+    0 0 0  0 0 0  0 0 0
+    0 0 0  0 0 0  0 0 0
+    0 0 0  0 0 0  0 0 0
 
-
-    print(ma_grille)            # affiche la grille 9 x 9 cases
-    print(ma_grille[0]) # affiche la première case (son index est 0)
+    print(ma_grille)   # affiche de même la grille 9 x 9 cases
     """
-
 
     LARGEUR_BLOC = 3
     LARGEUR_GRILLE = LARGEUR_BLOC * LARGEUR_BLOC
     NBR_CASES = LARGEUR_GRILLE * LARGEUR_GRILLE
+
+    # Couleurs des cases de la grille
     COULEUR_BLOCS_PAIRS = 'LightSteelBlue1'
     COULEUR_BLOCS_IMPAIRS = 'LightSteelBlue2'
     COULEUR_SELECTION_CASE = 'LightSteelBlue3'
 
-    
-    symbole_selectionne = None
-    
+    symbole_actif = None
+
     def __init__(self, cadre):
         self.cadre = cadre
 
@@ -118,8 +153,10 @@ class Grille:
                      index,
                      self.get_index_cousines(index),
                      name='{}'.format(index),
-                     text=' ', # cases vides à l'initialisation
-                     background= self.couleur_bloc(index)).grid(row=j, column=i, sticky="nsew")
+                     text=' ',  # cases vides à l'initialisation
+                     background=self.couleur_bloc(index)).grid(row=j,
+                                                               column=i,
+                                                               sticky="nsew")
                 index += 1
     
     def couleur_bloc(self, index):
@@ -542,7 +579,7 @@ def afficher_contenu():
             ma_case['text']=' '
         else:
             ma_case['text']=ma_case.contenu
-            if ma_case.contenu == grille_sudoku.symbole_selectionne:
+            if ma_case.contenu == grille_sudoku.symbole_actif:
                 ma_case['background']=grille_sudoku.COULEUR_SELECTION_CASE
             else:
                 ma_case['background']=grille_sudoku.couleur_bloc(index)
@@ -561,21 +598,21 @@ def gestion_des_evenements_on_press(event):
     if event.widget['text']=='Index des cases':
         reveler_index()
     if event.widget['text']=='X':
-        grille_sudoku.symbole_selectionne = 'X'
-        label_symbole_selectionne['text']='Sélection: X'
+        grille_sudoku.symbole_actif = 'X'
+        label_symbole_actif['text']='Sélection: X'
         afficher_contenu()
         pioche_sudoku.affiche_pioche(0)  # efface la sélection
         event.widget['background'] = 'red'
     if type(event.widget) == Case:
-        if grille_sudoku.symbole_selectionne == 'X':
+        if grille_sudoku.symbole_actif == 'X':
             pass
         else:
-            grille_sudoku.essaye_remplir_case_avec(event.widget.index, grille_sudoku.symbole_selectionne)
+            grille_sudoku.essaye_remplir_case_avec(event.widget.index, grille_sudoku.symbole_actif)
         
     if type(event.widget) == Sac:
         root.nametowidget('.pioche.x')['background'] = COULEUR_PIOCHE
-        grille_sudoku.symbole_selectionne = event.widget.symbole
-        label_symbole_selectionne['text']='Sélection: '+event.widget.symbole
+        grille_sudoku.symbole_actif = event.widget.symbole
+        label_symbole_actif['text']='Sélection: '+event.widget.symbole
         pioche_sudoku.affiche_pioche(int(event.widget.symbole))
         afficher_contenu()# pour tenir compte du sac sélectionné
 
@@ -657,10 +694,10 @@ grille_sudoku = Grille(cadre_central)
 pioche_sudoku = Pioche(cadre_pioche)
 
 bouton_index_cases = Button(cadre_gauche, name='index_cases', text='Index des cases')
-label_symbole_selectionne = Label(cadre_gauche, name='lbl_symbole_selectionne', text='Sélection: '+str(grille_sudoku.symbole_selectionne), background=COULEUR_CADRE_GAUCHE)
+label_symbole_actif = Label(cadre_gauche, name='lbl_symbole_actif', text='Sélection: '+str(grille_sudoku.symbole_actif), background=COULEUR_CADRE_GAUCHE)
 label_pretendants = Label(cadre_gauche, name='lbl_pretendants', text='Prétendants: ', background=COULEUR_CADRE_GAUCHE)
 bouton_index_cases.pack()
-label_symbole_selectionne.pack()
+label_symbole_actif.pack()
 label_pretendants.pack()
 
 # Disposition du conteneur cadre_bas
