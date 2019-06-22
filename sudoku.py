@@ -100,8 +100,8 @@ class Grille:
     >>> mon_cadre = Frame(root)
     >>> mon_cadre.pack()
     >>> ma_grille = Grille(mon_cadre)
-    >>> ma_grille[0]
-    '0' # affichage fainéant du contenu d'une case
+    >>> ma_grille[0] # affichage fainéant du contenu d'une case
+    '0'              # retourne une chaîne de caractères
     >>> print(ma_grille[0]) # affiche fainéant la première case (d'index 0)
     0
     >>> ma_case = ma_grille.get_case(0)
@@ -154,14 +154,17 @@ class Grille:
                      self.get_index_cousines(index),
                      name='{}'.format(index),
                      text=' ',  # cases vides à l'initialisation
-                     background=self.couleur_bloc(index)).grid(row=j,
+                     background=self.get_couleur_case(index)).grid(row=j,
                                                                column=i,
                                                                sticky="nsew")
                 index += 1
     
-    def couleur_bloc(self, index):
+    def get_couleur_case(self, index):
         """
         Retourne la couleur à donner à la case de la grille.
+
+        Il y a deux possibilités suivant que la case appartient à un bloc 3x3
+        pair ou impair.
         """
         if self.get_bloc(index) % 2:
             return self.COULEUR_BLOCS_PAIRS
@@ -582,7 +585,7 @@ def afficher_contenu():
             if ma_case.contenu == grille_sudoku.symbole_actif:
                 ma_case['background']=grille_sudoku.COULEUR_SELECTION_CASE
             else:
-                ma_case['background']=grille_sudoku.couleur_bloc(index)
+                ma_case['background']=grille_sudoku.get_couleur_case(index)
                 
 
 
