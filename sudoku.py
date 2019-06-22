@@ -138,6 +138,15 @@ class Grille:
     symbole_actif = None
 
     def __init__(self, cadre):
+        """
+        À l'initialisation préciser le cadre de destination de la grille.
+        exemple:
+        -------
+        >>> root = Tk()
+        >>> mon_cadre = Frame(root)
+        >>> mon_cadre.pack()
+        >>> ma_grille = Grille(mon_cadre) # fait apparaître la grille
+        """
         self.cadre = cadre
 
         # Disposition du conteneur cadre qui contient la grille de sudoku
@@ -154,23 +163,25 @@ class Grille:
                      self.get_index_cousines(index),
                      name='{}'.format(index),
                      text=' ',  # cases vides à l'initialisation
-                     background=self.get_couleur_case(index)).grid(row=j,
+                     background=self.get_couleur_case(index, ' ', None)).grid(row=j,
                                                                column=i,
                                                                sticky="nsew")
                 index += 1
-    
-    def get_couleur_case(self, index):
+
+    def get_couleur_case(self, index, symbole, symbole_actif):
         """
         Retourne la couleur à donner à la case de la grille.
 
-        Il y a deux possibilités suivant que la case appartient à un bloc 3x3
-        pair ou impair.
+        Il y a trois possibilités suivant que la case appartient à un bloc 3x3
+        pair ou impair ou alors qu'elle comporte le symbole actif.
         """
+        if symbole == symbole_actif:
+            return self.COULEUR_SELECTION_CASE
         if self.get_bloc(index) % 2:
             return self.COULEUR_BLOCS_PAIRS
         else:
             return self.COULEUR_BLOCS_IMPAIRS
-               
+
     def get_case(self, index):
         """
         Retourne la case d'index donné.
@@ -289,10 +300,13 @@ class Grille:
                 affichage += "  "   # sinon à faire toutes les 3 colonnes
             elif index % 9 in [0, 1, 3, 4, 6, 7]:
                 affichage += " "
-
             index += 1
         return affichage
 
+    def grille_efface_case(self):
+        "Efface le contenu de la case cliquée"
+        pass
+    
     def essaye_remplir_case_avec(self, index, valeur):
         """
         Rempli la case d'index compris entre 0 et 80 avec `valeur`.
@@ -351,21 +365,7 @@ class Grille:
         """
         return self.get_colonne(index)//3 + (self.get_ligne(index)//3)*3
 
-    def marquer_cousines(self, index):
-        """
-        Montre les cases cousines de la case d'index donné.
-        Attention cette méthode est destructive.
-
-        exemple:
-        -------
-        grille_test = grille()
-        grille_test.marquer_cousines(50)
-        print(grille_test)
-        """
-        for cousine in self.contenu[index].cousines:
-            self.essaye_remplir_case_avec(cousine, "*")
-
-            
+    
 class Sac(Button):
     """
     Classe représentant un sac. Un sac contient des symboles identiques.
@@ -384,7 +384,7 @@ class Sac(Button):
     >>> mon_cadre.pack()
     >>> mon_sac = Sac(mon_cadre,'5')
     >>> mon_sac
-    contient 9 chiffres 5
+    contient 9 symboles 5
     """
     def __init__(self, master, symbole, *args, **kwargs):
         """
@@ -405,7 +405,7 @@ class Sac(Button):
 
         exemple:
         -------
-        contient 9 chiffres 5
+        contient 9 symboles 5
 
         """
         if self.cardinal == 0:
@@ -518,7 +518,6 @@ class Pioche:
         Permet d'obtenir le contenu d'un sac dans la pioche avec:
         ma_pioche[index] # où index est compris entre 1 et NBR_SACS.
 
-
         exemple:
         -------
         >>> for i in range(1,10):
@@ -577,15 +576,12 @@ def afficher_contenu():
     """
     NBRE_CASES=81
     for index in range(NBRE_CASES):
-        ma_case=grille_sudoku.get_case(index)
+        ma_case = grille_sudoku.get_case(index)
         if ma_case.contenu is None:
-            ma_case['text']=' '
+            ma_case['text'] = ' '
         else:
-            ma_case['text']=ma_case.contenu
-            if ma_case.contenu == grille_sudoku.symbole_actif:
-                ma_case['background']=grille_sudoku.COULEUR_SELECTION_CASE
-            else:
-                ma_case['background']=grille_sudoku.get_couleur_case(index)
+            ma_case['text'] = ma_case.contenu
+        ma_case['background'] = grille_sudoku.get_couleur_case(index, ma_case['text'], grille_sudoku.symbole_actif)
                 
 
 
@@ -604,11 +600,11 @@ def gestion_des_evenements_on_press(event):
         grille_sudoku.symbole_actif = 'X'
         label_symbole_actif['text']='Sélection: X'
         afficher_contenu()
-        pioche_sudoku.affiche_pioche(0)  # efface la sélection
-        event.widget['background'] = 'red'
+        pioche_sudoku.affiche_pioche(0)  # pioche affichée sans sélection
+        event.widget['background'] = 'red' # case X en rouge
     if type(event.widget) == Case:
         if grille_sudoku.symbole_actif == 'X':
-            pass
+            grille_sudoku.efface_case()
         else:
             grille_sudoku.essaye_remplir_case_avec(event.widget.index, grille_sudoku.symbole_actif)
         
