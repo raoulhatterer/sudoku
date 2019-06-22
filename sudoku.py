@@ -41,7 +41,7 @@ class Case(Button):
     >>> ma_case = Case(root, 0, index_cousines, text="une case")
     >>> ma_case.pack()
     >>> ma_case.pretendants
-    [1, 2, 3, 4, 5, 6, 7, 8, 9]
+    ['1', '2', '3', '4', '5', '6', '7', '8', '9']
     >>> ma_case
     0
     """
@@ -61,7 +61,7 @@ class Case(Button):
         super().__init__(cadre, *args, **kwargs) # ce qui relève de la classe Button
         self.index = index
         self.contenu = None
-        self.pretendants = [1, 2, 3, 4, 5, 6, 7, 8, 9]
+        self.pretendants = ['1', '2', '3', '4', '5', '6', '7', '8', '9']
         self.index_cousines = index_cousines
 
     def __repr__(self):
@@ -109,7 +109,7 @@ class Grille:
     <class '__main__.Case'>
     >>> ma_case.contenu # n'affiche rien si le contenu est None
     >>> ma_case.pretendants
-    [1, 2, 3, 4, 5, 6, 7, 8, 9]
+    ['1', '2', '3', '4', '5', '6', '7', '8', '9']
     >>> ma_grille
     0 0 0  0 0 0  0 0 0
     0 0 0  0 0 0  0 0 0
@@ -199,14 +199,16 @@ class Grille:
 
     def get_index_cousines(self, index):
         """
-        Retourne une liste avec les index des 27 cases qui sont soit dans la
-        même ligne, soit dans la même colonne, soit dans le même bloc
+        Retourne une liste avec les index des 20 autres cases qui sont soit
+        dans la même ligne, soit dans la même colonne, soit dans le même bloc
         carré 3x3 que la case d'index donné.
         """
         cousines = list()
         cousines.extend(self.get_index_cousines_en_ligne(index))
         cousines.extend(self.get_index_cousines_en_colonne(index))
         cousines.extend(self.get_index_cousines_en_bloc(index))
+        cousines = list(dict.fromkeys(cousines)) # retire les doublons
+        cousines.remove(index)
         return cousines
 
     def get_index_cousines_en_bloc(self, index):
@@ -215,10 +217,10 @@ class Grille:
         bloc carré 3x3 que la case d'index donné.
         """
         cousines_en_bloc = list()
-        if self.get_bloc(index) < 3:                    # 3 premiers blocs
+        if self.get_bloc(index) < 3:                   # 3 premiers blocs
             premiere_triplette = [i for i in range(
                 self.get_bloc(index)*3, self.get_bloc(index)*3+3)]
-        elif self.get_bloc(index) < 6:                  # 3 blocs suivants
+        elif self.get_bloc(index) < 6:                 # 3 blocs suivants
             premiere_triplette = [i for i in range(
                 18+self.get_bloc(index)*3, 21+self.get_bloc(index)*3)]
         else:                                          # 3 derniers blocs
@@ -234,17 +236,20 @@ class Grille:
         Retourne une liste avec les index des 9 cases qui sont dans la même
         colonne que la case d'index donné.
         """
-        return [i for i in range(self.get_colonne(index),
-                                 self.NBR_CASES, self.LARGEUR_GRILLE)]
+        cousines_en_colonne = [i for i in range(
+            self.get_colonne(index),
+            self.NBR_CASES, self.LARGEUR_GRILLE)]
+        return cousines_en_colonne
 
     def get_index_cousines_en_ligne(self, index):
         """
         Retourne une liste avec les index des 9 cases qui sont dans la même
         ligne que la case d'index donné.
         """
-        return [i for i in range(
+        cousines_en_ligne = [i for i in range(
             self.LARGEUR_GRILLE * self.get_ligne(index),
             self.LARGEUR_GRILLE * self.get_ligne(index) + self.LARGEUR_GRILLE)]
+        return cousines_en_ligne
 
     def __getitem__(self, index):
         """
@@ -262,8 +267,6 @@ class Grille:
         -------
         ma_grille[0] = '5'
         """
-        print(index,type(index))
-        print(symbole,type(symbole))
         if not(isinstance(index, int)):
             raise TypeError()
         if not(isinstance(symbole, str)):
@@ -279,7 +282,7 @@ class Grille:
 
     def __repr__(self):
         """
-        Affichage d'une grille.
+        Affichage d'une grille dans l'interpréteur Python.
 
         Lorsque l'on tape son nom dans l'interpréteur
         son `contenu` est affiché sous forme d'une grille 9 x 9.
@@ -303,42 +306,87 @@ class Grille:
             index += 1
         return affichage
 
+    def afficher_contenu(self):
+        """
+        Affiche le contenu des cases dans tkinter.
+
+        exemple:
+        -------
+        >>> root = Tk()
+        >>> mon_cadre = Frame(root)
+        >>> mon_cadre.pack()
+        >>> ma_grille = Grille(mon_cadre)
+        >>> ma_grille[0] = '5'
+        >>> ma_grille.afficher_contenu()
+        """
+        for index in range(self.NBR_CASES):
+            ma_case = self.get_case(index)
+            if ma_case.contenu is None:
+                ma_case['text'] = ' '
+            else:
+                ma_case['text'] = ma_case.contenu
+            ma_case['background'] = self.get_couleur_case(index, ma_case['text'], self.symbole_actif)
+
+    def afficher_les_index(self):
+        """
+        Révèle dans tkinter les index des 81 cases à la place du contenu.
+
+        exemple:
+        -------
+        >>> root = Tk()
+        >>> mon_cadre = Frame(root)
+        >>> mon_cadre.pack()
+        >>> ma_grille = Grille(mon_cadre)
+        >>> ma_grille.afficher_les_index()
+        """
+        for index in range(self.NBR_CASES):
+            ma_case = self.get_case(index)
+            ma_case['text'] = str(index)
+
     def grille_efface_case(self):
         "Efface le contenu de la case cliquée"
         pass
     
-    def essaye_remplir_case_avec(self, index, valeur):
+    def remplissage_est_reussi(self, index, symbole):
         """
-        Rempli la case d'index compris entre 0 et 80 avec `valeur`.
+        Rempli la case d'index compris entre 0 et 80 avec `symbole`.
         """
-        if (self.get_autorisation_ecriture(index)):
-            self.__setitem__(index, valeur)
-            afficher_contenu()
-            self.reduire_pretendants()
-            self.reduire_sac()
+        if (self.get_autorisation_ecriture(index, symbole)):
+            self.__setitem__(index, symbole)
+            self.afficher_contenu()
+            self.reduire_pretendants(index, symbole)
             return True
         else:
             return False
 
-    def get_autorisation_ecriture(self, index):
-        return self.get_autorisation_colonne(index)\
-            and self.get_autorisation_ligne(index)\
-            and self.get_autorisation_bloc(index)
+    def get_autorisation_ecriture(self, index, symbole):
+        ma_case = self.get_case(index)
+        if symbole in ma_case.pretendants:
+            return True
+        else:
+            return False
+            
+        # return self.get_autorisation_colonne(index)\
+        #     and self.get_autorisation_ligne(index)\
+        #     and self.get_autorisation_bloc(index)
 
-    def get_autorisation_colonne(self, index):
-        return True
+    # def get_autorisation_colonne(self, index):
+    #     return True
 
-    def get_autorisation_ligne(self, index):
-        return True
+    # def get_autorisation_ligne(self, index):
+    #     return True
 
-    def get_autorisation_bloc(self, index):
-        return True
+    # def get_autorisation_bloc(self, index):
+    #     return True
 
-    def reduire_pretendants(self, index):
-        pass
-
-    def reduire_sac(self, index):
-        pass
+    def reduire_pretendants(self, index, symbole):
+        ma_case = self.get_case(index)
+        ma_case.pretendants = list()
+        for index_cousine in ma_case.index_cousines:
+            case_cousine = self.get_case(index_cousine)
+            pretendants = case_cousine.pretendants
+            if symbole in pretendants:
+                pretendants.remove(symbole)
 
     def get_colonne(self, index):
         """
@@ -464,7 +512,7 @@ class Pioche:
                 name='{}'.format(index),
                 text='{}'.format(index)).grid(row=0, column=index, sticky="nsew")
             Label(cadre,
-                  name='lbl{}'.format(index),
+                  name='cardinal{}'.format(index),
                   text='{}'.format(self[index].cardinal)).grid(row=1, column=index, sticky="nsew")
         Button(cadre, name='x', text='X').grid(row=0, column=10, sticky="nsew")
         
@@ -512,6 +560,13 @@ class Pioche:
         """
         return root.nametowidget(str(self.cadre)+"."+str(index))
 
+
+    def get_cardinal_sac(self, index):
+        """
+        Accès à l'étiquette tkinter qui affiche le  cardinal d'un sac d'index donné.
+        """
+        return root.nametowidget(str(self.cadre)+".cardinal"+str(index))
+
         
     def __getitem__(self, index):
         """
@@ -546,6 +601,11 @@ class Pioche:
             print(self.__getitem__(index))
 
     def affiche_pioche(self, index_selection):
+        """
+        Rafraîchi la couleur de la pioche dans tkinter
+
+        Si un sac est sélectionné, il est affiché avec une couleur distinctive.
+        """
         for index in range(1, self.NBR_SACS+1):
             self.get_sac(index)['background'] = self.COULEUR_INITIALE_SAC
         if index_selection == 0:
@@ -555,34 +615,17 @@ class Pioche:
         else:
             raise IndexError
 
+    def reduire_sac(self, symbole):
+        """
+        Il faut réduire le nombre de symbole d'un sac de la pioche
 
+         à chaque fois qu'un symbole est placé sur la grille.
+        """
+        mon_sac = self.get_sac(symbole)
+        mon_sac.cardinal -=1
+        self.get_cardinal_sac(symbole)['text'] = mon_sac.cardinal
+        
 ### Fonctions ###
-
-def reveler_index():
-    """
-    Révèle l'index des 81 cases (nombre variant de 0 à 80)
-
-    à la place du contenu habituellement affiché.
-    """
-    NBRE_CASES=81
-    for index in range(NBRE_CASES):
-        ma_case=grille_sudoku.get_case(index)
-        ma_case['text']=str(index)
-
-
-def afficher_contenu():
-    """
-    Affiche le contenu des cases (nombre variant de 0 à 9)
-    """
-    NBRE_CASES=81
-    for index in range(NBRE_CASES):
-        ma_case = grille_sudoku.get_case(index)
-        if ma_case.contenu is None:
-            ma_case['text'] = ' '
-        else:
-            ma_case['text'] = ma_case.contenu
-        ma_case['background'] = grille_sudoku.get_couleur_case(index, ma_case['text'], grille_sudoku.symbole_actif)
-                
 
 
 def gestion_des_evenements_on_press(event):
@@ -590,30 +633,43 @@ def gestion_des_evenements_on_press(event):
     Identifie l'élément cliqué par le joueur.
 
     Réagit en conséquence:
-    - Si le bouton_index_cases est pressé l'index des cases sera affiché
+    - Si le bouton_index_cases est cliqué
+    - Si le bouton effacer (X) est cliqué
+    - Si une case de la grille est cliqué
+    - Si un sac de la pioche est cliqué
     """
-    print(event)
-    print(event.widget)
-    if event.widget['text']=='Index des cases':
-        reveler_index()
-    if event.widget['text']=='X':
-        grille_sudoku.symbole_actif = 'X'
-        label_symbole_actif['text']='Sélection: X'
-        afficher_contenu()
-        pioche_sudoku.affiche_pioche(0)  # pioche affichée sans sélection
+    #  Si le bouton_index_cases est cliqué
+    if event.widget['text'] == 'Index des cases':
+        grille_sudoku.afficher_les_index()
+    # Si le bouton effacer (X) est cliqué
+    if event.widget['text'] == 'X':
+        deselectionner_les_cases_de_la_pioche()
         event.widget['background'] = 'red' # case X en rouge
+        grille_sudoku.symbole_actif = 'X'
+        label_symbole_actif['text'] ='Sélection: X'
+        grille_sudoku.afficher_contenu()
+    # Si une case de la grille est cliqué
     if type(event.widget) == Case:
         if grille_sudoku.symbole_actif == 'X':
             grille_sudoku.efface_case()
         else:
-            grille_sudoku.essaye_remplir_case_avec(event.widget.index, grille_sudoku.symbole_actif)
-        
+            if grille_sudoku.remplissage_est_reussi(event.widget.index, grille_sudoku.symbole_actif):
+                pioche_sudoku.reduire_sac(grille_sudoku.symbole_actif)
+    # Si un sac de la pioche est cliqué
     if type(event.widget) == Sac:
-        root.nametowidget('.pioche.x')['background'] = COULEUR_PIOCHE
+        deselectionner_le_bouton_effacer()
+        pioche_sudoku.affiche_pioche(int(event.widget.symbole))
         grille_sudoku.symbole_actif = event.widget.symbole
         label_symbole_actif['text']='Sélection: '+event.widget.symbole
-        pioche_sudoku.affiche_pioche(int(event.widget.symbole))
-        afficher_contenu()# pour tenir compte du sac sélectionné
+        grille_sudoku.afficher_contenu()# pour tenir compte du sac sélectionné
+
+
+def deselectionner_le_bouton_effacer():
+    root.nametowidget('.pioche.x')['background'] = COULEUR_PIOCHE
+
+
+def deselectionner_les_cases_de_la_pioche():
+    pioche_sudoku.affiche_pioche(0)  # pioche affichée sans sélection
 
 
 def gestion_des_evenements_on_release(event):
@@ -624,10 +680,8 @@ def gestion_des_evenements_on_release(event):
     - Si le bouton_index_cases est relâché le contenu des cases est rétabli:
     permet de révéler l'index des cases de façon temporaire.
     """
-    print(event)
-    print(event.widget)
     if event.widget['text'] == 'Index des cases':
-        afficher_contenu()
+        grille_sudoku.afficher_contenu()
 
 
 def gestion_des_evenements_on_mouse_over(event):
@@ -638,8 +692,7 @@ def gestion_des_evenements_on_mouse_over(event):
     - Si la souris survole une case de la grille les prétendants sont affichés.
     """
     if type(event.widget) == Case:
-        print(event.widget.pretendants)
-        label_pretendants['text']=event.widget.pretendants
+        label_pretendants['text'] = event.widget.pretendants
 
 
 def gestion_des_evenements_on_mouse_leave(event):
@@ -657,13 +710,13 @@ COULEUR_CADRE_BAS = 'lavender'
 
 root = Tk()
 root.title('Sudoku')
-# Gestion des évènements 
+# Contrôleur : Souris (Types d'évènements gérés)
 root.bind("<ButtonPress>", gestion_des_evenements_on_press)
 root.bind("<ButtonRelease>", gestion_des_evenements_on_release)
 root.bind("<Enter>", gestion_des_evenements_on_mouse_over)
 root.bind("<Leave>", gestion_des_evenements_on_mouse_leave)
 
-# création des conteneurs principaux
+# Création des conteneurs principaux
 cadre_haut = Frame(root, name='en_tete', background=COULEUR_CADRE_HAUT, width=640, height=50)
 cadre_gauche = Frame(root, name='gauche', background=COULEUR_CADRE_GAUCHE, height=400)
 cadre_central = Frame(root, name='grille_sudoku', background='white')
@@ -692,9 +745,17 @@ root.grid_columnconfigure(2, weight=1)  # l'espace horizontal à égalité
 grille_sudoku = Grille(cadre_central)
 pioche_sudoku = Pioche(cadre_pioche)
 
-bouton_index_cases = Button(cadre_gauche, name='index_cases', text='Index des cases')
-label_symbole_actif = Label(cadre_gauche, name='lbl_symbole_actif', text='Sélection: '+str(grille_sudoku.symbole_actif), background=COULEUR_CADRE_GAUCHE)
-label_pretendants = Label(cadre_gauche, name='lbl_pretendants', text='Prétendants: ', background=COULEUR_CADRE_GAUCHE)
+bouton_index_cases = Button(cadre_gauche,
+                            name='index_cases',
+                            text='Index des cases')
+label_symbole_actif = Label(cadre_gauche,
+                            name='lbl_symbole_actif',
+                            text='Sélection: '+str(grille_sudoku.symbole_actif),
+                            background=COULEUR_CADRE_GAUCHE)
+label_pretendants = Label(cadre_gauche,
+                          name='lbl_pretendants',
+                          text='Prétendants: ',
+                          background=COULEUR_CADRE_GAUCHE)
 bouton_index_cases.pack()
 label_symbole_actif.pack()
 label_pretendants.pack()
