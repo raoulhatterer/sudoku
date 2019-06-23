@@ -343,11 +343,23 @@ class Grille:
             ma_case = self.get_case(index)
             ma_case['text'] = str(index)
 
-    def grille_efface_case(self):
+    def efface_case(self, case_a_effacer):
         "Efface le contenu de la case cliquée"
-        pass
-    
-    def remplissage_est_reussi(self, index, symbole):
+        print('efface case')
+        case_a_effacer['text'] = ' '
+        case_a_effacer.contenu = None
+        self.restaurer_pretendants()
+        
+    def restaurer_pretendants(self):
+        for index in range(self.NBR_CASES):
+            ma_case = self.get_case(index)
+            ma_case.pretendants = ['1', '2', '3', '4', '5', '6', '7', '8', '9']
+        for index in  range(self.NBR_CASES):
+            symbole = self.get_case(index).contenu
+            if not(symbole is None):
+                self.reduire_pretendants(index, symbole)
+
+    def remplissage_reussi(self, index, symbole):
         """
         Rempli la case d'index compris entre 0 et 80 avec `symbole`.
         """
@@ -360,8 +372,13 @@ class Grille:
         else:
             return False
 
-
     def reduire_pretendants(self, index, symbole):
+        """
+        Réduit le nombre de prétendants des cousines d'une case d'index donné
+
+        Les cases cousines vierges ont des prétendants.
+        Cette fonction retire symbole de la liste de leurs prétendants.
+        """
         ma_case = self.get_case(index)
         ma_case.pretendants = list()
         for index_cousine in ma_case.index_cousines:
@@ -395,7 +412,13 @@ class Grille:
         """
         return self.get_colonne(index)//3 + (self.get_ligne(index)//3)*3
 
+    def exporte_grille_en_liste(self):
+        grille_en_liste = list()
+        for index in range(self.NBR_CASES):
+            grille_en_liste.append(self[index])
+        return grille_en_liste
 
+    
 class Sac(Button):
     """
     Classe représentant un sac. Un sac contient des symboles identiques.
@@ -617,7 +640,17 @@ class Pioche:
         mon_sac = self.get_widget_sac(symbole)
         mon_sac.cardinal -=1
         self.get_widget_cardinal_sac(symbole)['text'] = mon_sac.cardinal
-        
+
+    def remettre_dans_son_sac(self, symbole):
+        """
+        À chaque fois qu'un symbole est effacé de la grille
+
+        il faut le remettre dans le sac de la pioche approprié.
+        """
+        mon_sac = self.get_widget_sac(symbole)
+        mon_sac.cardinal +=1
+        self.get_widget_cardinal_sac(symbole)['text'] = mon_sac.cardinal
+
 ### Fonctions ###
 
 
@@ -643,10 +676,13 @@ def gestion_des_evenements_on_press(event):
         grille_sudoku.afficher_contenu()
     # Si une case de la grille est cliqué
     if type(event.widget) == Case:
-        if grille_sudoku.symbole_actif == 'X':
-            grille_sudoku.efface_case()
+        if grille_sudoku.symbole_actif == 'X' and not(event.widget.contenu is None):
+            symbole = event.widget.contenu # sauvegarde avant effacement
+            grille_sudoku.efface_case(event.widget)
+            print(symbole)
+            pioche_sudoku.remettre_dans_son_sac(symbole)
         else:
-            if grille_sudoku.remplissage_est_reussi(event.widget.index, grille_sudoku.symbole_actif):
+            if grille_sudoku.remplissage_reussi(event.widget.index, grille_sudoku.symbole_actif):
                 pioche_sudoku.reduire_sac(grille_sudoku.symbole_actif)
     # Si un sac de la pioche est cliqué
     if type(event.widget) == Sac:
