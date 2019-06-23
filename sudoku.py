@@ -708,9 +708,15 @@ def gestion_des_evenements_on_release(event):
     Réagit en conséquence:
     - Si le bouton_index_cases est relâché le contenu des cases est rétabli:
     permet de révéler l'index des cases de façon temporaire.
+    - Si une le contenu d'une case vient d'être supprimé il est nécessaire
+    de rafraîchir l'affichage des prétendants.
     """
     if event.widget['text'] == 'Index des cases':
         grille_sudoku.afficher_contenu()
+
+    if type(event.widget) == Case:
+        label_pretendants['text'] = event.widget.pretendants
+
 
 
 def gestion_des_evenements_on_mouse_over(event):
