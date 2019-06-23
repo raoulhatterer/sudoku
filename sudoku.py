@@ -351,7 +351,8 @@ class Grille:
         """
         Rempli la case d'index compris entre 0 et 80 avec `symbole`.
         """
-        if (self.get_autorisation_ecriture(index, symbole)):
+        case_a_remplir = self.get_case(index)
+        if symbole in case_a_remplir.pretendants:
             self.__setitem__(index, symbole)
             self.afficher_contenu()
             self.reduire_pretendants(index, symbole)
@@ -359,25 +360,6 @@ class Grille:
         else:
             return False
 
-    def get_autorisation_ecriture(self, index, symbole):
-        ma_case = self.get_case(index)
-        if symbole in ma_case.pretendants:
-            return True
-        else:
-            return False
-            
-        # return self.get_autorisation_colonne(index)\
-        #     and self.get_autorisation_ligne(index)\
-        #     and self.get_autorisation_bloc(index)
-
-    # def get_autorisation_colonne(self, index):
-    #     return True
-
-    # def get_autorisation_ligne(self, index):
-    #     return True
-
-    # def get_autorisation_bloc(self, index):
-    #     return True
 
     def reduire_pretendants(self, index, symbole):
         ma_case = self.get_case(index)
@@ -413,7 +395,7 @@ class Grille:
         """
         return self.get_colonne(index)//3 + (self.get_ligne(index)//3)*3
 
-    
+
 class Sac(Button):
     """
     Classe représentant un sac. Un sac contient des symboles identiques.
@@ -543,9 +525,12 @@ class Pioche:
         else:
             raise StopIteration
 
-    def get_sac(self, index):
+    def get_widget_sac(self, index):
         """
-        Retourne le sac d'index donné.
+        Retourne le widget sac d'index donné
+
+        à partir de son nom (le nom du Widget étant reconstruit à partir de
+        son index).
 
         exemple:
         -------
@@ -553,15 +538,23 @@ class Pioche:
         >>> mon_cadre = Frame(root)
         >>> mon_cadre.pack()
         >>> ma_pioche = Pioche(mon_cadre)
-        >>> ma_pioche.get_sac(1)
+        >>> print(ma_pioche.get_widget_sac(1))
+        .!frame.1
+        >>> ma_pioche.get_widget_sac(1) 
         contient 9 symboles 1
-        >>> print(pioche_sudoku.get_sac(5))
-
+        >>> print(ma_pioche[1])           # accès fainéant
+        .!frame.1
+        >>> ma_pioche[1]                  # affichage fainéant
+        contient 9 symboles 1
+        >>> ma_pioche.get_widget_sac(1).symbole
+        '1'
+        >>> ma_pioche.get_widget_sac(1).cardinal
+        9
         """
         return root.nametowidget(str(self.cadre)+"."+str(index))
 
 
-    def get_cardinal_sac(self, index):
+    def get_widget_cardinal_sac(self, index):
         """
         Accès à l'étiquette tkinter qui affiche le  cardinal d'un sac d'index donné.
         """
@@ -589,7 +582,7 @@ class Pioche:
         contient 9 symboles 9
 
         """
-        return self.get_sac(index)        
+        return self.get_widget_sac(index)        
 
     def __repr__(self):
         """
@@ -607,11 +600,11 @@ class Pioche:
         Si un sac est sélectionné, il est affiché avec une couleur distinctive.
         """
         for index in range(1, self.NBR_SACS+1):
-            self.get_sac(index)['background'] = self.COULEUR_INITIALE_SAC
+            self.get_widget_sac(index)['background'] = self.COULEUR_INITIALE_SAC
         if index_selection == 0:
             pass # la sélection est effacée
         elif index_selection <= 9:
-            self.get_sac(index_selection)['background'] = self.COULEUR_SELECTION_SAC
+            self.get_widget_sac(index_selection)['background'] = self.COULEUR_SELECTION_SAC
         else:
             raise IndexError
 
@@ -621,9 +614,9 @@ class Pioche:
 
          à chaque fois qu'un symbole est placé sur la grille.
         """
-        mon_sac = self.get_sac(symbole)
+        mon_sac = self.get_widget_sac(symbole)
         mon_sac.cardinal -=1
-        self.get_cardinal_sac(symbole)['text'] = mon_sac.cardinal
+        self.get_widget_cardinal_sac(symbole)['text'] = mon_sac.cardinal
         
 ### Fonctions ###
 
