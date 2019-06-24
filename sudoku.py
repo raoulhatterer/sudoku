@@ -7,10 +7,10 @@
 # pdb.set_trace()
 
 # Chargement du module tkinter
-from tkinter import Tk, Frame, Button, Label, Event
+from tkinter import Tk, Frame, Button, Label
+from random import shuffle, choice
 
-
-### Classes ###
+# CLASSES
 
 class Case(Button):
     """
@@ -51,14 +51,16 @@ class Case(Button):
         Construit un widget 'case'
 
         avec comme paramètres:
-        CADRE : le cadre de destination (transmis à la classe Button grâce à *args)
-        INDEX : la position dans la grille  (un nombre entier compris entre 0 et 80)
+        CADRE : le cadre de destination (transmis à la classe Button
+        grâce à *args)
+        INDEX : la position dans la grille  (un nombre entier compris
+        entre 0 et 80)
         INDEX_COUSINES : la liste des index des cases cousines (cases de même
         ligne, colonne ou carré 3x3)
          *ARGS : arguments simples destinés à la classe Button
         **KWARGS : arguments de type clé='valeur' transmis à la classe Button
         """
-        super().__init__(cadre, *args, **kwargs) # ce qui relève de la classe Button
+        super().__init__(cadre, *args, **kwargs)  # ce qui relève de la classe Button
         self.index = index
         self.contenu = None
         self.pretendants = ['1', '2', '3', '4', '5', '6', '7', '8', '9']
@@ -99,8 +101,8 @@ class Grille:
     >>> root = Tk()
     >>> mon_cadre = Frame(root)
     >>> mon_cadre.pack()
-    >>> ma_grille = Grille(mon_cadre)
-    >>> ma_grille[0] # affichage fainéant du contenu d'une case
+    >>> ma_grille = Grille(mon_cadre)  # affichage dans tkinter
+    >>> ma_grille[0] # affichage fainéant d'une case dans l'interpréteur
     '0'              # retourne une chaîne de caractères
     >>> print(ma_grille[0]) # affiche fainéant la première case (d'index 0)
     0
@@ -114,11 +116,11 @@ class Grille:
     0 0 0  0 0 0  0 0 0
     0 0 0  0 0 0  0 0 0
     0 0 0  0 0 0  0 0 0
-    
+
     0 0 0  0 0 0  0 0 0
     0 0 0  0 0 0  0 0 0
     0 0 0  0 0 0  0 0 0
-    
+
     0 0 0  0 0 0  0 0 0
     0 0 0  0 0 0  0 0 0
     0 0 0  0 0 0  0 0 0
@@ -163,9 +165,10 @@ class Grille:
                      self.get_index_cousines(index),
                      name='{}'.format(index),
                      text=' ',  # cases vides à l'initialisation
-                     background=self.get_couleur_case(index, ' ', None)).grid(row=j,
-                                                               column=i,
-                                                               sticky="nsew")
+                     background=self.get_couleur_case(
+                         index, ' ', None)).grid(row=j,
+                                                 column=i,
+                                                 sticky="nsew")
                 index += 1
 
     def get_couleur_case(self, index, symbole, symbole_actif):
@@ -207,7 +210,7 @@ class Grille:
         cousines.extend(self.get_index_cousines_en_ligne(index))
         cousines.extend(self.get_index_cousines_en_colonne(index))
         cousines.extend(self.get_index_cousines_en_bloc(index))
-        cousines = list(dict.fromkeys(cousines)) # retire les doublons
+        cousines = list(dict.fromkeys(cousines))  # retire les doublons
         cousines.remove(index)
         return cousines
 
@@ -253,14 +256,14 @@ class Grille:
 
     def __getitem__(self, index):
         """
-        Permet d'obtenir le symbole d'une case de la grille  avec ma_grille[index] 
-        où index est compris entre 0 et NBR_CASES-1.
+        Permet d'obtenir le symbole d'une case de la grille
+        avec ma_grille[index] où index est compris entre 0 et NBR_CASES-1.
         """
         return self.get_case(index).__repr__()
 
     def __setitem__(self, index, symbole):
         """
-        Permet d'écrire facilement un symbole dans le contenu d'une case de la grille.
+        Permet d'écrire facilement un symbole dans une case de la grille.
 
         Le symbole doit être de type str.
         exemple:
@@ -289,12 +292,12 @@ class Grille:
         """
         affichage = ""
         index = 0
-        for index in range(self.NBR_CASES): 
+        for index in range(self.NBR_CASES):
             une_case = self.get_case(index)
             if une_case.contenu is None:
                 affichage += '0'
             else:
-                affichage += une_case.contenu  # ajout de l'affichage d'une case
+                affichage += une_case.contenu  # ajout affichage d'une case
             if index % 27 == 26 and index < 80:
                 affichage += "\n\n"  # à faire toutes les 3 lignes
             elif index % 9 == 8:
@@ -325,7 +328,10 @@ class Grille:
                 ma_case['text'] = ' '
             else:
                 ma_case['text'] = ma_case.contenu
-            ma_case['background'] = self.get_couleur_case(index, ma_case['text'], self.symbole_actif)
+            ma_case['background'] = self.get_couleur_case(
+                index,
+                ma_case['text'],
+                self.symbole_actif)
 
     def afficher_les_index(self):
         """
@@ -345,16 +351,15 @@ class Grille:
 
     def efface_case(self, case_a_effacer):
         "Efface le contenu de la case cliquée"
-        print('efface case')
         case_a_effacer['text'] = ' '
         case_a_effacer.contenu = None
         self.restaurer_pretendants()
-        
+
     def restaurer_pretendants(self):
         for index in range(self.NBR_CASES):
             ma_case = self.get_case(index)
             ma_case.pretendants = ['1', '2', '3', '4', '5', '6', '7', '8', '9']
-        for index in  range(self.NBR_CASES):
+        for index in range(self.NBR_CASES):
             symbole = self.get_case(index).contenu
             if not(symbole is None):
                 self.reduire_pretendants(index, symbole)
@@ -412,13 +417,62 @@ class Grille:
         """
         return self.get_colonne(index)//3 + (self.get_ligne(index)//3)*3
 
-    def exporte_grille_en_liste(self):
-        grille_en_liste = list()
-        for index in range(self.NBR_CASES):
-            grille_en_liste.append(self[index])
-        return grille_en_liste
+    def tirage_debutant(self):
+        """
+        | niveau   | restant | pourcentage |   détail  |
+        |----------+---------+-------------+-----------|
+        | Débutant |      24 |          30 | 112233444 |
+        """
+        destination_des_1 = [index for index in range(81)]
+        destination_des_2 = [index for index in range(81)]
+        destination_des_3 = [index for index in range(81)]
+        destination_des_4 = [index for index in range(81)]
+        destination_des_5 = [index for index in range(81)]
+        destination_des_6 = [index for index in range(81)]
+        destination_des_7 = [index for index in range(81)]
+        destination_des_8 = [index for index in range(81)]
+        destination_des_9 = [index for index in range(81)]
+        restant_tirage_debutant = [1,1,2,2,3,3,4,4,4]
+        shuffle(restant_tirage_debutant)
+        symboles_a_placer = list()
+        for index in range(9):
+            symboles = str(index+1)*restant_tirage_debutant[index]
+            for symbole in symboles:
+                symboles_a_placer.append(symbole)
+        while symboles_a_placer:
+            symbole = symboles_a_placer.pop(0)
+            print("Placement d'un", symbole)
+            if symbole == '1':
+                index_case = choice(destination_des_1)
+                print('index_case', index_case)
+                if grille_sudoku.remplissage_reussi(index_case, symbole):
+                    pioche_sudoku.reduire_sac(symbole)
+                case_a_remplir = grille_sudoku.get_case(index_case)
+                print('case_a_remplir', case_a_remplir)
+                print('case_a_remplir.index_cousines', case_a_remplir.index_cousines)
+                for index in case_a_remplir.index_cousines:
+                    if index in destination_des_1:
+                        destination_des_1.remove(index)
+                if index_case in destination_des_1:
+                    destination_des_1.remove(index_case)
+                destination_des_2.remove(index_case)
+                destination_des_3.remove(index_case)
+                destination_des_4.remove(index_case)
+                destination_des_5.remove(index_case)
+                destination_des_6.remove(index_case)
+                destination_des_7.remove(index_case)
+                destination_des_8.remove(index_case)
+                destination_des_9.remove(index_case)
+                print(destination_des_1)
+                print(len(destination_des_1))
+            
+    # def exporte_grille_en_liste(self):
+    #     grille_en_liste = list()
+    #     for index in range(self.NBR_CASES):
+    #         grille_en_liste.append(self[index])
+    #     return grille_en_liste
 
-    
+
 class Sac(Button):
     """
     Classe représentant un sac. Un sac contient des symboles identiques.
@@ -472,7 +526,7 @@ class Sac(Button):
 
 class Pioche:
     """
-    Classe représentant 9 sacs contenant chacun des symboles identiques tous 
+    Classe représentant 9 sacs contenant chacun des symboles identiques tous
     différents (1 sac avec que des "1", un autre avec que des "2", etc.)
 
     À l'initialisation de la grille, un certain nombre de ces symboles est
@@ -480,7 +534,8 @@ class Pioche:
     Au cours du jeu, tant qu'il reste des symboles dans un sac, le joueur peut
     en piocher pour les placer sur la grille.
 
-    Les sacs sont des widgets tkinter. Il faut donc donner un cadre à la pioche.
+    Les sacs sont des widgets tkinter. Il faut donc donner un cadre à la
+    pioche.
 
     exemple:
     -------
@@ -515,12 +570,17 @@ class Pioche:
             Sac(cadre,
                 index,
                 name='{}'.format(index),
-                text='{}'.format(index)).grid(row=0, column=index, sticky="nsew")
+                text='{}'.format(index)).grid(row=0,
+                                              column=index,
+                                              sticky="nsew")
             Label(cadre,
                   name='cardinal{}'.format(index),
-                  text='{}'.format(self[index].cardinal)).grid(row=1, column=index, sticky="nsew")
-        Button(cadre, name='x', text='X').grid(row=0, column=10, sticky="nsew")
-        
+                  text='{}'.format(self[index].cardinal)).grid(row=1,
+                                                               column=index,
+                                                               sticky="nsew")
+        Button(cadre, name='x', text='X').grid(row=0,
+                                               column=10,
+                                               sticky="nsew")
 
     def __iter__(self):
         """
@@ -563,7 +623,7 @@ class Pioche:
         >>> ma_pioche = Pioche(mon_cadre)
         >>> print(ma_pioche.get_widget_sac(1))
         .!frame.1
-        >>> ma_pioche.get_widget_sac(1) 
+        >>> ma_pioche.get_widget_sac(1)
         contient 9 symboles 1
         >>> print(ma_pioche[1])           # accès fainéant
         .!frame.1
@@ -576,14 +636,14 @@ class Pioche:
         """
         return root.nametowidget(str(self.cadre)+"."+str(index))
 
-
     def get_widget_cardinal_sac(self, index):
         """
-        Accès à l'étiquette tkinter qui affiche le  cardinal d'un sac d'index donné.
+        Accès à l'étiquette tkinter
+
+        qui affiche le cardinal d'un sac d'index donné.
         """
         return root.nametowidget(str(self.cadre)+".cardinal"+str(index))
 
-        
     def __getitem__(self, index):
         """
         Permet d'obtenir le contenu d'un sac dans la pioche avec:
@@ -593,7 +653,7 @@ class Pioche:
         -------
         >>> for i in range(1,10):
         ...     ma_pioche[i]
-        ... 
+        ...
         contient 9 symboles 1
         contient 9 symboles 2
         contient 9 symboles 3
@@ -605,15 +665,15 @@ class Pioche:
         contient 9 symboles 9
 
         """
-        return self.get_widget_sac(index)        
+        return self.get_widget_sac(index)
 
     def __repr__(self):
         """
         Représentation de la pioche
-        
+
         quand on tape son nom dans l'interpréteur.
         """
-        for index in range(1,self.NBR_SACS):
+        for index in range(1, self.NBR_SACS):
             print(self.__getitem__(index))
 
     def affiche_pioche(self, index_selection):
@@ -624,8 +684,8 @@ class Pioche:
         """
         for index in range(1, self.NBR_SACS+1):
             self.get_widget_sac(index)['background'] = self.COULEUR_INITIALE_SAC
-        if index_selection == 0:
-            pass # la sélection est effacée
+        if index_selection == 0:  # code pour juste effacer la sélection
+            pass
         elif index_selection <= 9:
             self.get_widget_sac(index_selection)['background'] = self.COULEUR_SELECTION_SAC
         else:
@@ -638,7 +698,7 @@ class Pioche:
          à chaque fois qu'un symbole est placé sur la grille.
         """
         mon_sac = self.get_widget_sac(symbole)
-        mon_sac.cardinal -=1
+        mon_sac.cardinal -= 1
         self.get_widget_cardinal_sac(symbole)['text'] = mon_sac.cardinal
 
     def remettre_dans_son_sac(self, symbole):
@@ -648,11 +708,11 @@ class Pioche:
         il faut le remettre dans le sac de la pioche approprié.
         """
         mon_sac = self.get_widget_sac(symbole)
-        mon_sac.cardinal +=1
+        mon_sac.cardinal += 1
         self.get_widget_cardinal_sac(symbole)['text'] = mon_sac.cardinal
 
-### Fonctions ###
 
+# FONCTIONS
 
 def gestion_des_evenements_on_press(event):
     """
@@ -663,6 +723,7 @@ def gestion_des_evenements_on_press(event):
     - Si le bouton effacer (X) est cliqué
     - Si une case de la grille est cliqué
     - Si un sac de la pioche est cliqué
+    - Si le bouton_ajout_aleatoire est cliqué
     """
     #  Si le bouton_index_cases est cliqué
     if event.widget['text'] == 'Index des cases':
@@ -670,28 +731,32 @@ def gestion_des_evenements_on_press(event):
     # Si le bouton effacer (X) est cliqué
     if event.widget['text'] == 'X':
         deselectionner_les_cases_de_la_pioche()
-        event.widget['background'] = 'red' # case X en rouge
+        event.widget['background'] = 'red'  # case X en rouge
         grille_sudoku.symbole_actif = 'X'
-        label_symbole_actif['text'] ='Sélection: X'
+        label_symbole_actif['text'] = 'Sélection: X'
         grille_sudoku.afficher_contenu()
     # Si une case de la grille est cliqué
     if type(event.widget) == Case:
         if grille_sudoku.symbole_actif == 'X' and not(event.widget.contenu is None):
-            symbole = event.widget.contenu # sauvegarde avant effacement
+            symbole = event.widget.contenu  # sauvegarde avant effacement
             grille_sudoku.efface_case(event.widget)
-            print(symbole)
             pioche_sudoku.remettre_dans_son_sac(symbole)
         else:
-            if grille_sudoku.remplissage_reussi(event.widget.index, grille_sudoku.symbole_actif):
+            if grille_sudoku.remplissage_reussi(event.widget.index,
+                                                grille_sudoku.symbole_actif):
                 pioche_sudoku.reduire_sac(grille_sudoku.symbole_actif)
     # Si un sac de la pioche est cliqué
     if type(event.widget) == Sac:
         deselectionner_le_bouton_effacer()
         pioche_sudoku.affiche_pioche(int(event.widget.symbole))
         grille_sudoku.symbole_actif = event.widget.symbole
-        label_symbole_actif['text']='Sélection: '+event.widget.symbole
-        grille_sudoku.afficher_contenu()# pour tenir compte du sac sélectionné
-
+        label_symbole_actif['text'] = 'Sélection: '+event.widget.symbole
+        grille_sudoku.afficher_contenu()  # rafraîchissement sélection
+    # Si le bouton_ajout_aleatoire est cliqué
+    if event.widget['text'] == 'Ajout aléatoire':
+        print('tire symbole dans sac')
+        grille_sudoku.tirage_debutant()
+        
 
 def deselectionner_le_bouton_effacer():
     root.nametowidget('.pioche.x')['background'] = COULEUR_PIOCHE
@@ -718,7 +783,6 @@ def gestion_des_evenements_on_release(event):
         label_pretendants['text'] = event.widget.pretendants
 
 
-
 def gestion_des_evenements_on_mouse_over(event):
     """
     Identifie l'élément survolé par la souris.
@@ -733,7 +797,8 @@ def gestion_des_evenements_on_mouse_over(event):
 def gestion_des_evenements_on_mouse_leave(event):
     pass
 
-### Constantes ###
+
+# CONSTANTES
 
 COULEUR_CADRE_HAUT = 'lavender'
 COULEUR_CADRE_GAUCHE = 'lavender'
@@ -741,7 +806,7 @@ COULEUR_CADRE_DROIT = 'lavender'
 COULEUR_PIOCHE = '#d9d9d9'
 COULEUR_CADRE_BAS = 'lavender'
 
-### Applcation Tkinter ###
+# APPLICATION Tkinter
 
 root = Tk()
 root.title('Sudoku')
@@ -791,9 +856,14 @@ label_pretendants = Label(cadre_gauche,
                           name='lbl_pretendants',
                           text='Prétendants: ',
                           background=COULEUR_CADRE_GAUCHE)
+bouton_ajout_aleatoire = Button(cadre_gauche,
+                            name='ajout_aleatoire',
+                            text='Ajout aléatoire')
+
 bouton_index_cases.pack()
 label_symbole_actif.pack()
 label_pretendants.pack()
+bouton_ajout_aleatoire.pack()
 
 # Disposition du conteneur cadre_bas
 cadre_bas.columnconfigure(0, weight=1)
