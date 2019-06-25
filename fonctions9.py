@@ -427,23 +427,43 @@ def supprimer_nombre(tab):
     if (tab[i][j] != 0) and  len(reste_possible(tab,i,j))<2:
         tab[i][j]=0
     
-def Clic(event):
-    """ Gestion de l'evenement Clic gauche """
-    global DETECTION_CLIC_SUR_OBJET
-    
+def double_clic(event):
+    """ Gestion de l'evenement double clic gauche """
+    global chiffre
+    #text_choix=can.create_text(larg_carre*chiffre+5-larg_carre//2,larg_carre*10+5+larg_carre//2,text=chiffre,fill="black",font=("Helvetica",20))
     # position du pointeur de la souris
     X = (event.x-5)//larg_carre
     Y = (event.y-5)//larg_carre
+    if Y==10 and X<9 :
+        chiffre =X+1
+        can.create_text(larg_carre*chiffre+5-larg_carre//2,larg_carre*10+5+larg_carre//2,text=chiffre,fill="red",font=("Helvetica",20))   
+    elif Y==10 and X==10 :
+        chiffre =0  
 
-    before=tab[Y][X]
-    if valeur.get()>0 and valeur.get()<10:
-        tab[Y][X]=valeur.get()
+def Clic(event):
+    """ Gestion de l'evenement Clic gauche """
+    global chiffre
+    before=20
+   
+    # position du pointeur de la souris
+    X = (event.x-5)//larg_carre
+    Y = (event.y-5)//larg_carre
     
-    
+    if X<10 and Y<10 and chiffre!=0 and grille_depart[Y][X]==0:
+        before=tab[Y][X]
+        tab[Y][X]=chiffre
+    elif X<10 and Y<10 and chiffre==0 and grille_depart[Y][X]==0:
+        tab[Y][X]=chiffre
+        can.create_rectangle(larg_carre*X+5,larg_carre*Y+5,larg_carre*(X+1)+5,larg_carre*(Y+1)+5,fill="yellow")
+    else : before = 20    
+    #if valeur.get()>0 and valeur.get()<10:
+     #   tab[Y][X]=valeur.get()
+
     if before==0 and tab[Y][X]!=0:
-        text=can.create_text(larg_carre*X+5+larg_carre//2,larg_carre*Y+5+larg_carre//2,text=tab[Y][X],fill="black",font=("Helvetica",20))
-
-
+        can.create_text(larg_carre*X+5+larg_carre//2,larg_carre*Y+5+larg_carre//2,text=tab[Y][X],fill="blue",font=("Helvetica",20))
+    
+   
+    text_choix=can.create_text(larg_carre*chiffre+5-larg_carre//2,larg_carre*10+5+larg_carre//2,text=chiffre,fill="black",font=("Helvetica",20))
 
 def creation_aleatoire(tab) :
     melange_nombre_grille(tab)
@@ -451,10 +471,10 @@ def creation_aleatoire(tab) :
     change_3_lign(tab)
     change_3_petites_col(tab)
     change_3_petites_lignes(tab)
-    for i in range(60):
+    for i in range(80):
        supprimer_nombre(tab)
 
-
+creation_aleatoire(grille_sudoku)
 #____________________________________________________________________________
 #
 #                FONCTIONS RESOLUTION
@@ -599,7 +619,7 @@ def ou_le_nombre_peut_etre(tab,nombre):
                [0,8,5,0,0,0,0,7,0],
                [0,0,0,5,0,9,2,0,0]]"""
 
-grille_sudoku=[[1,0,0,0,0,0,5,2,0],
+"""grille_sudoku=[[1,0,0,0,0,0,5,2,0],
                [0,0,0,0,7,8,0,0,0],
                [0,0,0,0,0,0,6,0,0],
                [0,9,0,0,4,0,0,0,0],
@@ -607,7 +627,7 @@ grille_sudoku=[[1,0,0,0,0,0,5,2,0],
                [0,7,0,0,0,0,0,0,0],
                [0,0,6,2,0,0,0,0,0],
                [0,4,0,0,0,0,0,7,8],
-               [0,0,0,0,0,0,0,0,3]]
+               [0,0,0,0,0,0,0,0,3]]"""
 
 
 
@@ -670,8 +690,8 @@ def motifs_simples_carre_2 (tab,carre):
 
 
 
-
-for essai in range(10):
+def resolution():
+    global grille_possibles
 
 
 
@@ -759,10 +779,20 @@ for essai in range(10):
                 grille_sudoku[ligne][colonne]=grille_possibles[ligne][colonne][0]
 
 
+#------------------------------------------------------------------------------------------------------------------------------
+#
+#                                   AFFICHAGE
+#
+#-----------------------------------------------------------------------------------------------------------------------------
+
+def lignes(event):
+    for i in range(4) :
+        ligne_1=can.create_line(3*larg_carre*i+5,5,3*larg_carre*(i)+5,9*larg_carre+5,fill="red",width=3)
+        ligne_2=can.create_line(5,3*larg_carre*i+5,9*larg_carre+5,3*larg_carre*(i)+5,fill="red",width=3)
 
 
 
-
+grille_depart=list(grille_sudoku)
 tab=grille_sudoku
 
 fen = Tk()
@@ -774,21 +804,42 @@ for i in range(9) :
 for i in range(4) :
     ligne_1=can.create_line(3*larg_carre*i+5,5,3*larg_carre*(i)+5,9*larg_carre+5,fill="red",width=3)
     ligne_2=can.create_line(5,3*larg_carre*i+5,9*larg_carre+5,3*larg_carre*(i)+5,fill="red",width=3)
+for i in range(9) :
+    rect_choix=can.create_rectangle(larg_carre*i+5,larg_carre*10+5,larg_carre*(i+1)+5,larg_carre*(10+1)+5,fill="pink2")
+for i in range(1,10):
+    text_choix=can.create_text(larg_carre*i+5-larg_carre//2,larg_carre*10+5+larg_carre//2,text=i,fill="black",font=("Helvetica",20))
+mon_image=PhotoImage(file="gomme.gif")
+img=can.create_image(426,426,image=mon_image)
 
-
+    
 # CrÃ©ation d'un widget Entry
-valeur= IntVar()
-Champ = Entry(fen, textvariable= valeur, bg ='bisque', fg='maroon',font=("Helvetica",20))
-Champ.focus_set()
-Champ.pack(side = LEFT, padx = 5, pady = 5)
+#valeur= IntVar()
+#Champ = Entry(fen, textvariable= valeur, bg ='bisque', fg='maroon',font=("Helvetica",20))
+#Champ.focus_set()
+#Champ.pack(side = LEFT, padx = 5, pady = 5)
 
 
 for i in range(9) :
     for j in range(9):
         if tab[i][j]!=0 :
             text=can.create_text(larg_carre*j+5+larg_carre//2,larg_carre*i+5+larg_carre//2,text=tab[i][j],fill="black",font=("Helvetica",20))  
+# Création d'un widget Button (Resoudre)
+BoutonResout = Button(fen, text ='Resoudre', command = resolution)
+BoutonResout.pack(side = LEFT, padx = 5, pady = 5)
+# Création d'un widget Button (New)
+BoutonNew = Button(fen, text ='New', command = creation_aleatoire(grille_sudoku))
+BoutonNew.pack(side = LEFT, padx = 10, pady = 10)
+
+
+
+# Création d'un widget Button (bouton Quitter)
+BoutonQuitter = Button(fen, text ='Quitter', command = fen.destroy)
+BoutonQuitter.pack(side = LEFT, padx = 5, pady = 5)
+
 
 can.bind('<Button-1>',Clic)
+can.bind("<Double-Button-1>", double_clic)
+can.bind("<ButtonRelease-1>",lignes)
 fen.mainloop()
                              
-    
+
