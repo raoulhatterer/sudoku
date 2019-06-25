@@ -131,6 +131,7 @@ class Grille:
     LARGEUR_BLOC = 3
     LARGEUR_GRILLE = LARGEUR_BLOC * LARGEUR_BLOC
     NBR_CASES = LARGEUR_GRILLE * LARGEUR_GRILLE
+    SYMBOLES = ['1', '2', '3', '4', '5', '6', '7', '8', '9']
 
     # Couleurs des cases de la grille
     COULEUR_BLOCS_PAIRS = 'LightSteelBlue1'
@@ -350,7 +351,9 @@ class Grille:
             ma_case['text'] = str(index)
 
     def efface_case(self, case_a_effacer):
-        "Efface le contenu de la case cliquée"
+        """
+        Efface le contenu de la case cliquée
+        """
         case_a_effacer['text'] = ' '
         case_a_effacer.contenu = None
         self.restaurer_pretendants()
@@ -419,53 +422,70 @@ class Grille:
 
     def tirage_debutant(self):
         """
-        | niveau   | restant | pourcentage |   détail  |
-        |----------+---------+-------------+-----------|
-        | Débutant |      24 |          30 | 112233444 |
+        |----------+---------+-------------+-----------|------------------+
+        | niveau   | restant | pourcentage |   détail  | restant à placer |
+        |----------+---------+-------------+-----------|------------------+
+        | Débutant |      24 |          30 | 112233444 |    887766555     |
+        |----------+---------+-------------+-----------|------------------+
         """
-        destination_des_1 = [index for index in range(81)]
-        destination_des_2 = [index for index in range(81)]
-        destination_des_3 = [index for index in range(81)]
-        destination_des_4 = [index for index in range(81)]
-        destination_des_5 = [index for index in range(81)]
-        destination_des_6 = [index for index in range(81)]
-        destination_des_7 = [index for index in range(81)]
-        destination_des_8 = [index for index in range(81)]
-        destination_des_9 = [index for index in range(81)]
-        restant_tirage_debutant = [1,1,2,2,3,3,4,4,4]
-        shuffle(restant_tirage_debutant)
+
+        # Construction d'un dictionnaire nombre_symboles_a_placer
+        # associant à chaque symbole ['1', '2', '3', '4', '5', '6', '7', '8', '9']
+        # le nombre aléatoire de fois qu'il sera prélevé dans la pioche.
+        init_nombre_symboles_a_placer = [8, 8, 7, 7, 6, 6, 5, 5, 5]
+        shuffle(init_nombre_symboles_a_placer)
+        nombre_symboles_a_placer = dict(zip(self.SYMBOLES,
+                                            init_nombre_symboles_a_placer))
+
+        # Construction d'une liste comportant tous les symboles à placer à
+        # partir du dictionnaire précédent
         symboles_a_placer = list()
-        for index in range(9):
-            symboles = str(index+1)*restant_tirage_debutant[index]
-            for symbole in symboles:
-                symboles_a_placer.append(symbole)
+        for symbole in self.SYMBOLES:
+            symboles = symbole*nombre_symboles_a_placer[symbole]
+            for element in symboles:
+                symboles_a_placer.append(element)
+
+        # Construction d'un dictionnaire destinations_des_symboles
+        # associant à chaque symbole ['1', '2', '3', '4', '5', '6', '7', '8', '9']
+        # le nombre de destinations possibles
+        toutes_les_cases = [index for index in range(81)]
+        destinations_des_symboles = dict()
+        for symbole in self.SYMBOLES:
+            toutes_les_cases = toutes_les_cases.copy()
+            destinations_des_symboles.update({symbole: toutes_les_cases})
+
+
+        print('symboles à placer', symboles_a_placer)
+        print('nombre de symb à placer', nombre_symboles_a_placer)
+
         while symboles_a_placer:
-            symbole = symboles_a_placer.pop(0)
-            print("Placement d'un", symbole)
-            if symbole == '1':
-                index_case = choice(destination_des_1)
-                print('index_case', index_case)
-                if grille_sudoku.remplissage_reussi(index_case, symbole):
-                    pioche_sudoku.reduire_sac(symbole)
+            symbole_a_placer = symboles_a_placer.pop(0)
+            print("Placement d'un", symbole_a_placer)
+            index_case = choice(destinations_des_symboles[symbole_a_placer])
+            print('index_case', index_case)
+            if grille_sudoku.remplissage_reussi(index_case, symbole_a_placer):
+                pioche_sudoku.reduire_sac(symbole_a_placer)
                 case_a_remplir = grille_sudoku.get_case(index_case)
-                print('case_a_remplir', case_a_remplir)
-                print('case_a_remplir.index_cousines', case_a_remplir.index_cousines)
                 for index in case_a_remplir.index_cousines:
-                    if index in destination_des_1:
-                        destination_des_1.remove(index)
-                if index_case in destination_des_1:
-                    destination_des_1.remove(index_case)
-                destination_des_2.remove(index_case)
-                destination_des_3.remove(index_case)
-                destination_des_4.remove(index_case)
-                destination_des_5.remove(index_case)
-                destination_des_6.remove(index_case)
-                destination_des_7.remove(index_case)
-                destination_des_8.remove(index_case)
-                destination_des_9.remove(index_case)
-                print(destination_des_1)
-                print(len(destination_des_1))
-            
+                    if index in destinations_des_symboles[symbole_a_placer]:
+                        destinations_des_symboles[symbole_a_placer].remove(index)
+                for symbole in self.SYMBOLES:
+                    if index_case in destinations_des_symboles[symbole]:
+                        destinations_des_symboles[symbole].remove(index_case)
+                        if len(destinations_des_symboles[symbole]) + nombre_symboles_a_placer[symbole] == 9:
+                            a_proteger = destinations_des_symboles[symbole]
+                            print('Alerte ! À protéger:', a_proteger)
+                            for case_protegee in a_proteger:
+                                for autres_symboles in self.SYMBOLES:
+                                    if autres_symboles != symbole and case_protegee in destinations_des_symboles[autres_symboles]:
+                                        destinations_des_symboles[autres_symboles].remove(case_protegee)
+                for symbole in self.SYMBOLES:
+                    if len(destinations_des_symboles[symbole]) + nombre_symboles_a_placer[symbole] < 9:
+                        return  False
+        return True
+
+
+
     # def exporte_grille_en_liste(self):
     #     grille_en_liste = list()
     #     for index in range(self.NBR_CASES):
@@ -755,7 +775,8 @@ def gestion_des_evenements_on_press(event):
     # Si le bouton_ajout_aleatoire est cliqué
     if event.widget['text'] == 'Ajout aléatoire':
         print('tire symbole dans sac')
-        grille_sudoku.tirage_debutant()
+        print(grille_sudoku.tirage_debutant())
+              
         
 
 def deselectionner_le_bouton_effacer():
