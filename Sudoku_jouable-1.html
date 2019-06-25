@@ -24,7 +24,8 @@ th {
 }
 #b0,#b1,#b2,#b3,#b4,#b5,#b6,#b7,#b8{background-color:  #145a32 ;color:white;}
 #a4,#a3,#a5,#a12,#a13,#a14,#a21,#a22,#a23,#a57,#a58,#a59,#a66,#a67,#a68,#a75,#a76,#a77{background-color: #d5f5e3;}
-#a30,#a31,#a32,#a39,#a40,#a41,#a48,#a49,#a50{background-color: #82e0aa;}
+#a30,#a31,#a32,#a39,#a40,#a41,#a48,#a49,#a50{background-color: #82e0aa;
+}
 </style>
 <head> 
 <title>SUDOKU</title>
@@ -173,9 +174,10 @@ th {
 		
 
 
-
+<button id="bouttest" onclick="verif()">VERIFIER</button>
 <input type="file" id="fileinput" multiple />
 <div id="result"></div>
+<p id="demo"></p>
 <script type="text/javascript">
 
 function ajoute(e) {
@@ -215,8 +217,31 @@ function readMultipleFiles(evt)
       }
 
           document.getElementById('fileinput').addEventListener('change',readMultipleFiles, false);
+		  
+function verif()
+{
+var test1=0;
+for(var j1=0;j1<9;j1++){var ligne =[];
+for(var i1=0;i1<9;i1++) {var k1=i1+9*j1; ligne.push(document.getElementById("a"+k1).innerHTML); };
+ligne.sort();
+
+if (ligne!="1,2,3,4,5,6,7,8,9") test1=test1+1;
+
+}
+
+var test2=0;
+for(var j2=0;j2<9;j2++){var ligne =[];
+for(var i2=0;i2<9;i2++) {var k2=j2+9*i2; ligne.push(document.getElementById("a"+k2).innerHTML); };
+ligne.sort();
+
+if (ligne!="1,2,3,4,5,6,7,8,9") test2=test2+1;
+
+}if ((test1==0)&&(test2==0)) document.getElementById("demo").innerHTML = "La grille est bien remplie"; else document.getElementById("demo").innerHTML = "La grille comporte des erreurs ou n'est pas totalement remplie";
+}		  
+		  
 </script>
 
 </body>
 </html>		
+
 
