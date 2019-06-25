@@ -5,6 +5,7 @@ table {
   font-family: arial, sans-serif;
   font-size: 20px;
   border-collapse: collapse;
+  font-weight: bold;
   width: 50%;
 }
 
@@ -12,12 +13,18 @@ td, th {
   border: 2px solid #000000;
   text-align: center;
   padding: 8px;
-  color:blue
+  color:#145a32;
 }
 
+tr:nth-child(6) {background-color:  #d5f5e3;}
+tr:nth-child(4) {background-color: #d5f5e3;}
+tr:nth-child(5) {background-color:  #d5f5e3;}
 th {
-  background-color: #dddddd;
+  background-color:  #145a32 ;color:white;
 }
+#b0,#b1,#b2,#b3,#b4,#b5,#b6,#b7,#b8{background-color:  #145a32 ;color:white;}
+#a4,#a3,#a5,#a12,#a13,#a14,#a21,#a22,#a23,#a57,#a58,#a59,#a66,#a67,#a68,#a75,#a76,#a77{background-color: #d5f5e3;}
+#a30,#a31,#a32,#a39,#a40,#a41,#a48,#a49,#a50{background-color: #82e0aa;}
 </style>
 <head> 
 <title>SUDOKU</title>
@@ -30,7 +37,8 @@ th {
    
     <thead>
         <tr>
-          <th scope="col">a</th>
+          <th></th>
+		  <th scope="col">a</th>
           <th scope="col">b</th>
           <th scope="col">c</th>
           <th scope="col">d</th>
@@ -44,6 +52,7 @@ th {
       
 	<tbody>
         <tr>
+		  <td id="b0" >1</td>
           <td id="a0" onclick="ajoute(event)"></td>
           <td id="a1" onclick="ajoute(event)"></td>
           <td id="a2" onclick="ajoute(event)"></td>
@@ -55,7 +64,8 @@ th {
 		  <td id="a8" onclick="ajoute(event)"></td>	  
         </tr>
 		
-        <tr> 	
+        <tr>
+		  <td id="b1" >2</td>		
           <td id="a9" onclick="ajoute(event)"></td>
           <td id="a10" onclick="ajoute(event)"></td>
 		  <td id="a11" onclick="ajoute(event)"></td>
@@ -68,7 +78,8 @@ th {
         </tr>
         
 		<tr> 		
-          <td id="a18" onclick="ajoute(event)"></td>
+          <td id="b2" >3</td>
+		  <td id="a18" onclick="ajoute(event)"></td>
           <td id="a19" onclick="ajoute(event)"></td>
 		  <td id="a20" onclick="ajoute(event)"></td>
           <td id="a21" onclick="ajoute(event)"></td>
@@ -80,7 +91,8 @@ th {
         </tr>
 		
 		<tr>  
-          <td id="a27" onclick="ajoute(event)"></td>
+          <td id="b3" >4</td>
+		  <td id="a27" onclick="ajoute(event)"></td>
           <td id="a28" onclick="ajoute(event)"></td>
 		  <td id="a29" onclick="ajoute(event)"></td>
           <td id="a30" onclick="ajoute(event)"></td>
@@ -92,7 +104,8 @@ th {
         </tr>
 		
 		<tr>  
-          <td id="a36" onclick="ajoute(event)"></td>
+          <td id="b4" >5</td>
+		  <td id="a36" onclick="ajoute(event)"></td>
           <td id="a37" onclick="ajoute(event)"></td>
 		  <td id="a38" onclick="ajoute(event)"></td>
           <td id="a39" onclick="ajoute(event)"></td>
@@ -104,7 +117,8 @@ th {
         </tr>
 		
 		<tr> 	
-          <td id="a45" onclick="ajoute(event)"></td>
+          <td id="b5" >6</td>
+		  <td id="a45" onclick="ajoute(event)"></td>
           <td id="a46" onclick="ajoute(event)"></td>
 		  <td id="a47" onclick="ajoute(event)"></td>
           <td id="a48" onclick="ajoute(event)"></td>
@@ -116,7 +130,8 @@ th {
         </tr>
 		
 		<tr>	
-          <td id="a54" onclick="ajoute(event)"></td>
+          <td id="b6" >7</td>
+		  <td id="a54" onclick="ajoute(event)"></td>
           <td id="a55" onclick="ajoute(event)"></td>
 		  <td id="a56" onclick="ajoute(event)"></td>
           <td id="a57" onclick="ajoute(event)"></td>
@@ -128,7 +143,8 @@ th {
         </tr>
 		
 		<tr> 	
-          <td id="a63" onclick="ajoute(event)"></td>
+          <td id="b7" >8</td>
+		  <td id="a63" onclick="ajoute(event)"></td>
           <td id="a64" onclick="ajoute(event)"></td>
 		  <td id="a65" onclick="ajoute(event)"></td>
           <td id="a66" onclick="ajoute(event)"></td>
@@ -140,7 +156,8 @@ th {
         </tr>
 		
 		<tr>  
-          <td id="a72" onclick="ajoute(event)"></td>
+          <td id="b8" >9</td>
+		  <td id="a72" onclick="ajoute(event)"></td>
           <td id="a73" onclick="ajoute(event)"></td>
 		  <td id="a74" onclick="ajoute(event)"></td>
           <td id="a75" onclick="ajoute(event)"></td>
@@ -183,7 +200,7 @@ function readMultipleFiles(evt)
                     return function(e) {
                         var contents = e.target.result;
                         var res = document.getElementById("result");
-                        {var i; for(i=0;i<81;i++) {document.getElementById("a"+i).innerHTML =contents[2*i+(i-(i % 9))/9]; if (contents[2*i+(i-(i % 9))/9]>1){document.getElementById("a"+i).setAttribute("onclick", "");document.getElementById("a"+i).setAttribute("style", "color:red");}}}                      } 
+                        {var i; for(i=0;i<81;i++) { if (contents[2*i+(i-(i % 9))/9]>0){document.getElementById("a"+i).innerHTML =contents[2*i+(i-(i % 9))/9];document.getElementById("a"+i).setAttribute("onclick", "");document.getElementById("a"+i).setAttribute("style", "color:red");}}}                      } 
 						
 						 
                                    
