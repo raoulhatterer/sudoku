@@ -237,8 +237,19 @@ ligne.sort();
 if (ligne!="1,2,3,4,5,6,7,8,9") test2=test2+1;
 
 }if ((test1==0)&&(test2==0)) document.getElementById("demo").innerHTML = "La grille est bien remplie"; else document.getElementById("demo").innerHTML = "La grille comporte des erreurs ou n'est pas totalement remplie";
-}		  
 		  
+
+var test3=0;
+for(var carre=0;carre<9;carre++){var ligne =[];
+for(var i3=0;i3<9;i3++) {var k3=((i3%3)+((i3-(i3%3))*3)+(carre%3)*3+(carre-(carre%3))*9); ligne.push(document.getElementById("a"+k3).innerHTML); };
+ligne.sort();
+
+if (ligne!="1,2,3,4,5,6,7,8,9") test3=test3+1;
+
+}if (((test1==0)&&(test2==0))&&(test3==0)) document.getElementById("demo").innerHTML = "La grille est bien remplie"; else document.getElementById("demo").innerHTML = "La grille comporte des erreurs ou n'est pas totalement remplie";
+}		
+
+	  
 </script>
 
 </body>
