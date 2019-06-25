@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html> 
+<style>
+table {
+  font-family: arial, sans-serif;
+  font-size: 20px;
+  border-collapse: collapse;
+  width: 50%;
+}
+
+td, th {
+  border: 2px solid #000000;
+  text-align: center;
+  padding: 8px;
+  color:blue
+}
+
+th {
+  background-color: #dddddd;
+}
+</style>
+<head> 
+<title>SUDOKU</title>
+<meta charset="utf-8"> 
+</head> 
+<body> 
+    <h1 id="ici">SUDOKU</h1>
+	<p>Pour jouer, cliquer sur la case pour incrémenter sa valeur</p>
+	<table id "sudok">
+   
+    <thead>
+        <tr>
+          <th scope="col">a</th>
+          <th scope="col">b</th>
+          <th scope="col">c</th>
+          <th scope="col">d</th>
+          <th scope="col">e</th>
+          <th scope="col">f</th>
+          <th scope="col">g</th>
+          <th scope="col">h</th>
+          <th scope="col">i</th>      
+        </tr>
+    </thead>
+      
+	<tbody>
+        <tr>
+          <td id="a0" onclick="ajoute(event)"></td>
+          <td id="a1" onclick="ajoute(event)"></td>
+          <td id="a2" onclick="ajoute(event)"></td>
+          <td id="a3" onclick="ajoute(event)"></td>
+		  <td id="a4" onclick="ajoute(event)"></td>
+		  <td id="a5" onclick="ajoute(event)"></td>
+		  <td id="a6" onclick="ajoute(event)"></td>
+		  <td id="a7" onclick="ajoute(event)"></td>
+		  <td id="a8" onclick="ajoute(event)"></td>	  
+        </tr>
+		
+        <tr> 	
+          <td id="a9" onclick="ajoute(event)"></td>
+          <td id="a10" onclick="ajoute(event)"></td>
+		  <td id="a11" onclick="ajoute(event)"></td>
+          <td id="a12" onclick="ajoute(event)"></td>
+          <td id="a13" onclick="ajoute(event)"></td>
+		  <td id="a14" onclick="ajoute(event)"></td>
+		  <td id="a15" onclick="ajoute(event)"></td>
+		  <td id="a16" onclick="ajoute(event)"></td>
+		  <td id="a17" onclick="ajoute(event)"></td>
+        </tr>
+        
+		<tr> 		
+          <td id="a18" onclick="ajoute(event)"></td>
+          <td id="a19" onclick="ajoute(event)"></td>
+		  <td id="a20" onclick="ajoute(event)"></td>
+          <td id="a21" onclick="ajoute(event)"></td>
+          <td id="a22" onclick="ajoute(event)"></td>
+		  <td id="a23" onclick="ajoute(event)"></td>
+		  <td id="a24" onclick="ajoute(event)"></td>
+		  <td id="a25" onclick="ajoute(event)"></td>
+		  <td id="a26" onclick="ajoute(event)"></td>
+        </tr>
+		
+		<tr>  
+          <td id="a27" onclick="ajoute(event)"></td>
+          <td id="a28" onclick="ajoute(event)"></td>
+		  <td id="a29" onclick="ajoute(event)"></td>
+          <td id="a30" onclick="ajoute(event)"></td>
+          <td id="a31" onclick="ajoute(event)"></td>
+		  <td id="a32" onclick="ajoute(event)"></td>
+		  <td id="a33" onclick="ajoute(event)"></td>
+		  <td id="a34" onclick="ajoute(event)"></td>
+		  <td id="a35" onclick="ajoute(event)"></td>
+        </tr>
+		
+		<tr>  
+          <td id="a36" onclick="ajoute(event)"></td>
+          <td id="a37" onclick="ajoute(event)"></td>
+		  <td id="a38" onclick="ajoute(event)"></td>
+          <td id="a39" onclick="ajoute(event)"></td>
+          <td id="a40" onclick="ajoute(event)"></td>
+		  <td id="a41" onclick="ajoute(event)"></td>
+		  <td id="a42" onclick="ajoute(event)"></td>
+		  <td id="a43" onclick="ajoute(event)"></td>
+		  <td id="a44" onclick="ajoute(event)"></td>
+        </tr>
+		
+		<tr> 	
+          <td id="a45" onclick="ajoute(event)"></td>
+          <td id="a46" onclick="ajoute(event)"></td>
+		  <td id="a47" onclick="ajoute(event)"></td>
+          <td id="a48" onclick="ajoute(event)"></td>
+          <td id="a49" onclick="ajoute(event)"></td>
+		  <td id="a50" onclick="ajoute(event)"></td>
+		  <td id="a51" onclick="ajoute(event)"></td>
+		  <td id="a52" onclick="ajoute(event)"></td>
+		  <td id="a53" onclick="ajoute(event)"></td>
+        </tr>
+		
+		<tr>	
+          <td id="a54" onclick="ajoute(event)"></td>
+          <td id="a55" onclick="ajoute(event)"></td>
+		  <td id="a56" onclick="ajoute(event)"></td>
+          <td id="a57" onclick="ajoute(event)"></td>
+          <td id="a58" onclick="ajoute(event)"></td>
+		  <td id="a59" onclick="ajoute(event)"></td>
+		  <td id="a60" onclick="ajoute(event)"></td>
+		  <td id="a61" onclick="ajoute(event)"></td>
+		  <td id="a62" onclick="ajoute(event)"></td>
+        </tr>
+		
+		<tr> 	
+          <td id="a63" onclick="ajoute(event)"></td>
+          <td id="a64" onclick="ajoute(event)"></td>
+		  <td id="a65" onclick="ajoute(event)"></td>
+          <td id="a66" onclick="ajoute(event)"></td>
+          <td id="a67" onclick="ajoute(event)"></td>
+		  <td id="a68" onclick="ajoute(event)"></td>
+		  <td id="a69" onclick="ajoute(event)"></td>
+		  <td id="a70" onclick="ajoute(event)"></td>
+		  <td id="a71" onclick="ajoute(event)"></td>
+        </tr>
+		
+		<tr>  
+          <td id="a72" onclick="ajoute(event)"></td>
+          <td id="a73" onclick="ajoute(event)"></td>
+		  <td id="a74" onclick="ajoute(event)"></td>
+          <td id="a75" onclick="ajoute(event)"></td>
+          <td id="a76" onclick="ajoute(event)"></td>
+		  <td id="a77" onclick="ajoute(event)"></td>
+		  <td id="a78" onclick="ajoute(event)"></td>
+		  <td id="a79" onclick="ajoute(event)"></td>
+		  <td id="a80" onclick="ajoute(event)"></td>
+        </tr>
+		</tbody>
+		
+	</table>	
+		
+
+
+
+<input type="file" id="fileinput" multiple />
+<div id="result"></div>
+<script type="text/javascript">
+
+function ajoute(e) {
+	var element = e.target || e.srcElement;
+	var x = document.getElementById(element.id).innerHTML;
+    document.getElementById(element.id).innerHTML = (x/1+1)%10;
+}
+function myFunction() {
+  document.getElementById("a0").innerHTML = "1";
+  
+}
+
+function readMultipleFiles(evt) 
+	  {
+        //Retrieve all the files from the FileList object
+        var files = evt.target.files; 
+
+        if (files) {
+            f=files[0];
+                  var r = new FileReader();
+                r.onload = (function(f) {
+                    return function(e) {
+                        var contents = e.target.result;
+                        var res = document.getElementById("result");
+                        {var i; for(i=0;i<81;i++) {document.getElementById("a"+i).innerHTML =contents[2*i+(i-(i % 9))/9]; if (contents[2*i+(i-(i % 9))/9]>1){document.getElementById("a"+i).setAttribute("onclick", "");document.getElementById("a"+i).setAttribute("style", "color:red");}}}                      } 
+						
+						 
+                                   
+                                        })(f);
+
+                r.readAsText(f);
+                                                
+                 } 
+				 else {
+              alert("Failed to load files"); 
+                      }
+      }
+
+          document.getElementById('fileinput').addEventListener('change',readMultipleFiles, false);
+</script>
+
+</body>
+</html>		
+
