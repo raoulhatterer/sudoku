@@ -22,7 +22,7 @@ tr:nth-child(5) {background-color:  #d5f5e3;}
 th {
   background-color:  #145a32 ;color:white;
 }
-#b0,#b1,#b2,#b3,#b4,#b5,#b6,#b7,#b8{background-color:  #145a32 ;color:white;}
+#b0,#b1,#b2,#b3,#b4,#b5,#b6,#b7,#b8,#affich_tps,#RAZ{background-color:  #145a32 ;color:white;}
 #a4,#a3,#a5,#a12,#a13,#a14,#a21,#a22,#a23,#a57,#a58,#a59,#a66,#a67,#a68,#a75,#a76,#a77{background-color: #d5f5e3;}
 #a30,#a31,#a32,#a39,#a40,#a41,#a48,#a49,#a50{background-color: #82e0aa;
 }
@@ -34,9 +34,14 @@ th {
 <body> 
     <h1 id="ici">SUDOKU</h1>
 	<p>Pour jouer, cliquer sur la case pour incrémenter sa valeur</p>
+	<p> </p>
+	<p id="affich_tps"></p>
+	<button id="RAZ" onclick="initialise_tps()">RAZ chrono</button>
+	<p> </p>
 	<table id "sudok">
-   
+	
     <thead>
+	
         <tr>
           <th></th>
 		  <th scope="col">a</th>
@@ -178,6 +183,8 @@ th {
 <input type="file" id="fileinput" multiple />
 <div id="result"></div>
 <p id="demo"></p>
+
+
 <p class="author">Auteurs: Raoul HATTERER &amp; Jean-Luc COSSALTER</p>
 <script type="text/javascript">
 
@@ -250,7 +257,26 @@ if (ligne!="1,2,3,4,5,6,7,8,9") test3=test3+1;
 }if (((test1==0)&&(test2==0))&&(test3==0)) document.getElementById("demo").innerHTML = "La grille est bien remplie"; else document.getElementById("demo").innerHTML = "La grille comporte des erreurs ou n'est pas totalement remplie";
 }		
 
-	  
+ 
+function initialise_tps(){
+  var date = new Date();
+  var t0 = date.getTime();
+  temps=t0;
+  Afficher_temps();
+}
+
+
+function Afficher_temps() {
+  var date = new Date();
+  var t1 = date.getTime();
+  t1=t1-temps;
+  var tps_en_s = (t1-t1%1000)/1000
+  document.getElementById("affich_tps").innerHTML = "Vous jouez depuis : "+tps_en_s+" s";
+  setTimeout("Afficher_temps()",1000);
+     console.log("Afficher_temps");
+}
+
+initialise_tps()	  
 </script>
 
 </body>
