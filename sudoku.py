@@ -1,5 +1,6 @@
 # coding: UTF-8
 # Jeu de Sudoku
+
 # Auteur : Raoul HATTERER
 
 # Pour debugger:
@@ -350,6 +351,16 @@ class Grille:
             ma_case = self.get_case(index)
             ma_case['text'] = str(index)
 
+    def efface_grille(self):
+        """
+        Efface le contenu de toutes les cases de la grille.
+        """
+        for index in range(self.NBR_CASES):
+            case_a_effacer = self.get_case(index)
+            case_a_effacer['text'] = ' '
+            case_a_effacer.contenu = None
+            case_a_effacer.pretendants = ['1', '2', '3', '4', '5', '6', '7', '8', '9']
+
     def efface_case(self, case_a_effacer):
         """
         Efface le contenu de la case cliquée
@@ -367,20 +378,20 @@ class Grille:
             if not(symbole is None):
                 self.reduire_pretendants(index, symbole)
 
-    def remplissage_reussi(self, index, symbole):
+    def remplissage_reussi(self, index, symbole_a_placer):
         """
-        Rempli la case d'index compris entre 0 et 80 avec `symbole`.
+        Rempli la case d'index compris entre 0 et 80 avec `symbole_a_placer`.
         """
         case_a_remplir = self.get_case(index)
-        if symbole in case_a_remplir.pretendants:
-            self.__setitem__(index, symbole)
+        if symbole_a_placer in case_a_remplir.pretendants:
+            self.__setitem__(index, symbole_a_placer)
             self.afficher_contenu()
-            self.reduire_pretendants(index, symbole)
-            return True
+            return self.reduire_pretendants_des_cousines(index,
+                                                         symbole_a_placer)
         else:
             return False
 
-    def reduire_pretendants(self, index, symbole):
+    def reduire_pretendants_des_cousines(self, index, symbole):
         """
         Réduit le nombre de prétendants des cousines d'une case d'index donné
 
@@ -391,9 +402,14 @@ class Grille:
         ma_case.pretendants = list()
         for index_cousine in ma_case.index_cousines:
             case_cousine = self.get_case(index_cousine)
-            pretendants = case_cousine.pretendants
-            if symbole in pretendants:
-                pretendants.remove(symbole)
+            if case_cousine.contenu is None:
+                pretendants = case_cousine.pretendants
+                if symbole in pretendants:
+                    pretendants.remove(symbole)
+                if pretendants == []:
+                    print('Case sans contenu ni prétendants')
+                    return False
+        return True
 
     def get_colonne(self, index):
         """
@@ -427,9 +443,12 @@ class Grille:
         |----------+---------+-------------+-----------|------------------+
         | Débutant |      24 |          30 | 112233444 |    887766555     |
         |----------+---------+-------------+-----------|------------------+
+
+        Si le tirage réussi, la fonction retourne True. S'il échoue, la
+        fonction retourne False.
         """
 
-        # Construction d'un dictionnaire nombre_symboles_a_placer
+        # Construction d'un dictionnaire 'nombre_symboles_a_placer'
         # associant à chaque symbole ['1', '2', '3', '4', '5', '6', '7', '8', '9']
         # le nombre aléatoire de fois qu'il sera prélevé dans la pioche.
         init_nombre_symboles_a_placer = [8, 8, 7, 7, 6, 6, 5, 5, 5]
@@ -437,8 +456,7 @@ class Grille:
         nombre_symboles_a_placer = dict(zip(self.SYMBOLES,
                                             init_nombre_symboles_a_placer))
 
-        # Construction d'une liste comportant tous les symboles à placer à
-        # partir du dictionnaire précédent
+        # Construction d'une liste comportant tous les symboles à placer
         symboles_a_placer = list()
         for symbole in self.SYMBOLES:
             symboles = symbole*nombre_symboles_a_placer[symbole]
@@ -447,7 +465,7 @@ class Grille:
 
         # Construction d'un dictionnaire destinations_des_symboles
         # associant à chaque symbole ['1', '2', '3', '4', '5', '6', '7', '8', '9']
-        # le nombre de destinations possibles
+        # les destinations possibles (au départ toutes les cases)
         toutes_les_cases = [index for index in range(81)]
         destinations_des_symboles = dict()
         for symbole in self.SYMBOLES:
@@ -455,14 +473,14 @@ class Grille:
             destinations_des_symboles.update({symbole: toutes_les_cases})
 
 
-        print('symboles à placer', symboles_a_placer)
-        print('nombre de symb à placer', nombre_symboles_a_placer)
+        # print('symboles à placer', symboles_a_placer)
+        # print('nombre de symb à placer', nombre_symboles_a_placer)
 
         while symboles_a_placer:
             symbole_a_placer = symboles_a_placer.pop(0)
-            print("Placement d'un", symbole_a_placer)
+            # print("Placement d'un", symbole_a_placer)
             index_case = choice(destinations_des_symboles[symbole_a_placer])
-            print('index_case', index_case)
+            # print('index_case', index_case)
             if grille_sudoku.remplissage_reussi(index_case, symbole_a_placer):
                 pioche_sudoku.reduire_sac(symbole_a_placer)
                 case_a_remplir = grille_sudoku.get_case(index_case)
@@ -474,7 +492,7 @@ class Grille:
                         destinations_des_symboles[symbole].remove(index_case)
                         if len(destinations_des_symboles[symbole]) + nombre_symboles_a_placer[symbole] == 9:
                             a_proteger = destinations_des_symboles[symbole]
-                            print('Alerte ! À protéger:', a_proteger)
+                            # print('Alerte ! À protéger:', a_proteger)
                             for case_protegee in a_proteger:
                                 for autres_symboles in self.SYMBOLES:
                                     if autres_symboles != symbole and case_protegee in destinations_des_symboles[autres_symboles]:
@@ -482,6 +500,8 @@ class Grille:
                 for symbole in self.SYMBOLES:
                     if len(destinations_des_symboles[symbole]) + nombre_symboles_a_placer[symbole] < 9:
                         return  False
+            else:
+                return False
         return True
 
 
@@ -573,6 +593,7 @@ class Pioche:
     """
 
     NBR_SACS = 9
+    SYMBOLES = ['1', '2', '3', '4', '5', '6', '7', '8', '9']
     COULEUR_INITIALE_SAC = '#d9d9d9'
     COULEUR_SELECTION_SAC = 'LightSteelBlue3'
 
@@ -731,6 +752,17 @@ class Pioche:
         mon_sac.cardinal += 1
         self.get_widget_cardinal_sac(symbole)['text'] = mon_sac.cardinal
 
+    def reinitialiser(self):
+        """
+        Réinitialise la pioche
+
+        en mettant 9 symboles identiques dans chaque sac.
+        """
+        for symbole in self.SYMBOLES:
+            sac_a_remplir = self.get_widget_sac(symbole)
+            sac_a_remplir.cardinal = 9
+            self.get_widget_cardinal_sac(symbole)['text'] = 9
+
 
 # FONCTIONS
 
@@ -773,11 +805,25 @@ def gestion_des_evenements_on_press(event):
         label_symbole_actif['text'] = 'Sélection: '+event.widget.symbole
         grille_sudoku.afficher_contenu()  # rafraîchissement sélection
     # Si le bouton_ajout_aleatoire est cliqué
-    if event.widget['text'] == 'Ajout aléatoire':
-        print('tire symbole dans sac')
-        print(grille_sudoku.tirage_debutant())
-              
-        
+    if event.widget['text'] == 'Tirage aléatoire':
+        grille_valide = False
+        tentatives_de_remplissage = 0
+        afficher_tentatives = input('Afficher chaque tentatives ?')
+        while not(grille_valide) and (tentatives_de_remplissage < 5000):
+            if afficher_tentatives:
+                input('ENTER pour faire une tentative')
+            grille_sudoku.efface_grille()
+            pioche_sudoku.reinitialiser()
+            tentatives_de_remplissage +=1
+            print('Tentative de remplissage n°{}'.format(tentatives_de_remplissage))
+            tirage = grille_sudoku.tirage_debutant()
+            print(grille_sudoku)
+            if tirage:
+                print('Tirage réussi')
+                grille_valide = True
+            else:
+                print('Tirage non valide !')
+
 
 def deselectionner_le_bouton_effacer():
     root.nametowidget('.pioche.x')['background'] = COULEUR_PIOCHE
@@ -878,8 +924,8 @@ label_pretendants = Label(cadre_gauche,
                           text='Prétendants: ',
                           background=COULEUR_CADRE_GAUCHE)
 bouton_ajout_aleatoire = Button(cadre_gauche,
-                            name='ajout_aleatoire',
-                            text='Ajout aléatoire')
+                            name='tirage_aleatoire',
+                            text='Tirage aléatoire')
 
 bouton_index_cases.pack()
 label_symbole_actif.pack()
