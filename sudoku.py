@@ -273,8 +273,9 @@ class Grille:
         """
         if not(isinstance(index, int)):
             raise TypeError()
-        if not(isinstance(symbole, str)):
-            raise TypeError()
+        if symbole is not None:
+            if not(isinstance(symbole, str)):
+                raise TypeError()
 
         if index < self.NBR_CASES:
             self.get_case(index).contenu = symbole
@@ -406,7 +407,7 @@ class Grille:
                 pretendants = case_cousine.pretendants
                 if symbole in pretendants:
                     pretendants.remove(symbole)
-                if not pretendants :
+                if not pretendants:
                     print('Case sans contenu ni prétendants')
                     return False
         return True
@@ -534,7 +535,8 @@ class Grille:
             if destinations_des_symboles[symbole_a_placer]: 
                 index_case = choice(destinations_des_symboles[symbole_a_placer])
                 print('en case', index_case,
-                      'parmi', destinations_des_symboles[symbole_a_placer])
+                      'parmi', destinations_des_symboles[symbole_a_placer],
+                      len(destinations_des_symboles[symbole_a_placer]))
                 if grille_sudoku.remplissage_reussi(index_case, symbole_a_placer):
                     # Réduire la pioche
                     pioche.reduire_sac(symbole_a_placer)
@@ -563,20 +565,32 @@ class Grille:
                             print(destinations_des_symboles[symbole])
                             print(pioche.get_widget_sac(symbole).cardinal)
                             print('Destinations pour les', symbole, 'insuffisantes.')
-                            return  False
+                            return False
                 else:
                     return False
             else:
                 print('sans destination possible')
         return True
 
+    def liste_export(self):
+        """
+        Exporte la grille sudoku sous forme de liste.
+        """
+        grille_en_liste = list()
+        for index in range(self.NBR_CASES):
+            grille_en_liste.append(self[index])
+        return grille_en_liste
 
-
-    # def exporte_grille_en_liste(self):
-    #     grille_en_liste = list()
-    #     for index in range(self.NBR_CASES):
-    #         grille_en_liste.append(self[index])
-    #     return grille_en_liste
+    def liste_import(self, grille_en_liste):
+        """
+        Importe puis affiche une grille transmise sous forme de liste.
+        """
+        for index in range(self.NBR_CASES):
+            if grille_en_liste[index] == '0':
+                self[index] = None
+            else:
+                self[index] = grille_en_liste[index]
+        self.afficher_contenu()
 
 
 class Sac(Button):
