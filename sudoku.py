@@ -9,6 +9,8 @@
 # Chargement du module tkinter
 from tkinter import Tk, Frame, Button, Label
 from random import shuffle, choice
+from tkinter import ttk
+from tkinter.constants import *
 
 # CLASSES
 
@@ -529,9 +531,12 @@ class Grille:
             toutes_les_cases = toutes_les_cases.copy()
             destinations_des_symboles.update({symbole: toutes_les_cases})
 
+        compteur = 0
         while symboles_a_placer:
             symbole_a_placer = symboles_a_placer.pop(0)
             print("Placement d'un", symbole_a_placer, end=' ')
+            compteur +=1
+            progressbar["value"] = compteur
             if destinations_des_symboles[symbole_a_placer]: 
                 index_case = choice(destinations_des_symboles[symbole_a_placer])
                 print('en case', index_case,
@@ -1007,6 +1012,12 @@ root.grid_columnconfigure(0, weight=1)  # cadre_gauche cadre_central
 root.grid_columnconfigure(1, weight=1)  # et cadre_droite se partagent
 root.grid_columnconfigure(2, weight=1)  # l'espace horizontal à égalité
 
+progressbar = ttk.Progressbar(cadre_gauche,
+                              orient="vertical",
+                              length=300,
+                              maximum = 81,
+                              mode="determinate")
+progressbar.pack(side = BOTTOM)
 grille_sudoku = Grille(cadre_central)
 pioche_sudoku = Pioche(cadre_pioche)
 
