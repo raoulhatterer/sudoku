@@ -103,7 +103,8 @@ class Grille:
     >>> root = Tk()
     >>> mon_cadre = Frame(root)
     >>> mon_cadre.pack()
-    >>> ma_grille = Grille(mon_cadre)  # affichage dans tkinter
+    >>> ma_pioche = Pioche(mon_cadre)
+    >>> ma_grille = Grille(mon_cadre, ma_pioche)  # affichage de la grille dans tkinter
     >>> ma_grille[0] # affichage fainéant d'une case dans l'interpréteur
     '0'              # retourne une chaîne de caractères
     >>> print(ma_grille[0]) # affiche fainéant la première case (d'index 0)
@@ -142,15 +143,16 @@ class Grille:
 
     symbole_actif = None
 
-    def __init__(self, cadre):
+    def __init__(self, cadre, grille):
         """
-        À l'initialisation préciser le cadre de destination de la grille.
+        À l'initialisation préciser le cadre de destination de la grille et la pioche à utiliser.
         exemple:
         -------
         >>> root = Tk()
         >>> mon_cadre = Frame(root)
         >>> mon_cadre.pack()
-        >>> ma_grille = Grille(mon_cadre) # fait apparaître la grille
+        >>> ma_pioche = Pioche(mon_cadre)
+        >>> ma_grille = Grille(mon_cadre, ma_pioche) # fait apparaître la grille
         """
         self.cadre = cadre
 
@@ -378,7 +380,7 @@ class Grille:
         for index in range(self.NBR_CASES):
             symbole = self.get_case(index).contenu
             if not(symbole is None):
-                self.reduire_pretendants(index, symbole)
+                self.reduire_pretendants_des_cousines(index, symbole)
 
     def remplissage_reussi(self, index, symbole_a_placer):
         """
@@ -570,7 +572,11 @@ class Grille:
                             print(destinations_des_symboles[symbole])
                             print(pioche.get_widget_sac(symbole).cardinal)
                             print('Destinations pour les', symbole, 'insuffisantes.')
-                            return False
+                            print('Retirer', symbole_a_placer, 'de la case', index_case)
+                            self.efface_case(case_a_remplir)
+                            pioche.remettre_dans_son_sac(symbole_a_placer)
+                            symboles_a_placer.insert(0, symbole)
+                            #return False
                 else:
                     return False
             else:
@@ -1018,8 +1024,8 @@ progressbar = ttk.Progressbar(cadre_gauche,
                               maximum = 81,
                               mode="determinate")
 progressbar.pack(side = BOTTOM)
-grille_sudoku = Grille(cadre_central)
 pioche_sudoku = Pioche(cadre_pioche)
+grille_sudoku = Grille(cadre_central, pioche_sudoku)
 
 bouton_index_cases = Button(cadre_gauche,
                             name='index_cases',
