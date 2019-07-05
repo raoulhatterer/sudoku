@@ -544,12 +544,13 @@ class Grille:
                 print('en case', index_case,
                       'parmi', destinations_des_symboles[symbole_a_placer],
                       len(destinations_des_symboles[symbole_a_placer]))
-                if grille_sudoku.remplissage_reussi(index_case, symbole_a_placer):
+                sauvegarde = destinations_des_symboles[symbole_a_placer].copy()
+                if self.remplissage_reussi(index_case, symbole_a_placer):
                     # Réduire la pioche
                     pioche.reduire_sac(symbole_a_placer)
                     input('Pause')
                     # Retirer les cousines des destinations possibles
-                    case_a_remplir = grille_sudoku.get_case(index_case)
+                    case_a_remplir = self.get_case(index_case)
                     for index in case_a_remplir.index_cousines:
                         if index in destinations_des_symboles[symbole_a_placer]:
                             destinations_des_symboles[symbole_a_placer].remove(index)
@@ -559,14 +560,14 @@ class Grille:
                         if index_case in destinations:
                             destinations.remove(index_case)
                             # Réserver les destinations si leur nombre devient critique
-                            if destinations:
-                                if len(destinations) == pioche.get_widget_sac(symbole).cardinal:
-                                    print('Alerte ! À protéger:', destinations)
-                                    for case_protegee in destinations:
-                                        for autres_symboles in self.SYMBOLES:
-                                            if autres_symboles != symbole and case_protegee in destinations_des_symboles[autres_symboles]:
-                                                destinations_des_symboles[autres_symboles].remove(case_protegee)
-                    # Contrôler que les destinations restent suffisantes
+                            # if destinations:
+                            #     if len(destinations) == pioche.get_widget_sac(symbole).cardinal:
+                            #         print('Alerte ! À protéger:', destinations)
+                            #         for case_protegee in destinations:
+                            #             for autres_symboles in self.SYMBOLES:
+                            #                 if autres_symboles != symbole and case_protegee in destinations_des_symboles[autres_symboles]:
+                            #                     destinations_des_symboles[autres_symboles].remove(case_protegee)
+                    # Contrôler que les destinations restent suffisantes sinon annuler le dernier placement
                     for symbole in self.SYMBOLES:
                         if len(destinations_des_symboles[symbole]) < pioche.get_widget_sac(symbole).cardinal:
                             print(destinations_des_symboles[symbole])
@@ -576,6 +577,10 @@ class Grille:
                             self.efface_case(case_a_remplir)
                             pioche.remettre_dans_son_sac(symbole_a_placer)
                             symboles_a_placer.insert(0, symbole)
+                            compteur -= 1
+                            print(destinations_des_symboles[symbole_a_placer])
+                            destinations_des_symboles[symbole_a_placer] = sauvegarde
+                            print(destinations_des_symboles[symbole_a_placer])                            
                             #return False
                 else:
                     return False
