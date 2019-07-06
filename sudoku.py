@@ -135,6 +135,7 @@ class Grille:
     LARGEUR_GRILLE = LARGEUR_BLOC * LARGEUR_BLOC
     NBR_CASES = LARGEUR_GRILLE * LARGEUR_GRILLE
     SYMBOLES = ['1', '2', '3', '4', '5', '6', '7', '8', '9']
+    destinations_des_symboles = dict()
 
     # Couleurs des cases de la grille
     COULEUR_BLOCS_PAIRS = 'LightSteelBlue1'
@@ -175,6 +176,9 @@ class Grille:
                                                  column=i,
                                                  sticky="nsew")
                 index += 1
+        self.restaurer_pretendants()
+        self.restaurer_destinations()
+        
 
     def get_couleur_case(self, index, symbole, symbole_actif):
         """
@@ -374,6 +378,9 @@ class Grille:
         self.restaurer_pretendants()
 
     def restaurer_pretendants(self):
+        """
+        Détermine les prétendants de chacune des cases de la grille.
+        """
         for index in range(self.NBR_CASES):
             ma_case = self.get_case(index)
             ma_case.pretendants = ['1', '2', '3', '4', '5', '6', '7', '8', '9']
@@ -382,7 +389,7 @@ class Grille:
             if not(symbole is None):
                 self.reduire_pretendants_des_cousines(index, symbole)
 
-    def remplissage_reussi(self, index, symbole_a_placer):
+    def remplir_case(self, index, symbole_a_placer):
         """
         Rempli la case d'index compris entre 0 et 80 avec `symbole_a_placer`.
         """
@@ -486,7 +493,7 @@ class Grille:
             # print("Placement d'un", symbole_a_placer)
             index_case = choice(destinations_des_symboles[symbole_a_placer])
             # print('index_case', index_case)
-            if grille_sudoku.remplissage_reussi(index_case, symbole_a_placer):
+            if self.remplir_case(index_case, symbole_a_placer):
                 pioche_sudoku.reduire_sac(symbole_a_placer)
                 case_a_remplir = grille_sudoku.get_case(index_case)
                 for index in case_a_remplir.index_cousines:
@@ -523,40 +530,31 @@ class Grille:
             symboles = symbole*9
             for element in symboles:
                 symboles_a_placer.append(element)
-
-        # Construction d'un dictionnaire destinations_des_symboles
-        # associant à chaque symbole ['1', '2', '3', '4', '5', '6', '7', '8', '9']
-        # les destinations possibles (au départ toutes les cases)
-        toutes_les_cases = [index for index in range(81)]
-        destinations_des_symboles = dict()
-        for symbole in self.SYMBOLES:
-            toutes_les_cases = toutes_les_cases.copy()
-            destinations_des_symboles.update({symbole: toutes_les_cases})
-
+    
         compteur = 0
         while symboles_a_placer:
             symbole_a_placer = symboles_a_placer.pop(0)
             print("Placement d'un", symbole_a_placer, end=' ')
             compteur +=1
             progressbar["value"] = compteur
-            if destinations_des_symboles[symbole_a_placer]: 
-                index_case = choice(destinations_des_symboles[symbole_a_placer])
+            if self.destinations_des_symboles[symbole_a_placer]:
+                index_case = choice(self.destinations_des_symboles[symbole_a_placer])
                 print('en case', index_case,
-                      'parmi', destinations_des_symboles[symbole_a_placer],
-                      len(destinations_des_symboles[symbole_a_placer]))
-                sauvegarde = destinations_des_symboles[symbole_a_placer].copy()
-                if self.remplissage_reussi(index_case, symbole_a_placer):
+                      'parmi', self.destinations_des_symboles[symbole_a_placer],
+                      len(self.destinations_des_symboles[symbole_a_placer]))
+                sauvegarde = self.destinations_des_symboles[symbole_a_placer].copy()
+                if self.remplir_case(index_case, symbole_a_placer):
                     # Réduire la pioche
                     pioche.reduire_sac(symbole_a_placer)
                     input('Pause')
                     # Retirer les cousines des destinations possibles
                     case_a_remplir = self.get_case(index_case)
                     for index in case_a_remplir.index_cousines:
-                        if index in destinations_des_symboles[symbole_a_placer]:
-                            destinations_des_symboles[symbole_a_placer].remove(index)
+                        if index in self.destinations_des_symboles[symbole_a_placer]:
+                            self.destinations_des_symboles[symbole_a_placer].remove(index)
                     # Retirer la case des destinations possibles
                     for symbole in self.SYMBOLES:
-                        destinations = destinations_des_symboles[symbole]
+                        destinations = self.destinations_des_symboles[symbole]
                         if index_case in destinations:
                             destinations.remove(index_case)
                             # Réserver les destinations si leur nombre devient critique
@@ -569,8 +567,8 @@ class Grille:
                             #                     destinations_des_symboles[autres_symboles].remove(case_protegee)
                     # Contrôler que les destinations restent suffisantes sinon annuler le dernier placement
                     for symbole in self.SYMBOLES:
-                        if len(destinations_des_symboles[symbole]) < pioche.get_widget_sac(symbole).cardinal:
-                            print(destinations_des_symboles[symbole])
+                        if len(self.destinations_des_symboles[symbole]) < pioche.get_widget_sac(symbole).cardinal:
+                            print(self.destinations_des_symboles[symbole])
                             print(pioche.get_widget_sac(symbole).cardinal)
                             print('Destinations pour les', symbole, 'insuffisantes.')
                             print('Retirer', symbole_a_placer, 'de la case', index_case)
@@ -578,9 +576,9 @@ class Grille:
                             pioche.remettre_dans_son_sac(symbole_a_placer)
                             symboles_a_placer.insert(0, symbole)
                             compteur -= 1
-                            print(destinations_des_symboles[symbole_a_placer])
-                            destinations_des_symboles[symbole_a_placer] = sauvegarde
-                            print(destinations_des_symboles[symbole_a_placer])                            
+                            print(self.destinations_des_symboles[symbole_a_placer])
+                            self.destinations_des_symboles[symbole_a_placer] = sauvegarde
+                            print(self.destinations_des_symboles[symbole_a_placer])                            
                             #return False
                 else:
                     return False
@@ -588,7 +586,7 @@ class Grille:
                 print('sans destination possible')
         return True
 
-    def liste_export(self):
+    def grille_export(self):
         """
         Exporte la grille sudoku sous forme de liste.
         """
@@ -597,7 +595,7 @@ class Grille:
             grille_en_liste.append(self[index])
         return grille_en_liste
 
-    def liste_import(self, grille_en_liste):
+    def grille_import(self, grille_en_liste):
         """
         Importe puis affiche une grille transmise sous forme de liste.
         """
@@ -607,6 +605,22 @@ class Grille:
             else:
                 self[index] = grille_en_liste[index]
         self.afficher_contenu()
+        self.restaurer_pretendants()
+        self.restaurer_destinations()
+
+    def restaurer_destinations(self):
+        """
+        Restaure les destinations possibles pour les symboles
+
+        à partir des prétendants de chacune des cases de la grille.
+        """
+        self.destinations_des_symboles = {'1': [], '2': [], '3': [], '4': [], '5': [], '6': [], '7': [], '8': [], '9': []}
+        for index in range(self.NBR_CASES):
+            une_case = self.get_case(index)
+            for symbole in self.SYMBOLES:
+                if symbole in une_case.pretendants:
+                    self.destinations_des_symboles[symbole].append(index)
+
 
 
 class Sac(Button):
@@ -890,7 +904,7 @@ def gestion_des_evenements_on_press(event):
             grille_sudoku.efface_case(event.widget)
             pioche_sudoku.remettre_dans_son_sac(symbole)
         else:
-            if grille_sudoku.remplissage_reussi(event.widget.index,
+            if grille_sudoku.remplir_case(event.widget.index,
                                                 grille_sudoku.symbole_actif):
                 pioche_sudoku.reduire_sac(grille_sudoku.symbole_actif)
     # Si un sac de la pioche est cliqué
