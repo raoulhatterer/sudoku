@@ -530,23 +530,26 @@ class Grille:
             symboles = symbole*9
             for element in symboles:
                 symboles_a_placer.append(element)
-    
+
+        sauvegardes = list()
         compteur = 0
         while symboles_a_placer:
+            input('Pause')
             symbole_a_placer = symboles_a_placer.pop(0)
             print("Placement d'un", symbole_a_placer, end=' ')
-            compteur +=1
-            progressbar["value"] = compteur
             if self.destinations_des_symboles[symbole_a_placer]:
+                compteur +=1
+                progressbar["value"] = compteur
                 index_case = choice(self.destinations_des_symboles[symbole_a_placer])
                 print('en case', index_case,
                       'parmi', self.destinations_des_symboles[symbole_a_placer],
                       len(self.destinations_des_symboles[symbole_a_placer]))
-                sauvegarde = self.destinations_des_symboles[symbole_a_placer].copy()
                 if self.remplir_case(index_case, symbole_a_placer):
+                    # sauvegarder dans la pile des sauvegardes
+                    sauvegardes.append(self.grille_export())
+                    # print(sauvegardes)
                     # Réduire la pioche
                     pioche.reduire_sac(symbole_a_placer)
-                    input('Pause')
                     # Retirer les cousines des destinations possibles
                     case_a_remplir = self.get_case(index_case)
                     for index in case_a_remplir.index_cousines:
@@ -566,24 +569,29 @@ class Grille:
                             #                 if autres_symboles != symbole and case_protegee in destinations_des_symboles[autres_symboles]:
                             #                     destinations_des_symboles[autres_symboles].remove(case_protegee)
                     # Contrôler que les destinations restent suffisantes sinon annuler le dernier placement
-                    for symbole in self.SYMBOLES:
-                        if len(self.destinations_des_symboles[symbole]) < pioche.get_widget_sac(symbole).cardinal:
-                            print(self.destinations_des_symboles[symbole])
-                            print(pioche.get_widget_sac(symbole).cardinal)
-                            print('Destinations pour les', symbole, 'insuffisantes.')
-                            print('Retirer', symbole_a_placer, 'de la case', index_case)
-                            self.efface_case(case_a_remplir)
-                            pioche.remettre_dans_son_sac(symbole_a_placer)
-                            symboles_a_placer.insert(0, symbole)
-                            compteur -= 1
-                            print(self.destinations_des_symboles[symbole_a_placer])
-                            self.destinations_des_symboles[symbole_a_placer] = sauvegarde
-                            print(self.destinations_des_symboles[symbole_a_placer])                            
-                            #return False
+                    # for symbole in self.SYMBOLES:
+                    #     if len(self.destinations_des_symboles[symbole]) < pioche.get_widget_sac(symbole).cardinal:
+                    #         print(self.destinations_des_symboles[symbole])
+                    #         print(pioche.get_widget_sac(symbole).cardinal)
+                    #         print('Destinations pour les', symbole, 'insuffisantes.')
+                    #         print('Retirer', symbole_a_placer, 'de la case', index_case)
+                    #         self.efface_case(case_a_remplir)
+                    #         pioche.remettre_dans_son_sac(symbole_a_placer)
+                    #         symboles_a_placer.insert(0, symbole)
+                    #         compteur -= 1
+                    #         print(self.destinations_des_symboles[symbole_a_placer])
+                    #         self.destinations_des_symboles[symbole_a_placer] = sauvegarde
+                    #         print(self.destinations_des_symboles[symbole_a_placer])                            
                 else:
                     return False
             else:
                 print('sans destination possible')
+                compteur -= 1
+                self.grille_import(sauvegardes.pop())
+                self.restaurer_pretendants()
+                self.restaurer_destinations()
+                symboles_a_placer.insert(0, symbole_a_placer)
+                pioche.remettre_dans_son_sac(symbole_a_placer)
         return True
 
     def grille_export(self):
