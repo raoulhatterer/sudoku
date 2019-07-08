@@ -178,7 +178,7 @@ class Grille:
                 index += 1
         self.restaurer_pretendants()
         self.restaurer_destinations()
-        
+    
 
     def get_couleur_case(self, index, symbole, symbole_actif):
         """
@@ -531,7 +531,7 @@ class Grille:
             for element in symboles:
                 symboles_a_placer.append(element)
 
-        sauvegardes = list()
+        pile = list()
         compteur = 0
         while symboles_a_placer:
             input('Pause')
@@ -544,10 +544,11 @@ class Grille:
                 print('en case', index_case,
                       'parmi', self.destinations_des_symboles[symbole_a_placer],
                       len(self.destinations_des_symboles[symbole_a_placer]))
+                print('compteur:',compteur)
                 if self.remplir_case(index_case, symbole_a_placer):
-                    # sauvegarder dans la pile des sauvegardes
-                    sauvegardes.append(self.grille_export())
-                    # print(sauvegardes)
+                    # sauvegarder dans la pile
+                    pile.append((symbole_a_placer,index_case))
+                    print(pile)
                     # Réduire la pioche
                     pioche.reduire_sac(symbole_a_placer)
                     # Retirer les cousines des destinations possibles
@@ -586,12 +587,18 @@ class Grille:
                     return False
             else:
                 print('sans destination possible')
+                symboles_a_placer.insert(0, symbole_a_placer)
+                # Retour en arrière
                 compteur -= 1
-                self.grille_import(sauvegardes.pop())
+                print('compteur :', compteur)
+                symboles_a_placer.insert(0, symbole_a_placer)
+                self.efface_case(case_a_remplir)
                 self.restaurer_pretendants()
                 self.restaurer_destinations()
-                symboles_a_placer.insert(0, symbole_a_placer)
                 pioche.remettre_dans_son_sac(symbole_a_placer)
+                pile.pop()
+                print('pile :', pile)
+            print('SàP:',symboles_a_placer)
         return True
 
     def grille_export(self):
