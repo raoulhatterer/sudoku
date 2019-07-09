@@ -545,58 +545,35 @@ class Grille:
                       'parmi', self.destinations_des_symboles[symbole_a_placer],
                       len(self.destinations_des_symboles[symbole_a_placer]))
                 print('compteur:',compteur)
-                if self.remplir_case(index_case, symbole_a_placer):
-                    # sauvegarder dans la pile
-                    pile.append((symbole_a_placer,index_case))
-                    print(pile)
-                    # Réduire la pioche
-                    pioche.reduire_sac(symbole_a_placer)
-                    # Retirer les cousines des destinations possibles
-                    case_a_remplir = self.get_case(index_case)
-                    for index in case_a_remplir.index_cousines:
-                        if index in self.destinations_des_symboles[symbole_a_placer]:
-                            self.destinations_des_symboles[symbole_a_placer].remove(index)
-                    # Retirer la case des destinations possibles
-                    for symbole in self.SYMBOLES:
-                        destinations = self.destinations_des_symboles[symbole]
-                        if index_case in destinations:
-                            destinations.remove(index_case)
-                            # Réserver les destinations si leur nombre devient critique
-                            # if destinations:
-                            #     if len(destinations) == pioche.get_widget_sac(symbole).cardinal:
-                            #         print('Alerte ! À protéger:', destinations)
-                            #         for case_protegee in destinations:
-                            #             for autres_symboles in self.SYMBOLES:
-                            #                 if autres_symboles != symbole and case_protegee in destinations_des_symboles[autres_symboles]:
-                            #                     destinations_des_symboles[autres_symboles].remove(case_protegee)
-                    # Contrôler que les destinations restent suffisantes sinon annuler le dernier placement
-                    # for symbole in self.SYMBOLES:
-                    #     if len(self.destinations_des_symboles[symbole]) < pioche.get_widget_sac(symbole).cardinal:
-                    #         print(self.destinations_des_symboles[symbole])
-                    #         print(pioche.get_widget_sac(symbole).cardinal)
-                    #         print('Destinations pour les', symbole, 'insuffisantes.')
-                    #         print('Retirer', symbole_a_placer, 'de la case', index_case)
-                    #         self.efface_case(case_a_remplir)
-                    #         pioche.remettre_dans_son_sac(symbole_a_placer)
-                    #         symboles_a_placer.insert(0, symbole)
-                    #         compteur -= 1
-                    #         print(self.destinations_des_symboles[symbole_a_placer])
-                    #         self.destinations_des_symboles[symbole_a_placer] = sauvegarde
-                    #         print(self.destinations_des_symboles[symbole_a_placer])                            
-                else:
-                    return False
+                self.remplir_case(index_case, symbole_a_placer)
+                # sauvegarder dans la pile
+                pile.append((symbole_a_placer,index_case))
+                print(pile)
+                # Réduire la pioche
+                pioche.reduire_sac(symbole_a_placer)
+                # Retirer les cousines des destinations possibles
+                case_a_remplir = self.get_case(index_case)
+                for index in case_a_remplir.index_cousines:
+                    if index in self.destinations_des_symboles[symbole_a_placer]:
+                        self.destinations_des_symboles[symbole_a_placer].remove(index)
+                # Retirer la case des destinations possibles
+                for symbole in self.SYMBOLES:
+                    destinations = self.destinations_des_symboles[symbole]
+                    if index_case in destinations:
+                        destinations.remove(index_case)
             else:
                 print('sans destination possible')
                 symboles_a_placer.insert(0, symbole_a_placer)
                 # Retour en arrière
                 compteur -= 1
                 print('compteur :', compteur)
-                symboles_a_placer.insert(0, symbole_a_placer)
-                self.efface_case(case_a_remplir)
+                symbole, index = pile.pop()
+                case_a_effacer = self.get_case(index)
+                symboles_a_placer.insert(0, symbole)
+                self.efface_case(case_a_effacer)
                 self.restaurer_pretendants()
                 self.restaurer_destinations()
-                pioche.remettre_dans_son_sac(symbole_a_placer)
-                pile.pop()
+                pioche.remettre_dans_son_sac(symbole)
                 print('pile :', pile)
             print('SàP:',symboles_a_placer)
         return True
