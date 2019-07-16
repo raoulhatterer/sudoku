@@ -229,6 +229,7 @@ class Grille:
         cousines.remove(index)
         return cousines
 
+
     def get_index_cousines_en_bloc(self, index):
         """
         Retourne une liste avec les index des 9 cases qui sont dans le même
@@ -325,7 +326,7 @@ class Grille:
             index += 1
         return affichage
 
-    def afficher_contenu(self):
+    def rafraichir_affichage(self):
         """
         Affiche le contenu des cases dans tkinter.
 
@@ -336,7 +337,7 @@ class Grille:
         >>> mon_cadre.pack()
         >>> ma_grille = Grille(mon_cadre)
         >>> ma_grille[0] = '5'
-        >>> ma_grille.afficher_contenu()
+        >>> ma_grille.rafraichir_affichage()
         """
         for index in range(self.NBR_CASES):
             ma_case = self.get_case(index)
@@ -402,7 +403,7 @@ class Grille:
         case_a_remplir = self.get_case(index)
         if symbole_a_placer in case_a_remplir.pretendants:
             self.__setitem__(index, symbole_a_placer)
-            self.afficher_contenu()
+            self.rafraichir_affichage()
             return self.reduire_pretendants_des_cousines(index,
                                                          symbole_a_placer)
         else:
@@ -523,7 +524,7 @@ class Grille:
     #     return True
 
 
-    def tirage(self, pioche):
+    def tirageR(self, pioche):
         """
         Génération d'une grille pleine
         """
@@ -537,8 +538,9 @@ class Grille:
                 self.pioche.reinitialiser() 
                 self.efface_grille() 
                 self.restaurer_pretendants() 
-                self.restaurer_destinations() 
-                trouvé = self.placement(self.pioche)
+                self.restaurer_destinations()
+                self.compteur = 0
+                trouvé = self.placementR(self.pioche)
             except:
                 trouvé = False
 
@@ -546,11 +548,11 @@ class Grille:
         """
         """
         self.pioche = pioche
-        trouvé = self.placement(self.pioche)
+        trouvé = self.placementR(self.pioche)
 
 
                 
-    def placement(self, pioche):  
+    def placementR(self, pioche):  
         #input('pause')
         symboles_a_placer = pioche.get_symboles_a_placer()
         # print (symboles_a_placer)
@@ -559,8 +561,10 @@ class Grille:
             while self.destinations_des_symboles[symbole_a_placer]:
                 self.compteur += 1
                 progressbar["value"] = self.compteur
+                progressbar.update()
                 index_case = choice(self.destinations_des_symboles[symbole_a_placer])
                 self.pile.append((symbole_a_placer, index_case,self.destinations_des_symboles[symbole_a_placer].copy()))
+                print(self.pile[-1])
                 self.remplir_case(index_case, symbole_a_placer)
                 # Réduire la pioche
                 self.pioche.reduire_sac(symbole_a_placer)
@@ -574,12 +578,13 @@ class Grille:
                     destinations = self.destinations_des_symboles[symbole]
                     if index_case in destinations:
                         destinations.remove(index_case)
-                if self.placement(pioche):
+                if self.placementR(pioche):
                     return True
                 else:
                     print('Placement a retourné False')
                     # pdb.set_trace()
-                    symbole_a_retirer, destination_problematique, destinations = self.pile.pop() 
+                    symbole_a_retirer, destination_problematique, destinations = self.pile.pop()
+                    print('pile après pop',self.pile[-1])
                     # effacer la dernière case et restaurer les prétendants
                     case_a_effacer = self.get_case(destination_problematique)
                     self.efface_case(case_a_effacer)
@@ -591,6 +596,7 @@ class Grille:
                     self.pioche.remettre_dans_son_sac(symbole_a_retirer)
                     if len(destinations) == 1:
                         symbole_a_retirer, destination_problematique, destinations = self.pile.pop()
+                        print('last in pile après deuxième pop',self.pile[-1])
                         # effacer la dernière case et restaurer les prétendants
                         case_a_effacer = self.get_case(destination_problematique)
                         self.efface_case(case_a_effacer)
@@ -612,6 +618,109 @@ class Grille:
             print('Tous les symboles on été placés')
             return True
 
+    def tirage(self, pioche):
+        """
+        Génération d'une grille pleine
+        """
+        self.pioche = pioche
+        self.pioche.reinitialiser() 
+        self.efface_grille() 
+        self.restaurer_pretendants() 
+        self.restaurer_destinations()
+        destinations_en_place = {'1':list(), '2':list(), '3':list(), '4':list(), '5':list(), '6':list(), '7':list(), '8':list(), '9':list()}
+        self.compteur = 0
+        symboles_a_placer = pioche.get_symboles_a_placer()
+        #pdb.set_trace()
+        while symboles_a_placer:
+            symbole_a_placer = symboles_a_placer.pop(0)
+            if self.destinations_des_symboles[symbole_a_placer]\
+               and self.placement_possible(
+                   destinations_en_place[symbole_a_placer],
+                   self.destinations_des_symboles[symbole_a_placer]):
+                print('compteur :',self.compteur)
+                self.compteur += 1
+                progressbar["value"] = self.compteur
+                progressbar.update()
+                index_case = choice(self.destinations_des_symboles[symbole_a_placer])
+                self.pile.append((symbole_a_placer,
+                                  index_case,
+                                  self.destinations_des_symboles[symbole_a_placer].copy()))
+                print('pile après append:',self.pile[-1])
+                self.remplir_case(index_case, symbole_a_placer)
+                destinations_en_place[symbole_a_placer].append(index_case)
+                # Réduire la pioche
+                self.pioche.reduire_sac(symbole_a_placer)
+                self.restaurer_destinations()
+            elif self.pioche.get_widget_sac(symbole_a_placer).cardinal == 0:
+                # un sac est vide ; on passe au sac suivant
+                symboles_a_placer = pioche.get_symboles_a_placer()
+            else:
+                # impasse détectée
+                # effacer la dernière case et restaurer les prétendants
+                print('mauvaise destinations', 'sac',symbole_a_placer)
+                print(self.destinations_des_symboles[symbole_a_placer] ,pioche.get_widget_sac(symbole_a_placer).cardinal)
+                symbole_a_retirer, destination_problematique, destinations = self.pile.pop()
+                print('pile après pop:',self.pile[-1])
+                case_a_effacer = self.get_case(destination_problematique)
+                self.efface_case(case_a_effacer)
+                destinations_en_place[symbole_a_retirer].pop()
+                # décrémenter compteur
+                self.compteur -=1
+                progressbar["value"] = self.compteur
+                # le symbole que l'on vient de retirer est à replacer dans la pioche
+                self.pioche.remettre_dans_son_sac(symbole_a_retirer)
+                # if len(destinations) == 1:
+                #     symbole_a_retirer, destination_problematique, destinations = self.pile.pop()
+                #     print('pile après deuxième pop:',self.pile[-1])
+                #     # effacer la dernière case et restaurer les prétendants
+                #     case_a_effacer = self.get_case(destination_problematique)
+                #     self.efface_case(case_a_effacer)
+                #     # décrémenter compteur
+                #     self.compteur -=1
+                #     progressbar["value"] = self.compteur
+                #     # le symbole que l'on vient de retirer est à replacer dans la  pioche
+                #     self.pioche.remettre_dans_son_sac(symbole_a_retirer)
+                # amorcer la nouvelle tentative en ayant retiré
+                # index_case_bloquante  de destinations_des_symboles
+                # self.restaurer_destinations()
+                destinations.remove(destination_problematique)
+                self.destinations_des_symboles[symbole_a_retirer] = destinations
+                symboles_a_placer = pioche.get_symboles_a_placer()
+        print('Tous les symboles on été placés')
+        return True
+        
+    def placement_possible(self, destinations_en_place, autres_destinations):
+        """
+        Retourne True si les 9 lignes, les 9 colonnes et les 9 blocs 3x3
+        sont présents parmi les candidats.
+        Retourne False dans le cas contraire.
+        """
+        lignes_requises = set()
+        colonnes_requises = set()
+        blocs_requis = set()
+        destinations = destinations_en_place.copy()
+        destinations.extend(autres_destinations.copy())
+        for destination in destinations:
+            lignes_requises.add(self.get_ligne(destination))
+            colonnes_requises.add(self.get_colonne(destination))
+            blocs_requis.add(self.get_bloc(destination))
+        return (len(lignes_requises) == 9) and (len(colonnes_requises) == 9) and (len(blocs_requis) == 9)
+
+
+    def controleur_colonnes_autorise(self, destinations_en_place, autres_destinations):
+        """
+        Retourne True si les 9 colonnes sont présentes parmi les candidats.
+        Retourne False dans le cas contraire.
+        """
+        return True
+
+
+    def controleur_blocs_autorise(self, destinations_en_place, autres_destinations):
+        """
+        Retourne True si les 9 blocs 3x3 sont présents parmi les candidats.
+        Retourne False dans le cas contraire.
+        """
+        return True
 
     def grille_export(self):
         """
@@ -631,7 +740,7 @@ class Grille:
                 self[index] = None
             else:
                 self[index] = grille_en_liste[index]
-        self.afficher_contenu()
+        self.rafraichir_affichage()
         self.restaurer_pretendants()
         self.restaurer_destinations()
 
@@ -948,7 +1057,7 @@ def gestion_des_evenements_on_press(event):
         event.widget['background'] = 'red'  # case X en rouge
         grille_sudoku.symbole_actif = 'X'
         label_symbole_actif['text'] = 'Sélection: X'
-        grille_sudoku.afficher_contenu()
+        grille_sudoku.rafraichir_affichage()
     # Si une case de la grille est cliqué
     if type(event.widget) == Case:
         if grille_sudoku.symbole_actif == 'X' and not(event.widget.contenu is None):
@@ -967,7 +1076,7 @@ def gestion_des_evenements_on_press(event):
         pioche_sudoku.affiche_pioche(int(event.widget.symbole))
         grille_sudoku.symbole_actif = event.widget.symbole
         label_symbole_actif['text'] = 'Sélection: '+event.widget.symbole
-        grille_sudoku.afficher_contenu()  # rafraîchissement sélection
+        grille_sudoku.rafraichir_affichage()  # rafraîchissement sélection
     # Si le bouton_ajout_aleatoire est cliqué
     if event.widget['text'] == 'Tirage aléatoire':
         grille_valide = False
@@ -987,12 +1096,16 @@ def gestion_des_evenements_on_press(event):
                 grille_valide = True
             else:
                 print('Tirage non valide !')
+    if event.widget['text'] == 'TirageR':
+        #grille_sudoku.efface_grille()
+        #pioche_sudoku.reinitialiser()
+        grille_sudoku.tirageR(pioche_sudoku)
+    if event.widget['text'] == 'Solveur':
+        grille_sudoku.solveur(pioche_sudoku)
     if event.widget['text'] == 'Tirage':
         #grille_sudoku.efface_grille()
         #pioche_sudoku.reinitialiser()
         grille_sudoku.tirage(pioche_sudoku)
-    if event.widget['text'] == 'Solveur':
-        grille_sudoku.solveur(pioche_sudoku)
         
 
 def deselectionner_le_bouton_effacer():
@@ -1014,7 +1127,7 @@ def gestion_des_evenements_on_release(event):
     de rafraîchir l'affichage des prétendants.
     """
     if event.widget['text'] == 'Index des cases':
-        grille_sudoku.afficher_contenu()
+        grille_sudoku.rafraichir_affichage()
 
     if type(event.widget) == Case:
         label_pretendants['text'] = event.widget.pretendants
@@ -1102,21 +1215,24 @@ label_pretendants = Label(cadre_gauche,
 bouton_tirage_aleatoire = Button(cadre_gauche,
                             name='tirage_aleatoire',
                             text='Tirage aléatoire')
-bouton_tirage = Button(cadre_gauche,
-                            name='tirage',
-                            text='Tirage')
+bouton_tirageR = Button(cadre_gauche,
+                            name='tirageR',
+                            text='TirageR')
 bouton_solveur = Button(cadre_gauche,
                             name='solveur',
                             text='Solveur')
+bouton_tirage = Button(cadre_gauche,
+                            name='tirage',
+                            text='Tirage')
 
 
 bouton_index_cases.pack()
 label_symbole_actif.pack()
 label_pretendants.pack()
 bouton_tirage_aleatoire.pack()
-bouton_tirage.pack()
+bouton_tirageR.pack()
 bouton_solveur.pack()
-
+bouton_tirage.pack()
 # Disposition du conteneur cadre_bas
 cadre_bas.columnconfigure(0, weight=1)
 
