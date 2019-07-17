@@ -138,7 +138,6 @@ class Grille:
     LARGEUR_BLOC = 3
     LARGEUR_GRILLE = LARGEUR_BLOC * LARGEUR_BLOC
     NBR_CASES = LARGEUR_GRILLE * LARGEUR_GRILLE
-    WATCHDOG_LIMITE = 7
     SYMBOLES = ['1', '2', '3', '4', '5', '6', '7', '8', '9']
     # destinations_des_symboles = dict()
     compteur = 0
@@ -642,7 +641,7 @@ class Grille:
         Génération d'une grille pleine à partir de l'état actuel de la grille et de la pioche
         """
         symboles_a_placer = pioche.get_symboles_a_placer()
-        
+        mon_watchdog = Watchdog() 
         # pdb.set_trace()
         while symboles_a_placer:
             symbole_a_placer = symboles_a_placer.pop(0)
@@ -663,12 +662,9 @@ class Grille:
                 # Réduire la pioche
                 self.pioche.reduire_sac(symbole_a_placer)
                 self.restaurer_destinations()
-                watchdog_compteur = self.WATCHDOG_LIMITE
-            elif self.pioche.get_widget_sac(symbole_a_placer).cardinal == 0:
-                # un sac est vide ; on passe au sac suivant
-                symboles_a_placer = pioche.get_symboles_a_placer()
-            elif watchdog_compteur == 0:
-                watchdog_compteur = self.WATCHDOG_LIMITE
+                mon_watchdog.reset()
+            elif mon_watchdog.alarm():
+                mon_watchdog.reset()
                 self.pioche.reinitialiser() 
                 self.efface_grille() 
                 self.restaurer_pretendants() 
@@ -679,7 +675,8 @@ class Grille:
             else:
                 # impasse détectée
                 # effacer la dernière case et restaurer les prétendants
-                watchdog_compteur -= 1
+                mon_watchdog.update()
+                symboles_a_placer.insert(0, symbole_a_placer)
                 symbole_a_retirer, destination_problematique, destinations = self.pile.pop()
                 case_a_effacer = self.get_case(destination_problematique)
                 self.efface_case(case_a_effacer)
@@ -689,10 +686,10 @@ class Grille:
                 progressbar["value"] = self.compteur
                 # le symbole que l'on vient de retirer est à replacer dans la pioche
                 self.pioche.remettre_dans_son_sac(symbole_a_retirer)
+                symboles_a_placer.insert(0, symbole_a_retirer)
                 destinations.remove(destination_problematique)
                 print('-------------retire', destination_problematique)
                 self.destinations_des_symboles[symbole_a_retirer] = destinations
-                symboles_a_placer = pioche.get_symboles_a_placer()
         print('Tous les symboles on été placés')
         return True
         
@@ -748,7 +745,26 @@ class Grille:
                 if symbole in une_case.pretendants:
                     self.destinations_des_symboles[symbole].append(index)
 
+class Watchdog():
+    """
+    Signale quand l'exploration de l'arbre va trop profond.
+    """
+    WATCHDOG_LIMIT = 7
 
+    def __init__(self):
+        self.compteur = self.WATCHDOG_LIMIT
+
+    def reset(self):
+        self.compteur = self.WATCHDOG_LIMIT
+        
+    def update(self):
+        self.compteur -=1
+
+    def alarm(self):
+        if self.compteur == 0:
+            return True
+        else:
+            return False
 
                     
 class Sac(Button):
@@ -986,7 +1002,8 @@ class Pioche:
 
     def get_symboles_a_placer(self):
         """
-        Retourne une liste avec les symboles à placer sur la grille
+        Par lecture de la pioche, cette fonction retourne une liste
+        avec les symboles à placer sur la grille.
         ['1','1','1','1','1','1','1','1','1','2','2','2',...,'9','9']
         """
         symboles_a_placer = list()
