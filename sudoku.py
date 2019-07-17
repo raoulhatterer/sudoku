@@ -138,6 +138,7 @@ class Grille:
     LARGEUR_BLOC = 3
     LARGEUR_GRILLE = LARGEUR_BLOC * LARGEUR_BLOC
     NBR_CASES = LARGEUR_GRILLE * LARGEUR_GRILLE
+    WATCHDOG_LIMITE = 7
     SYMBOLES = ['1', '2', '3', '4', '5', '6', '7', '8', '9']
     # destinations_des_symboles = dict()
     compteur = 0
@@ -383,6 +384,7 @@ class Grille:
         case_a_effacer['text'] = ' '
         case_a_effacer.contenu = None
         self.restaurer_pretendants()
+        self.rafraichir_affichage()
 
     def restaurer_pretendants(self):
         """
@@ -564,7 +566,7 @@ class Grille:
                 progressbar.update()
                 index_case = choice(self.destinations_des_symboles[symbole_a_placer])
                 self.pile.append((symbole_a_placer, index_case,self.destinations_des_symboles[symbole_a_placer].copy()))
-                print(self.pile[-1])
+                print('compteur:',self.compteur, 'pile', self.pile[-1])
                 self.remplir_case(index_case, symbole_a_placer)
                 # Réduire la pioche
                 self.pioche.reduire_sac(symbole_a_placer)
@@ -618,9 +620,10 @@ class Grille:
             print('Tous les symboles on été placés')
             return True
 
+
     def tirage(self, pioche):
         """
-        Génération d'une grille pleine
+        Génération d'une grille pleine en partant d'une grille vierge
         """
         self.pioche = pioche
         self.pioche.reinitialiser() 
@@ -629,15 +632,24 @@ class Grille:
         self.restaurer_destinations()
         destinations_en_place = {'1':list(), '2':list(), '3':list(), '4':list(), '5':list(), '6':list(), '7':list(), '8':list(), '9':list()}
         self.compteur = 0
+        watchdog = True
+        self.placement_de_la_pioche_sur_la_grille(destinations_en_place, pioche, watchdog)
+           
+
+
+    def placement_de_la_pioche_sur_la_grille(self, destinations_en_place, pioche, watchdog):
+        """
+        Génération d'une grille pleine à partir de l'état actuel de la grille et de la pioche
+        """
         symboles_a_placer = pioche.get_symboles_a_placer()
-        #pdb.set_trace()
+        
+        # pdb.set_trace()
         while symboles_a_placer:
             symbole_a_placer = symboles_a_placer.pop(0)
             if self.destinations_des_symboles[symbole_a_placer]\
                and self.placement_possible(
                    destinations_en_place[symbole_a_placer],
                    self.destinations_des_symboles[symbole_a_placer]):
-                print('compteur :',self.compteur)
                 self.compteur += 1
                 progressbar["value"] = self.compteur
                 progressbar.update()
@@ -645,22 +657,30 @@ class Grille:
                 self.pile.append((symbole_a_placer,
                                   index_case,
                                   self.destinations_des_symboles[symbole_a_placer].copy()))
-                print('pile après append:',self.pile[-1])
+                print('compteur:',self.compteur, 'pile', self.pile[-1])
                 self.remplir_case(index_case, symbole_a_placer)
                 destinations_en_place[symbole_a_placer].append(index_case)
                 # Réduire la pioche
                 self.pioche.reduire_sac(symbole_a_placer)
                 self.restaurer_destinations()
+                watchdog_compteur = self.WATCHDOG_LIMITE
             elif self.pioche.get_widget_sac(symbole_a_placer).cardinal == 0:
                 # un sac est vide ; on passe au sac suivant
+                symboles_a_placer = pioche.get_symboles_a_placer()
+            elif watchdog_compteur == 0:
+                watchdog_compteur = self.WATCHDOG_LIMITE
+                self.pioche.reinitialiser() 
+                self.efface_grille() 
+                self.restaurer_pretendants() 
+                self.restaurer_destinations()
+                destinations_en_place = {'1':list(), '2':list(), '3':list(), '4':list(), '5':list(), '6':list(), '7':list(), '8':list(), '9':list()}
+                self.compteur = 0
                 symboles_a_placer = pioche.get_symboles_a_placer()
             else:
                 # impasse détectée
                 # effacer la dernière case et restaurer les prétendants
-                print('mauvaise destinations', 'sac',symbole_a_placer)
-                print(self.destinations_des_symboles[symbole_a_placer] ,pioche.get_widget_sac(symbole_a_placer).cardinal)
+                watchdog_compteur -= 1
                 symbole_a_retirer, destination_problematique, destinations = self.pile.pop()
-                print('pile après pop:',self.pile[-1])
                 case_a_effacer = self.get_case(destination_problematique)
                 self.efface_case(case_a_effacer)
                 destinations_en_place[symbole_a_retirer].pop()
@@ -669,21 +689,8 @@ class Grille:
                 progressbar["value"] = self.compteur
                 # le symbole que l'on vient de retirer est à replacer dans la pioche
                 self.pioche.remettre_dans_son_sac(symbole_a_retirer)
-                # if len(destinations) == 1:
-                #     symbole_a_retirer, destination_problematique, destinations = self.pile.pop()
-                #     print('pile après deuxième pop:',self.pile[-1])
-                #     # effacer la dernière case et restaurer les prétendants
-                #     case_a_effacer = self.get_case(destination_problematique)
-                #     self.efface_case(case_a_effacer)
-                #     # décrémenter compteur
-                #     self.compteur -=1
-                #     progressbar["value"] = self.compteur
-                #     # le symbole que l'on vient de retirer est à replacer dans la  pioche
-                #     self.pioche.remettre_dans_son_sac(symbole_a_retirer)
-                # amorcer la nouvelle tentative en ayant retiré
-                # index_case_bloquante  de destinations_des_symboles
-                # self.restaurer_destinations()
                 destinations.remove(destination_problematique)
+                print('-------------retire', destination_problematique)
                 self.destinations_des_symboles[symbole_a_retirer] = destinations
                 symboles_a_placer = pioche.get_symboles_a_placer()
         print('Tous les symboles on été placés')
@@ -705,22 +712,6 @@ class Grille:
             colonnes_requises.add(self.get_colonne(destination))
             blocs_requis.add(self.get_bloc(destination))
         return (len(lignes_requises) == 9) and (len(colonnes_requises) == 9) and (len(blocs_requis) == 9)
-
-
-    def controleur_colonnes_autorise(self, destinations_en_place, autres_destinations):
-        """
-        Retourne True si les 9 colonnes sont présentes parmi les candidats.
-        Retourne False dans le cas contraire.
-        """
-        return True
-
-
-    def controleur_blocs_autorise(self, destinations_en_place, autres_destinations):
-        """
-        Retourne True si les 9 blocs 3x3 sont présents parmi les candidats.
-        Retourne False dans le cas contraire.
-        """
-        return True
 
     def grille_export(self):
         """
@@ -759,6 +750,7 @@ class Grille:
 
 
 
+                    
 class Sac(Button):
     """
     Classe représentant un sac. Un sac contient des symboles identiques.
