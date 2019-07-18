@@ -382,6 +382,8 @@ class Grille:
         """
         case_a_effacer['text'] = ' '
         case_a_effacer.contenu = None
+        self.compteur -=1
+        jauge_de_remplissage["value"] = self.compteur
         self.restaurer_pretendants()
         self.rafraichir_affichage()
 
@@ -405,6 +407,9 @@ class Grille:
         case_a_remplir = self.get_case(index)
         if symbole_a_placer in case_a_remplir.pretendants:
             self.__setitem__(index, symbole_a_placer)
+            self.compteur += 1
+            jauge_de_remplissage["value"] = self.compteur
+            jauge_de_remplissage.update()
             self.rafraichir_affichage()
             return self.reduire_pretendants_des_cousines(index,
                                                          symbole_a_placer)
@@ -472,17 +477,23 @@ class Grille:
 
     def solveur(self, pioche):
         """
+        Complète la grille
         """
-        self.pioche = pioche
-        trouvé = self.placementR(self.pioche)
+        destinations_en_place = {'1':list(), '2':list(), '3':list(), '4':list(), '5':list(), '6':list(), '7':list(), '8':list(), '9':list()}
+        for index_case in range(self.NBR_CASES):
+            case_examinee = self.get_case(index_case) 
+            if case_examinee.contenu:
+                destinations_en_place[case_examinee.contenu].append(index_case)             
+        watchdog = False
+        self.placement_de_la_pioche_sur_la_grille(destinations_en_place, pioche, watchdog)
+
 
 
     def tirage(self, pioche):
         """
         Génération d'une grille pleine en partant d'une grille vierge
         """
-        self.pioche = pioche
-        self.pioche.reinitialiser() 
+        pioche.reinitialiser() 
         self.efface_grille() 
         self.restaurer_pretendants() 
         self.recalculer_les_destinations()
@@ -500,16 +511,13 @@ class Grille:
         symboles_a_placer = pioche.get_symboles_a_placer()
         mon_watchdog = Watchdog()
         pile = list()
-        # pdb.set_trace()
+        #pdb.set_trace()
         while symboles_a_placer:
             symbole_a_placer = symboles_a_placer.pop(0)
             if self.destinations_des_symboles[symbole_a_placer]\
                and self.placement_est_possible(
                    destinations_en_place[symbole_a_placer],
                    self.destinations_des_symboles[symbole_a_placer]):
-                self.compteur += 1
-                progressbar["value"] = self.compteur
-                progressbar.update()
                 index_case = choice(self.destinations_des_symboles[symbole_a_placer])
                 pile.append((symbole_a_placer,
                                   index_case,
@@ -518,7 +526,7 @@ class Grille:
                 self.remplir_case(index_case, symbole_a_placer)
                 destinations_en_place[symbole_a_placer].append(index_case)
                 # Réduire la pioche
-                self.pioche.reduire_sac(symbole_a_placer)
+                pioche.reduire_sac(symbole_a_placer)
                 self.recalculer_les_destinations()
                 mon_watchdog.reset()
             elif mon_watchdog.alarm():
@@ -531,16 +539,14 @@ class Grille:
                     case_a_effacer = self.get_case(destination_liberee)
                     self.efface_case(case_a_effacer)
                     print('-------------retire', symbole_a_retirer, 'de', destination_liberee)
-                    # décrémenter compteur
-                    self.compteur -=1
-                    progressbar["value"] = self.compteur
                     # le symbole que l'on vient de retirer est à replacer dans la pioche
-                    self.pioche.remettre_dans_son_sac(symbole_a_retirer)
+                    pioche.remettre_dans_son_sac(symbole_a_retirer)
                     symboles_a_placer.append(symbole_a_retirer)
                 # reconstruction des destinations la pile
                 self.efface_grille()
                 self.recalculer_les_destinations()
                 pile_a_jour = list()
+                sauvegarde_compteur = self.compteur
                 for element in pile:
                     symbole, destination, destinations = element 
                     element = (symbole, destination, self.destinations_des_symboles[symbole].copy())
@@ -548,6 +554,7 @@ class Grille:
                     self.remplir_case(destination, symbole)
                     self.recalculer_les_destinations()
                 pile = pile_a_jour
+                self.compteur = sauvegarde_compteur
             else:
                 # impasse détectée
                 # effacer la dernière case et restaurer les prétendants
@@ -557,11 +564,8 @@ class Grille:
                 case_a_effacer = self.get_case(destination_problematique)
                 self.efface_case(case_a_effacer)
                 destinations_en_place[symbole_a_retirer].pop()
-                # décrémenter compteur
-                self.compteur -=1
-                progressbar["value"] = self.compteur
                 # le symbole que l'on vient de retirer est à replacer dans la pioche
-                self.pioche.remettre_dans_son_sac(symbole_a_retirer)
+                pioche.remettre_dans_son_sac(symbole_a_retirer)
                 symboles_a_placer.insert(0, symbole_a_retirer)
                 destinations.remove(destination_problematique)
                 print('-------------retire', destination_problematique)
@@ -860,8 +864,13 @@ class Pioche:
 
         quand on tape son nom dans l'interpréteur.
         """
-        for index in range(1, self.NBR_SACS):
-            print(self.__getitem__(index))
+        pioche = ""
+        for index in range(1, self.NBR_SACS+1):
+            if self.__getitem__(index).cardinal < 2:
+                pioche += "contient {} symbole '{}'\n".format(self.__getitem__(index).cardinal, self.__getitem__(index).symbole)
+            else:
+                pioche += "contient {} symboles '{}'\n".format(self.__getitem__(index).cardinal, self.__getitem__(index).symbole)
+        return pioche
 
     def affiche_pioche(self, index_selection):
         """
@@ -924,71 +933,45 @@ class Pioche:
 
 # FONCTIONS
 
-def gestion_des_evenements_on_press(event):
-    """
-    Identifie l'élément cliqué par le joueur.
 
-    Réagit en conséquence:
-    - Si le bouton_index_cases est cliqué
-    - Si le bouton effacer (X) est cliqué
-    - Si une case de la grille est cliqué
-    - Si un sac de la pioche est cliqué
-    - Si le bouton_ajout_aleatoire est cliqué
-    """
-    #  Si le bouton_index_cases est cliqué
-    if event.widget['text'] == 'Index des cases':
-        grille_sudoku.afficher_les_index()
-    # Si le bouton effacer (X) est cliqué
-    if event.widget['text'] == 'X':
-        deselectionner_les_cases_de_la_pioche()
-        event.widget['background'] = 'red'  # case X en rouge
-        grille_sudoku.symbole_actif = 'X'
-        label_symbole_actif['text'] = 'Sélection: X'
-        grille_sudoku.rafraichir_affichage()
-    # Si une case de la grille est cliqué
-    if type(event.widget) == Case:
-        if grille_sudoku.symbole_actif == 'X' and not(event.widget.contenu is None):
-            symbole = event.widget.contenu  # sauvegarde avant effacement
-            grille_sudoku.efface_case(event.widget)
-            # grille_sudoku.restaurer_pretendants()
-            grille_sudoku.recalculer_les_destinations()
-            pioche_sudoku.remettre_dans_son_sac(symbole)
-        else:
-            if grille_sudoku.remplir_case(event.widget.index,
-                                                grille_sudoku.symbole_actif):
-                pioche_sudoku.reduire_sac(grille_sudoku.symbole_actif)
-    # Si un sac de la pioche est cliqué
-    if type(event.widget) == Sac:
-        deselectionner_le_bouton_effacer()
-        pioche_sudoku.affiche_pioche(int(event.widget.symbole))
-        grille_sudoku.symbole_actif = event.widget.symbole
-        label_symbole_actif['text'] = 'Sélection: '+event.widget.symbole
-        grille_sudoku.rafraichir_affichage()  # rafraîchissement sélection
-    # Si le bouton_ajout_aleatoire est cliqué
-    if event.widget['text'] == 'Tirage aléatoire':
-        grille_valide = False
-        tentatives_de_remplissage = 0
-        afficher_tentatives = (input('Afficher chaque tentatives ?') in ['oui', 'o', 'O', 'y', 'yes'])
-        while not(grille_valide) and (tentatives_de_remplissage < 5000):
-            if afficher_tentatives:
-                input('ENTER pour faire une tentative')
-            grille_sudoku.efface_grille()
-            pioche_sudoku.reinitialiser()
-            tentatives_de_remplissage +=1
-            print('Tentative de remplissage n°{}'.format(tentatives_de_remplissage))
-            tirage = grille_sudoku.tirage_debutant()
-            print(grille_sudoku)
-            if tirage:
-                print('Tirage réussi')
-                grille_valide = True
-            else:
-                print('Tirage non valide !')
-    if event.widget['text'] == 'Solveur':
-        grille_sudoku.solveur(pioche_sudoku)
-    if event.widget['text'] == 'Tirage':
-        grille_sudoku.tirage(pioche_sudoku)
-        
+    # if event.widget['text'] == 'Solveur':
+    #     grille_sudoku.solveur(pioche_sudoku)
 
+
+    
+def tirage():
+    """
+    Remplissage d'une grille complète
+    """
+    grille_sudoku.tirage(pioche_sudoku)
+
+
+    
+def solveur():
+    """
+    Remplissage d'une grille complète
+    """
+    #pdb.set_trace()
+    grille_sudoku.solveur(pioche_sudoku)
+
+    
+def afficher_les_index(event):
+    """
+    Les index des cases sont montrés, si le bouton_index_cases est enfoncé.
+
+    Permet de révéler l'index des cases de façon temporaire.
+    """
+    grille_sudoku.afficher_les_index()
+
+def cacher_les_index(event):
+    """
+    Si le bouton_index_cases est relâché le contenu des cases est rétabli.
+
+    Permet de révéler l'index des cases de façon temporaire.
+    """
+    grille_sudoku.rafraichir_affichage()
+
+    
 def deselectionner_le_bouton_effacer():
     root.nametowidget('.pioche.x')['background'] = COULEUR_PIOCHE
 
@@ -996,34 +979,59 @@ def deselectionner_le_bouton_effacer():
 def deselectionner_les_cases_de_la_pioche():
     pioche_sudoku.affiche_pioche(0)  # pioche affichée sans sélection
 
+def gestion_des_evenements_on_press(event):
+    """
+    Identifie l'élément cliqué par le joueur.
+
+    Réagit en conséquence:
+    - si le bouton effacer (X) est cliqué
+    - si une case de la grille est cliqué
+    - si un sac de la pioche est cliqué
+    """
+    # Si le bouton effacer (X) est cliqué
+    if type(event.widget) == Button and event.widget['text'] == 'X':
+        deselectionner_les_cases_de_la_pioche()
+        event.widget['background'] = 'red'  # case X en rouge
+        grille_sudoku.symbole_actif = 'X'
+        label_symbole_actif['text'] = 'Sélection: X'
+        grille_sudoku.rafraichir_affichage()
+
+    # Si une case de la grille est cliqué
+    if type(event.widget) == Case:
+        if grille_sudoku.symbole_actif == 'X' and not(event.widget.contenu is None):
+            symbole = event.widget.contenu  # sauvegarde avant effacement
+            grille_sudoku.efface_case(event.widget)
+            grille_sudoku.recalculer_les_destinations()
+            pioche_sudoku.remettre_dans_son_sac(symbole)
+        elif grille_sudoku.symbole_actif == 'X' and event.widget.contenu is None:
+            pass # ne rien faire la case est déjà vide
+        else:
+            if grille_sudoku.remplir_case(event.widget.index,
+                                                grille_sudoku.symbole_actif):
+                pioche_sudoku.reduire_sac(grille_sudoku.symbole_actif)
+                
+    # Si un sac de la pioche est cliqué
+    if type(event.widget) == Sac:
+        deselectionner_le_bouton_effacer()
+        pioche_sudoku.affiche_pioche(int(event.widget.symbole))
+        grille_sudoku.symbole_actif = event.widget.symbole
+        label_symbole_actif['text'] = 'Sélection: '+event.widget.symbole
+        grille_sudoku.rafraichir_affichage()
 
 def gestion_des_evenements_on_release(event):
     """
-    Identifie l'élément cliqué préalablement par le joueur.
-
-    Réagit en conséquence:
-    - Si le bouton_index_cases est relâché le contenu des cases est rétabli:
-    permet de révéler l'index des cases de façon temporaire.
-    - Si une le contenu d'une case vient d'être supprimé il est nécessaire
+    Si une le contenu d'une case vient d'être supprimé il est nécessaire
     de rafraîchir l'affichage des prétendants.
     """
-    if event.widget['text'] == 'Index des cases':
-        grille_sudoku.rafraichir_affichage()
-
     if type(event.widget) == Case:
         label_pretendants['text'] = event.widget.pretendants
-
 
 def gestion_des_evenements_on_mouse_over(event):
     """
-    Identifie l'élément survolé par la souris.
-
-    Réagit en conséquence:
-    - Si la souris survole une case de la grille les prétendants sont affichés.
+    Si la souris survole une case de la grille les prétendants sont affichés.
     """
     if type(event.widget) == Case:
         label_pretendants['text'] = event.widget.pretendants
-
 
 def gestion_des_evenements_on_mouse_leave(event):
     pass
@@ -1041,11 +1049,6 @@ COULEUR_CADRE_BAS = 'lavender'
 
 root = Tk()
 root.title('Sudoku')
-# Contrôleur : Souris (Types d'évènements gérés)
-root.bind("<ButtonPress>", gestion_des_evenements_on_press)
-root.bind("<ButtonRelease>", gestion_des_evenements_on_release)
-root.bind("<Enter>", gestion_des_evenements_on_mouse_over)
-root.bind("<Leave>", gestion_des_evenements_on_mouse_leave)
 
 # Création des conteneurs principaux
 cadre_haut = Frame(root, name='en_tete', background=COULEUR_CADRE_HAUT, width=640, height=50)
@@ -1073,15 +1076,10 @@ root.grid_columnconfigure(0, weight=1)  # cadre_gauche cadre_central
 root.grid_columnconfigure(1, weight=1)  # et cadre_droite se partagent
 root.grid_columnconfigure(2, weight=1)  # l'espace horizontal à égalité
 
-progressbar = ttk.Progressbar(cadre_gauche,
-                              orient="vertical",
-                              length=300,
-                              maximum = 81,
-                              mode="determinate")
-progressbar.pack(side = BOTTOM)
 pioche_sudoku = Pioche(cadre_pioche)
 grille_sudoku = Grille(cadre_central, pioche_sudoku)
 
+# Création des éléments dans le cadre de gauche
 bouton_index_cases = Button(cadre_gauche,
                             name='index_cases',
                             text='Index des cases')
@@ -1094,11 +1092,18 @@ label_pretendants = Label(cadre_gauche,
                           text='Prétendants: ',
                           background=COULEUR_CADRE_GAUCHE)
 bouton_solveur = Button(cadre_gauche,
-                            name='solveur',
-                            text='Solveur')
+                        name='solveur',
+                        text='Solveur',
+                        command = solveur)
 bouton_tirage = Button(cadre_gauche,
-                            name='tirage',
-                            text='Tirage')
+                       name='tirage',
+                       text='Tirage',
+                       command = tirage)
+jauge_de_remplissage = ttk.Progressbar(cadre_gauche,
+                              orient="vertical",
+                              length=300,
+                              maximum = 81,
+                              mode="determinate")
 
 
 bouton_index_cases.pack()
@@ -1106,6 +1111,8 @@ label_symbole_actif.pack()
 label_pretendants.pack()
 bouton_solveur.pack()
 bouton_tirage.pack()
+jauge_de_remplissage.pack(side = BOTTOM)
+
 # Disposition du conteneur cadre_bas
 cadre_bas.columnconfigure(0, weight=1)
 
@@ -1114,6 +1121,16 @@ bouton_quitter = Button(cadre_bas, text='Quitter', command=root.quit)
 
 # Disposition du bouton quitter
 bouton_quitter.grid(sticky="nsew")
+
+# Contrôleur évolué: Souris (Types d'évènements gérés)
+bouton_index_cases.bind("<ButtonPress>", afficher_les_index)
+bouton_index_cases.bind("<ButtonRelease>", cacher_les_index)
+root.bind("<ButtonPress>", gestion_des_evenements_on_press)
+root.bind("<ButtonRelease>", gestion_des_evenements_on_release)
+root.bind("<Enter>", gestion_des_evenements_on_mouse_over)
+root.bind("<Leave>", gestion_des_evenements_on_mouse_leave)
+
+
 
 # Boucle du programme
 root.mainloop()
