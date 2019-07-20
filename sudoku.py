@@ -139,7 +139,7 @@ class Grille:
     LARGEUR_GRILLE = LARGEUR_BLOC * LARGEUR_BLOC
     NBR_CASES = LARGEUR_GRILLE * LARGEUR_GRILLE
     SYMBOLES = ['1', '2', '3', '4', '5', '6', '7', '8', '9']
-    # destinations_des_symboles = dict()
+    # destinations_envisageables = dict()
     compteur = 0
     
 
@@ -287,15 +287,15 @@ class Grille:
         ma_grille[0] = '5'
         """
         if not(isinstance(index, int)):
-            raise TypeError()
+            raise TypeError
         if symbole is not None:
             if not(isinstance(symbole, str)):
-                raise TypeError()
+                raise TypeError
 
         if index < self.NBR_CASES:
             self.get_case(index).contenu = symbole
         else:
-            raise IndexError()
+            raise IndexError
 
     def __len__(self):
         return self.NBR_CASES
@@ -366,7 +366,7 @@ class Grille:
             ma_case = self.get_case(index)
             ma_case['text'] = str(index)
 
-    def efface_grille(self):
+    def effacer_grille(self):
         """
         Efface le contenu de toutes les cases de la grille.
         """
@@ -375,8 +375,12 @@ class Grille:
             case_a_effacer['text'] = ' '
             case_a_effacer.contenu = None
             case_a_effacer.pretendants = ['1', '2', '3', '4', '5', '6', '7', '8', '9']
+        self.restaurer_pretendants() 
+        self.recalculer_les_destinations()
+        self.compteur = 0
+        jauge_de_remplissage["value"] = self.compteur
 
-    def efface_case(self, case_a_effacer):
+    def effacer_case(self, case_a_effacer):
         """
         Efface le contenu de la case cliquée
         """
@@ -425,16 +429,16 @@ class Grille:
         Cette fonction retire SYMBOLE de la liste de leurs prétendants.
         """
         ma_case = self.get_case(index)
-        ma_case.pretendants = list()
+        #ma_case.pretendants = list()
         for index_cousine in ma_case.index_cousines:
             case_cousine = self.get_case(index_cousine)
             if case_cousine.contenu is None:
                 pretendants = case_cousine.pretendants
+                if not pretendants:
+                    raise ValueError('Case',index_cousine ,'sans contenu ni prétendants')
+                    return False
                 if symbole in pretendants:
                     pretendants.remove(symbole)
-                if not pretendants:
-                    print('Case sans contenu ni prétendants')
-                    return False
         return True
 
     def get_colonne(self, index):
@@ -483,45 +487,37 @@ class Grille:
         for index_case in range(self.NBR_CASES):
             case_examinee = self.get_case(index_case) 
             if case_examinee.contenu:
-                destinations_en_place[case_examinee.contenu].append(index_case)             
-        watchdog = False
-        self.placement_de_la_pioche_sur_la_grille(destinations_en_place, pioche, watchdog)
-
-
+                destinations_en_place[case_examinee.contenu].append(index_case)
+        self.recalculer_les_destinations()
+        self.placement_de_la_pioche_sur_la_grille(destinations_en_place, pioche, False)
 
     def tirage(self, pioche):
         """
         Génération d'une grille pleine en partant d'une grille vierge
         """
+        self.effacer_grille() 
         pioche.reinitialiser() 
-        self.efface_grille() 
-        self.restaurer_pretendants() 
-        self.recalculer_les_destinations()
         destinations_en_place = {'1':list(), '2':list(), '3':list(), '4':list(), '5':list(), '6':list(), '7':list(), '8':list(), '9':list()}
-        self.compteur = 0
-        watchdog = True
-        self.placement_de_la_pioche_sur_la_grille(destinations_en_place, pioche, watchdog)
-           
+        self.placement_de_la_pioche_sur_la_grille(destinations_en_place, pioche, True)
 
-
-    def placement_de_la_pioche_sur_la_grille(self, destinations_en_place, pioche, watchdog):
+    def placement_de_la_pioche_sur_la_grille(self, destinations_en_place, pioche, watchdog_est_actif):
         """
         Génération d'une grille pleine à partir de l'état actuel de la grille et de la pioche
         """
         symboles_a_placer = pioche.get_symboles_a_placer()
-        mon_watchdog = Watchdog()
+        mon_watchdog = Watchdog(watchdog_est_actif)
         pile = list()
-        #pdb.set_trace()
+        pdb.set_trace()
         while symboles_a_placer:
             symbole_a_placer = symboles_a_placer.pop(0)
-            if self.destinations_des_symboles[symbole_a_placer]\
+            if self.destinations_envisageables[symbole_a_placer]\
                and self.placement_est_possible(
                    destinations_en_place[symbole_a_placer],
-                   self.destinations_des_symboles[symbole_a_placer]):
-                index_case = choice(self.destinations_des_symboles[symbole_a_placer])
+                   self.destinations_envisageables[symbole_a_placer]):
+                index_case = choice(self.destinations_envisageables[symbole_a_placer])
                 pile.append((symbole_a_placer,
                                   index_case,
-                                  self.destinations_des_symboles[symbole_a_placer].copy()))
+                                  self.destinations_envisageables[symbole_a_placer].copy()))
                 print('compteur:',self.compteur, 'pile', pile[-1])
                 self.remplir_case(index_case, symbole_a_placer)
                 destinations_en_place[symbole_a_placer].append(index_case)
@@ -529,32 +525,31 @@ class Grille:
                 pioche.reduire_sac(symbole_a_placer)
                 self.recalculer_les_destinations()
                 mon_watchdog.reset()
-            elif mon_watchdog.alarm():
+            elif mon_watchdog.est_actif() and  mon_watchdog.alarm():
                 mon_watchdog.reset()
                 symboles_a_placer.insert(0, symbole_a_placer)
                 for i in range(9):
                     symbole_a_retirer, destination_liberee, sans_interet = pile.pop(0)
-                    print('Parmi',destinations_en_place[symbole_a_retirer])
+                    print('Parmi', destinations_en_place[symbole_a_retirer])
                     destinations_en_place[symbole_a_retirer].remove(destination_liberee)
                     case_a_effacer = self.get_case(destination_liberee)
-                    self.efface_case(case_a_effacer)
+                    self.effacer_case(case_a_effacer)
                     print('-------------retire', symbole_a_retirer, 'de', destination_liberee)
                     # le symbole que l'on vient de retirer est à replacer dans la pioche
                     pioche.remettre_dans_son_sac(symbole_a_retirer)
                     symboles_a_placer.append(symbole_a_retirer)
                 # reconstruction des destinations la pile
-                self.efface_grille()
-                self.recalculer_les_destinations()
+                # sauvegarde_compteur = self.compteur
+                self.effacer_grille()
                 pile_a_jour = list()
-                sauvegarde_compteur = self.compteur
                 for element in pile:
                     symbole, destination, destinations = element 
-                    element = (symbole, destination, self.destinations_des_symboles[symbole].copy())
+                    element = (symbole, destination, self.destinations_envisageables[symbole].copy())
                     pile_a_jour.append(element)
                     self.remplir_case(destination, symbole)
                     self.recalculer_les_destinations()
                 pile = pile_a_jour
-                self.compteur = sauvegarde_compteur
+                # self.compteur = sauvegarde_compteur
             else:
                 # impasse détectée
                 # effacer la dernière case et restaurer les prétendants
@@ -562,14 +557,14 @@ class Grille:
                 symboles_a_placer.insert(0, symbole_a_placer)
                 symbole_a_retirer, destination_problematique, destinations = pile.pop()
                 case_a_effacer = self.get_case(destination_problematique)
-                self.efface_case(case_a_effacer)
+                self.effacer_case(case_a_effacer)
                 destinations_en_place[symbole_a_retirer].pop()
                 # le symbole que l'on vient de retirer est à replacer dans la pioche
                 pioche.remettre_dans_son_sac(symbole_a_retirer)
                 symboles_a_placer.insert(0, symbole_a_retirer)
                 destinations.remove(destination_problematique)
                 print('-------------retire', destination_problematique)
-                self.destinations_des_symboles[symbole_a_retirer] = destinations
+                self.destinations_envisageables[symbole_a_retirer] = destinations
             print('SP:',symboles_a_placer)
         print('Tous les symboles on été placés')
         return True
@@ -600,19 +595,25 @@ class Grille:
             grille_en_liste.append(self[index])
         return grille_en_liste
 
-    def grille_import(self, grille_en_liste):
+    def grille_import(self, grille_en_liste, pioche):
         """
         Importe puis affiche une grille transmise sous forme de liste.
+
         """
-        
+        pioche.reinitialiser()
+        self.compteur = 0
         for index in range(self.NBR_CASES):
-            if grille_en_liste[index] == '0':
+            symbole = grille_en_liste[index]
+            if symbole  == '0':
                 self[index] = None
             else:
-                self[index] = grille_en_liste[index]
+                self[index] = symbole
+                self.compteur +=1
+                jauge_de_remplissage["value"] = self.compteur
+                pioche.reduire_sac(symbole)
         self.rafraichir_affichage()
         self.restaurer_pretendants()
-        self.restaurer_destinations()
+        self.recalculer_les_destinations()
 
     def recalculer_les_destinations(self):
         """
@@ -620,12 +621,12 @@ class Grille:
 
         à partir des prétendants de chacune des cases de la grille.
         """
-        self.destinations_des_symboles = {'1': [], '2': [], '3': [], '4': [], '5': [], '6': [], '7': [], '8': [], '9': []}
+        self.destinations_envisageables = {'1': [], '2': [], '3': [], '4': [], '5': [], '6': [], '7': [], '8': [], '9': []}
         for index in range(self.NBR_CASES):
             une_case = self.get_case(index)
             for symbole in self.SYMBOLES:
                 if symbole in une_case.pretendants:
-                    self.destinations_des_symboles[symbole].append(index)
+                    self.destinations_envisageables[symbole].append(index)
 
 class Watchdog():
     """
@@ -633,9 +634,13 @@ class Watchdog():
     """
     WATCHDOG_LIMIT = 7
 
-    def __init__(self):
+    def __init__(self, etat):
         self.compteur = self.WATCHDOG_LIMIT
+        self.actif = etat
 
+    def est_actif(self):
+        return self.actif
+        
     def reset(self):
         self.compteur = self.WATCHDOG_LIMIT
         
@@ -933,12 +938,6 @@ class Pioche:
 
 # FONCTIONS
 
-
-    # if event.widget['text'] == 'Solveur':
-    #     grille_sudoku.solveur(pioche_sudoku)
-
-
-    
 def tirage():
     """
     Remplissage d'une grille complète
@@ -946,12 +945,24 @@ def tirage():
     grille_sudoku.tirage(pioche_sudoku)
 
 
-    
+def vierge():
+    """
+    Efface la grille
+    """
+    #pdb.set_trace()
+    grille_sudoku.effacer_grille()
+    pioche_sudoku.reinitialiser()
+
+def exemple():
+    """
+    Charge un exemple
+    """
+    grille_sudoku.grille_import(['0', '6', '0', '0', '0', '0', '0', '0', '8', '0', '0', '7', '6', '9', '3', '0', '0', '0', '3', '0', '0', '0', '1', '0', '0', '2', '0', '0', '0', '2', '0', '7', '0', '4', '0', '0', '0', '1', '0', '0', '0', '0', '9', '6', '7', '0', '0', '0', '1', '0', '0', '0', '8', '2', '5', '9', '0', '7', '0', '1', '0', '4', '0', '0', '0', '0', '0', '0', '6', '2', '0', '0', '0', '0', '0', '9', '0', '0', '8', '0', '0'], pioche_sudoku)
+
 def solveur():
     """
     Remplissage d'une grille complète
     """
-    #pdb.set_trace()
     grille_sudoku.solveur(pioche_sudoku)
 
     
@@ -971,7 +982,6 @@ def cacher_les_index(event):
     """
     grille_sudoku.rafraichir_affichage()
 
-    
 def deselectionner_le_bouton_effacer():
     root.nametowidget('.pioche.x')['background'] = COULEUR_PIOCHE
 
@@ -1000,7 +1010,7 @@ def gestion_des_evenements_on_press(event):
     if type(event.widget) == Case:
         if grille_sudoku.symbole_actif == 'X' and not(event.widget.contenu is None):
             symbole = event.widget.contenu  # sauvegarde avant effacement
-            grille_sudoku.efface_case(event.widget)
+            grille_sudoku.effacer_case(event.widget)
             grille_sudoku.recalculer_les_destinations()
             pioche_sudoku.remettre_dans_son_sac(symbole)
         elif grille_sudoku.symbole_actif == 'X' and event.widget.contenu is None:
@@ -1091,6 +1101,14 @@ label_pretendants = Label(cadre_gauche,
                           name='lbl_pretendants',
                           text='Prétendants: ',
                           background=COULEUR_CADRE_GAUCHE)
+bouton_vierge = Button(cadre_gauche,
+                        name='vierge',
+                        text='Vierge',
+                        command = vierge)
+bouton_exemple = Button(cadre_gauche,
+                        name='exemple',
+                        text='Exemple',
+                        command = exemple)
 bouton_solveur = Button(cadre_gauche,
                         name='solveur',
                         text='Solveur',
@@ -1109,6 +1127,8 @@ jauge_de_remplissage = ttk.Progressbar(cadre_gauche,
 bouton_index_cases.pack()
 label_symbole_actif.pack()
 label_pretendants.pack()
+bouton_vierge.pack()
+bouton_exemple.pack()
 bouton_solveur.pack()
 bouton_tirage.pack()
 jauge_de_remplissage.pack(side = BOTTOM)
