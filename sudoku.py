@@ -7,7 +7,7 @@ import pdb
 # pdb.set_trace()
 
 # Chargement du module tkinter
-from tkinter import Tk, Frame, Button, Label
+from tkinter import Tk, Frame, Button, Label, font
 from random import shuffle, choice
 from tkinter import ttk
 from tkinter.constants import *
@@ -369,14 +369,18 @@ class Grille:
     def effacer_grille(self):
         """
         Efface le contenu de toutes les cases de la grille.
+
+        C'est à dire:
+        - le contenu de la case est None
+        - visuellement la case est  vierge
+        - la case est prête à accepter n'importe lequel des 9 symboles possibles
         """
         for index in range(self.NBR_CASES):
             case_a_effacer = self.get_case(index)
-            case_a_effacer['text'] = ' '
             case_a_effacer.contenu = None
+            case_a_effacer['text'] = ' '
             case_a_effacer.pretendants = ['1', '2', '3', '4', '5', '6', '7', '8', '9']
-        self.restaurer_pretendants() 
-        self.recalculer_les_destinations()
+        pioche.reinitialiser()
         self.compteur = 0
         jauge_de_remplissage["value"] = self.compteur
 
@@ -400,9 +404,8 @@ class Grille:
             ma_case = self.get_case(index)
             ma_case.pretendants = ['1', '2', '3', '4', '5', '6', '7', '8', '9']
         for index in range(self.NBR_CASES):
-            symbole = self.get_case(index).contenu
-            if not(symbole is None):
-                self.reduire_pretendants_des_cousines(index, symbole)
+            if not(self.get_case(index).contenu is None):
+                self.reduire_pretendants_des_cousines_de_la_case(index)
 
     def remplir_case(self, index, symbole_a_placer):
         """
@@ -415,30 +418,30 @@ class Grille:
             jauge_de_remplissage["value"] = self.compteur
             jauge_de_remplissage.update()
             self.rafraichir_affichage()
-            return self.reduire_pretendants_des_cousines(index,
-                                                         symbole_a_placer)
+            return self.reduire_pretendants_des_cousines_de_la_case(index)
         else:
             print("Ce symbole ne figure pas parmi les prétendants de la case d'index", index)
             return False
 
-    def reduire_pretendants_des_cousines(self, index, symbole):
+    def reduire_pretendants_des_cousines_de_la_case(self, index):
         """
         Réduit le nombre de prétendants des cousines d'une case d'index donné
 
         Les cases cousines vierges ont des prétendants.
-        Cette fonction retire SYMBOLE de la liste de leurs prétendants.
+        Cette fonction retire le SYMBOLE contenu dans la case de la liste de leurs prétendants.
+        Retourne False si une case vide se retrouve sans prétendants.
         """
         ma_case = self.get_case(index)
-        #ma_case.pretendants = list()
+        symbole = ma_case.contenu
         for index_cousine in ma_case.index_cousines:
             case_cousine = self.get_case(index_cousine)
             if case_cousine.contenu is None:
                 pretendants = case_cousine.pretendants
-                if not pretendants:
-                    raise ValueError('Case',index_cousine ,'sans contenu ni prétendants')
-                    return False
                 if symbole in pretendants:
                     pretendants.remove(symbole)
+                if not pretendants:
+                    print('Case',index_cousine ,'sans contenu ni prétendants')
+                    return False
         return True
 
     def get_colonne(self, index):
@@ -495,6 +498,7 @@ class Grille:
         """
         Génération d'une grille pleine en partant d'une grille vierge
         """
+        pdb.set_trace()
         self.effacer_grille() 
         pioche.reinitialiser() 
         destinations_en_place = {'1':list(), '2':list(), '3':list(), '4':list(), '5':list(), '6':list(), '7':list(), '8':list(), '9':list()}
@@ -504,16 +508,14 @@ class Grille:
         """
         Génération d'une grille pleine à partir de l'état actuel de la grille et de la pioche
         """
-        symboles_a_placer = pioche.get_symboles_a_placer()
         mon_watchdog = Watchdog(watchdog_est_actif)
         pile = list()
-        pdb.set_trace()
-        while symboles_a_placer:
-            symbole_a_placer = symboles_a_placer.pop(0)
-            if self.destinations_envisageables[symbole_a_placer]\
+        while pioche.symboles_a_placer:
+            symbole_a_placer = pioche.symboles_a_placer.pop(0)
+            if pioche[symbole_a_placer].destinations_envisageables\
                and self.placement_est_possible(
                    destinations_en_place[symbole_a_placer],
-                   self.destinations_envisageables[symbole_a_placer]):
+                   pioche[symbole_a_placer].destinations_envisageables):
                 index_case = choice(self.destinations_envisageables[symbole_a_placer])
                 pile.append((symbole_a_placer,
                                   index_case,
@@ -652,18 +654,22 @@ class Watchdog():
             return True
         else:
             return False
-
-                    
-class Sac(Button):
+    
+class Sac(Frame):
     """
     Classe représentant un sac. Un sac contient des symboles identiques.
 
     Attributs:
     ---------
-    symbole : symbole placé dans le sacs
-    cardinal : nombre de symboles que le sac contient
+    - symbole: soit '1' pour indiquer que le sac contient des '1', soit '2'..., etc.
+    - cardinal: nombre d'éléments dans le sac
+    destinations_envisageables : ensemble des cases de la grille envisageables pour le prochain symbole tiré de ce sac.
+    À l'initialisation chacune des 81 cases de la grille constitue une destination envisageable.
 
-    Une case se configure comme une bouton.
+    Méthodes:
+    ---------
+    - reinitialiser
+    - get_symboles_a_placer
 
     exemple:
     -------
@@ -674,15 +680,30 @@ class Sac(Button):
     >>> mon_sac
     contient 9 symboles 5
     """
+    police_symbole = "{dyuthi} 12"
+    police_cardinal = "{dyuthi} 8"
+
     def __init__(self, master, symbole, *args, **kwargs):
         """
         Construit un widget 'sac' avec comme cadre MASTER
-
-        contenant 9 symboles identiques
         """
-        super().__init__(master, *args, **kwargs) # ce qui relève de la classe Button
+        super().__init__(master, *args, **kwargs) 
         self.symbole = str(symbole)
-        self.cardinal = 9  # nombre d'éléments dans le sac
+        self.cardinal = 9  
+        self.destinations_envisageables = set([destination for destination in range(81)])
+        Button(self,
+               name="symbole{}".format(symbole),
+               font=self.police_symbole,
+               text=symbole).pack(side=TOP, fill=X)
+        Label(self,
+              name='cardinal{}'.format(symbole),
+              font=self.police_cardinal,
+              text='{}'.format(self.cardinal)).pack(side=BOTTOM, fill=X)        
+        
+
+    def reinitialiser(self):
+        self.cardinal = 9
+        self.destinations_envisageables = set([destination for destination in range(81)])
 
     def __repr__(self):
         """
@@ -732,6 +753,20 @@ class Pioche:
     Les sacs sont des widgets tkinter. Il faut donc donner un cadre à la
     pioche.
 
+    attributs:
+    ----------
+    - symboles_a_placer
+
+
+
+    méthodes:
+    ---------
+    - get_symboles_a_placer
+    - get_widget_sac
+    - get_widget_cardinal_sac
+    - rafraichir_affichage
+
+
     exemple:
     -------
     >>> root = Tk()
@@ -751,32 +786,21 @@ class Pioche:
     SYMBOLES = ['1', '2', '3', '4', '5', '6', '7', '8', '9']
     COULEUR_INITIALE_SAC = '#d9d9d9'
     COULEUR_SELECTION_SAC = 'LightSteelBlue3'
-
+    police_X = "{dyuthi} 26"
+    
     def __init__(self, cadre):
         """
-        Initialisation d'une liste contenant 9 sacs
+        Initialisation d'une pioche contenant 9 sacs
         chaque sac contenant chacun 9 symboles identiques
         """
         self.cadre = cadre
-    
-        # Disposition du conteneur cadre qui contient la pioche
-        for column in range(1, self.NBR_SACS+2):
-            cadre.columnconfigure(column, weight=1)
         for index in range(1, self.NBR_SACS+1):
-            Sac(cadre,
+            Sac(self.cadre,
                 index,
-                name='{}'.format(index),
-                text='{}'.format(index)).grid(row=0,
-                                              column=index,
-                                              sticky="nsew")
-            Label(cadre,
-                  name='cardinal{}'.format(index),
-                  text='{}'.format(self[index].cardinal)).grid(row=1,
-                                                               column=index,
-                                                               sticky="nsew")
-        Button(cadre, name='x', text='X').grid(row=0,
-                                               column=10,
-                                               sticky="nsew")
+                name='{}'.format(index)).pack(side=LEFT, fill=X, expand=1)
+        Button(self.cadre, name='x', text='X', font= self.police_X).pack(side=LEFT, fill=BOTH, expand=True, padx=1, anchor="se")
+        # lecture de  la pioche pour déterminer les symboles à placer
+        self.symboles_a_placer = self.get_symboles_a_placer()
 
     def __iter__(self):
         """
@@ -877,7 +901,7 @@ class Pioche:
                 pioche += "contient {} symboles '{}'\n".format(self.__getitem__(index).cardinal, self.__getitem__(index).symbole)
         return pioche
 
-    def affiche_pioche(self, index_selection):
+    def rafraichir_affichage(self, index_selection):
         """
         Rafraîchi la couleur de la pioche dans tkinter
 
@@ -987,7 +1011,7 @@ def deselectionner_le_bouton_effacer():
 
 
 def deselectionner_les_cases_de_la_pioche():
-    pioche_sudoku.affiche_pioche(0)  # pioche affichée sans sélection
+    pioche_sudoku.rafraichir_affichage(0)  # pioche affichée sans sélection
 
 def gestion_des_evenements_on_press(event):
     """
@@ -1023,7 +1047,7 @@ def gestion_des_evenements_on_press(event):
     # Si un sac de la pioche est cliqué
     if type(event.widget) == Sac:
         deselectionner_le_bouton_effacer()
-        pioche_sudoku.affiche_pioche(int(event.widget.symbole))
+        pioche_sudoku.rafraichir_affichage(int(event.widget.symbole))
         grille_sudoku.symbole_actif = event.widget.symbole
         label_symbole_actif['text'] = 'Sélection: '+event.widget.symbole
         grille_sudoku.rafraichir_affichage()
@@ -1085,14 +1109,14 @@ root.grid_rowconfigure(1, weight=1)
 root.grid_columnconfigure(0, weight=1)  # cadre_gauche cadre_central
 root.grid_columnconfigure(1, weight=1)  # et cadre_droite se partagent
 root.grid_columnconfigure(2, weight=1)  # l'espace horizontal à égalité
-
+pdb.set_trace()
 pioche_sudoku = Pioche(cadre_pioche)
 grille_sudoku = Grille(cadre_central, pioche_sudoku)
 
 # Création des éléments dans le cadre de gauche
 bouton_index_cases = Button(cadre_gauche,
                             name='index_cases',
-                            text='Index des cases')
+                            text='Idex des cases')
 label_symbole_actif = Label(cadre_gauche,
                             name='lbl_symbole_actif',
                             text='Sélection: '+str(grille_sudoku.symbole_actif),
@@ -1155,3 +1179,6 @@ root.bind("<Leave>", gestion_des_evenements_on_mouse_leave)
 # Boucle du programme
 root.mainloop()
 root.destroy()
+
+
+
