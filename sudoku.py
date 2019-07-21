@@ -7,7 +7,7 @@ import pdb
 # pdb.set_trace()
 
 # Chargement du module tkinter
-from tkinter import Tk, Frame, Button, Label, font
+from tkinter import Tk, Frame, Button, Label, font, Message
 from random import shuffle, choice
 from tkinter import ttk
 from tkinter.constants import *
@@ -150,7 +150,7 @@ class Grille:
 
     symbole_actif = None
 
-    def __init__(self, cadre, grille):
+    def __init__(self, cadre, pioche):
         """
         À l'initialisation préciser le cadre de destination de la grille et la pioche à utiliser.
         exemple:
@@ -414,6 +414,7 @@ class Grille:
         case_a_remplir = self.get_case(index)
         if symbole_a_placer in case_a_remplir.pretendants:
             self.__setitem__(index, symbole_a_placer)
+            case_a_remplir.pretendants = []
             self.compteur += 1
             jauge_de_remplissage["value"] = self.compteur
             jauge_de_remplissage.update()
@@ -663,13 +664,23 @@ class Sac(Frame):
     ---------
     - symbole: soit '1' pour indiquer que le sac contient des '1', soit '2'..., etc.
     - cardinal: nombre d'éléments dans le sac
-    destinations_envisageables : ensemble des cases de la grille envisageables pour le prochain symbole tiré de ce sac.
+    - destinations_envisageables : ensemble des cases de la grille envisageables pour le prochain symbole tiré de ce sac.
     À l'initialisation chacune des 81 cases de la grille constitue une destination envisageable.
 
     Méthodes:
     ---------
     - reinitialiser
     - get_symboles_a_placer
+    - get_symbole
+    - set_symbole
+    - get_cardinal
+    - set_cardinal
+    - ajouter_un_element
+    - retirer_un_element
+    - get_destinations_envisageables
+    - set_destinations_envisageables
+    - selectionner
+    - deselectionner
 
     exemple:
     -------
@@ -682,6 +693,8 @@ class Sac(Frame):
     """
     police_symbole = "{dyuthi} 12"
     police_cardinal = "{dyuthi} 8"
+    COULEUR_INITIALE_SAC = '#d9d9d9'
+    COULEUR_SELECTION_SAC = 'LightSteelBlue3'    
 
     def __init__(self, master, symbole, *args, **kwargs):
         """
@@ -692,17 +705,20 @@ class Sac(Frame):
         self.cardinal = 9  
         self.destinations_envisageables = set([destination for destination in range(81)])
         Button(self,
-               name="symbole{}".format(symbole),
+               name="symbole",
                font=self.police_symbole,
                text=symbole).pack(side=TOP, fill=X)
         Label(self,
-              name='cardinal{}'.format(symbole),
+              name="cardinal",
               font=self.police_cardinal,
               text='{}'.format(self.cardinal)).pack(side=BOTTOM, fill=X)        
         
 
     def reinitialiser(self):
-        self.cardinal = 9
+        """
+        Réinitialisation du sac.
+        """
+        self.set_cardinal(9)
         self.destinations_envisageables = set([destination for destination in range(81)])
 
     def __repr__(self):
@@ -740,6 +756,86 @@ class Sac(Frame):
         """
         return list(self.symbole)*self.cardinal
 
+    def get_symbole(self):
+        """
+        Retourne le symbole du sac.
+        """
+        return self.symbole
+
+    def set_symbole(self, symbole):
+        """
+        Permet d'attribuer un symbole au sac.
+        """
+        # Sauvegarde
+        self.symbole = symbole
+        # Affichage
+        print(str(self)+".symbole")
+        root.nametowidget(str(self)+".symbole")['text'] = symbole
+
+    def get_cardinal(self):
+        """
+        Retourne le nombre d'éléments dans le sac.
+        """
+        return self.cardinal
+
+    def set_cardinal(self, cardinal):
+        """
+        Permet d'attribuer un cardinal au sac.
+        """
+        # Sauvegarde
+        self.cardinal = cardinal
+        # Affichage
+        root.nametowidget(str(self)+".cardinal")['text'] = cardinal
+
+    def ajouter_un_element(self):
+        """
+        Permet d'incrémenter le cardinal du sac.
+        """
+        # Sauvegarde
+        self.cardinal += 1
+        if self.cardinal > 9:
+            self.cardinal = 9
+            raise IndexError()
+        # Affichage
+        root.nametowidget(str(self)+".cardinal")['text'] = self.cardinal
+
+    def retirer_un_element(self):
+        """
+        Permet d'incrémenter le cardinal du sac.
+        """
+        # Sauvegarde
+        self.cardinal -= 1
+        if self.cardinal < 0:
+            self.cardinal = 0
+            raise IndexError()
+        # Affichage
+        root.nametowidget(str(self)+".cardinal")['text'] = self.cardinal
+
+    def get_destinations_envisageables(self):
+        """
+        Retourne l'ensemble des destinations envisageables où l'on pourrait placer les symboles contenus dans le sac.
+        """
+        return self.destinations_envisageables
+
+    def set_destinations_envisageables(self, destinations):
+        """
+        Permet d'attribuer des destinations envisageables au sac.
+        """
+        self.destinations_envisageables = destinations
+
+    def selectionner(self):
+        """
+        Active la couleur SELECTION du sac 
+        """
+        root.nametowidget(str(self)+".symbole")['background'] = self.COULEUR_SELECTION_SAC
+
+    def deselectionner(self):
+        """
+        Active la couleur SANS-SELECTION du sac 
+        """
+        root.nametowidget(str(self)+".symbole")['background'] = self.COULEUR_INITIALE_SAC
+        
+
 class Pioche:
     """
     Classe représentant 9 sacs contenant chacun des symboles identiques tous
@@ -762,7 +858,7 @@ class Pioche:
     méthodes:
     ---------
     - get_symboles_a_placer
-    - get_widget_sac
+    - get_sac
     - get_widget_cardinal_sac
     - rafraichir_affichage
 
@@ -794,6 +890,7 @@ class Pioche:
         chaque sac contenant chacun 9 symboles identiques
         """
         self.cadre = cadre
+        Message(self.cadre, name='msg_destinations_envisageables', text='', aspect= 800).pack(side=TOP)
         for index in range(1, self.NBR_SACS+1):
             Sac(self.cadre,
                 index,
@@ -801,6 +898,19 @@ class Pioche:
         Button(self.cadre, name='x', text='X', font= self.police_X).pack(side=LEFT, fill=BOTH, expand=True, padx=1, anchor="se")
         # lecture de  la pioche pour déterminer les symboles à placer
         self.symboles_a_placer = self.get_symboles_a_placer()
+
+    def montrer_destinations_envisageables(self, symbole):
+        """
+        Montre les destinations envisageables.
+        """
+        root.nametowidget(str(self.cadre)+".msg_destinations_envisageables")['text'] = self[symbole].destinations_envisageables
+
+
+    def cacher_destinations_envisageables(self, event):
+        """
+        Cache  les destinations envisageables.
+        """
+        root.nametowidget(str(self.cadre)+".msg_destinations_envisageables")['text'] = ''
 
     def __iter__(self):
         """
@@ -828,7 +938,7 @@ class Pioche:
         else:
             raise StopIteration
 
-    def get_widget_sac(self, index):
+    def get_sac(self, index):
         """
         Retourne le widget sac d'index donné
 
@@ -841,29 +951,22 @@ class Pioche:
         >>> mon_cadre = Frame(root)
         >>> mon_cadre.pack()
         >>> ma_pioche = Pioche(mon_cadre)
-        >>> print(ma_pioche.get_widget_sac(1))
+        >>> print(ma_pioche.get_sac(1))
         .!frame.1
-        >>> ma_pioche.get_widget_sac(1)
+        >>> ma_pioche.get_sac(1)
         contient 9 symboles 1
         >>> print(ma_pioche[1])           # accès fainéant
         .!frame.1
         >>> ma_pioche[1]                  # affichage fainéant
         contient 9 symboles 1
-        >>> ma_pioche.get_widget_sac(1).symbole
+        >>> ma_pioche.get_sac(1).symbole
         '1'
-        >>> ma_pioche.get_widget_sac(1).cardinal
+        >>> ma_pioche.get_sac(1).cardinal
         9
         """
         return root.nametowidget(str(self.cadre)+"."+str(index))
 
-    def get_widget_cardinal_sac(self, index):
-        """
-        Accès à l'étiquette tkinter
-
-        qui affiche le cardinal d'un sac d'index donné.
-        """
-        return root.nametowidget(str(self.cadre)+".cardinal"+str(index))
-
+    
     def __getitem__(self, index):
         """
         Permet d'obtenir le contenu d'un sac dans la pioche avec:
@@ -885,7 +988,7 @@ class Pioche:
         contient 9 symboles 9
 
         """
-        return self.get_widget_sac(index)
+        return self.get_sac(index)
 
     def __repr__(self):
         """
@@ -908,11 +1011,11 @@ class Pioche:
         Si un sac est sélectionné, il est affiché avec une couleur distinctive.
         """
         for index in range(1, self.NBR_SACS+1):
-            self.get_widget_sac(index)['background'] = self.COULEUR_INITIALE_SAC
+            self[index].deselectionner()
         if index_selection == 0:  # code pour juste effacer la sélection
             pass
         elif index_selection <= 9:
-            self.get_widget_sac(index_selection)['background'] = self.COULEUR_SELECTION_SAC
+            self[index_selection].selectionner()
         else:
             raise IndexError
 
@@ -924,7 +1027,7 @@ class Pioche:
         """
         symboles_a_placer = list()
         for symbole in self.SYMBOLES:
-            un_sac = self.get_widget_sac(symbole)
+            un_sac = self.get_sac(symbole)
             symboles_a_placer.extend(un_sac.get_symboles_a_placer())
         return symboles_a_placer
         
@@ -934,9 +1037,7 @@ class Pioche:
 
          à chaque fois qu'un symbole est placé sur la grille.
         """
-        mon_sac = self.get_widget_sac(symbole)
-        mon_sac.cardinal -= 1
-        self.get_widget_cardinal_sac(symbole)['text'] = mon_sac.cardinal
+        self[symbole].retirer_un_element()
 
     def remettre_dans_son_sac(self, symbole):
         """
@@ -944,9 +1045,8 @@ class Pioche:
 
         il faut le remettre dans le sac de la pioche approprié.
         """
-        mon_sac = self.get_widget_sac(symbole)
-        mon_sac.cardinal += 1
-        self.get_widget_cardinal_sac(symbole)['text'] = mon_sac.cardinal
+        self[symbole].ajouter_un_element()
+
 
     def reinitialiser(self):
         """
@@ -955,7 +1055,7 @@ class Pioche:
         en mettant 9 symboles identiques dans chaque sac.
         """
         for symbole in self.SYMBOLES:
-            sac_a_remplir = self.get_widget_sac(symbole)
+            sac_a_remplir = self.get_sac(symbole)
             sac_a_remplir.cardinal = 9
             self.get_widget_cardinal_sac(symbole)['text'] = 9
 
@@ -1009,7 +1109,6 @@ def cacher_les_index(event):
 def deselectionner_le_bouton_effacer():
     root.nametowidget('.pioche.x')['background'] = COULEUR_PIOCHE
 
-
 def deselectionner_les_cases_de_la_pioche():
     pioche_sudoku.rafraichir_affichage(0)  # pioche affichée sans sélection
 
@@ -1022,6 +1121,10 @@ def gestion_des_evenements_on_press(event):
     - si une case de la grille est cliqué
     - si un sac de la pioche est cliqué
     """
+
+    # Cacher les destinations envisageables
+    pioche_sudoku.cacher_destinations_envisageables(event)
+    
     # Si le bouton effacer (X) est cliqué
     if type(event.widget) == Button and event.widget['text'] == 'X':
         deselectionner_les_cases_de_la_pioche()
@@ -1045,17 +1148,17 @@ def gestion_des_evenements_on_press(event):
                 pioche_sudoku.reduire_sac(grille_sudoku.symbole_actif)
                 
     # Si un sac de la pioche est cliqué
-    if type(event.widget) == Sac:
+    if type(event.widget.master) == Sac:
         deselectionner_le_bouton_effacer()
-        pioche_sudoku.rafraichir_affichage(int(event.widget.symbole))
-        grille_sudoku.symbole_actif = event.widget.symbole
-        label_symbole_actif['text'] = 'Sélection: '+event.widget.symbole
+        pioche_sudoku.rafraichir_affichage(int(event.widget.master.symbole))
+        grille_sudoku.symbole_actif = event.widget.master.symbole
+        label_symbole_actif['text'] = 'Sélection: '+event.widget.master.symbole
         grille_sudoku.rafraichir_affichage()
 
 def gestion_des_evenements_on_release(event):
     """
-    Si une le contenu d'une case vient d'être supprimé il est nécessaire
-    de rafraîchir l'affichage des prétendants.
+    Il est nécessaire de rafraîchir l'affichage des prétendants.
+    au cas où le contenu d'une case vient d'être supprimé 
     """
     if type(event.widget) == Case:
         label_pretendants['text'] = event.widget.pretendants
@@ -1066,10 +1169,15 @@ def gestion_des_evenements_on_mouse_over(event):
     """
     if type(event.widget) == Case:
         label_pretendants['text'] = event.widget.pretendants
+    if type(event.widget) == Label and type(event.widget.master) == Sac:
+        print(event.widget.master.symbole)
+        pioche_sudoku.montrer_destinations_envisageables(event.widget.master.symbole)
+
+
+
 
 def gestion_des_evenements_on_mouse_leave(event):
     pass
-
 
 # CONSTANTES
 
@@ -1115,30 +1223,30 @@ grille_sudoku = Grille(cadre_central, pioche_sudoku)
 
 # Création des éléments dans le cadre de gauche
 bouton_index_cases = Button(cadre_gauche,
-                            name='index_cases',
-                            text='Idex des cases')
+                            name='index_cases', # utilité à vérifier
+                            text='Index des cases')
 label_symbole_actif = Label(cadre_gauche,
-                            name='lbl_symbole_actif',
+                            name='lbl_symbole_actif', # utilité à vérifier
                             text='Sélection: '+str(grille_sudoku.symbole_actif),
                             background=COULEUR_CADRE_GAUCHE)
 label_pretendants = Label(cadre_gauche,
-                          name='lbl_pretendants',
+                          name='lbl_pretendants', # utilité à vérifier
                           text='Prétendants: ',
                           background=COULEUR_CADRE_GAUCHE)
 bouton_vierge = Button(cadre_gauche,
-                        name='vierge',
+                        name='vierge', # utilité à vérifier
                         text='Vierge',
                         command = vierge)
 bouton_exemple = Button(cadre_gauche,
-                        name='exemple',
+                        name='exemple', # utilité à vérifier
                         text='Exemple',
                         command = exemple)
 bouton_solveur = Button(cadre_gauche,
-                        name='solveur',
+                        name='solveur', # utilité à vérifier
                         text='Solveur',
                         command = solveur)
 bouton_tirage = Button(cadre_gauche,
-                       name='tirage',
+                       name='tirage', # utilité à vérifier
                        text='Tirage',
                        command = tirage)
 jauge_de_remplissage = ttk.Progressbar(cadre_gauche,
