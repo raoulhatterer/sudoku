@@ -162,6 +162,7 @@ class Grille:
         >>> ma_grille = Grille(mon_cadre, ma_pioche) # fait apparaître la grille
         """
         self.cadre = cadre
+        self.pioche = pioche
 
         # Disposition du conteneur cadre qui contient la grille de sudoku
         for row in range(self.LARGEUR_GRILLE):
@@ -183,7 +184,7 @@ class Grille:
                                                  sticky="nsew")
                 index += 1
         self.restaurer_pretendants()
-        self.recalculer_les_destinations()
+
     
 
     def get_couleur_case(self, index, symbole, symbole_actif):
@@ -326,6 +327,22 @@ class Grille:
             index += 1
         return affichage
 
+    def selectionner_le_bouton_effacer(self):
+        """
+        Sélectionne le bouton effacer et désactive les autres sélections
+        """
+        self.pioche.selectionner_le_bouton_effacer()
+        self.symbole_actif = 'X'
+        self.rafraichir_affichage()
+
+    def activer_le_symbole(self, symbole):
+        """
+        Sélectionne le bon symbole (sur la grille et dans la pioche)
+        """
+        self.pioche.selectionner_un_sac(symbole)
+        self.symbole_actif = symbole
+        self.rafraichir_affichage()
+        
     def rafraichir_affichage(self):
         """
         Affiche le contenu des cases dans tkinter.
@@ -390,10 +407,13 @@ class Grille:
         """
         case_a_effacer['text'] = ' '
         case_a_effacer.contenu = None
-        self.compteur -=1
-        jauge_de_remplissage["value"] = self.compteur
+        self.diminuer_jauge()
         self.restaurer_pretendants()
         self.rafraichir_affichage()
+
+    def diminuer_jauge(self):
+        self.compteur -=1
+        jauge_de_remplissage["value"] = self.compteur
 
     def restaurer_pretendants(self):
         """
@@ -415,14 +435,17 @@ class Grille:
         if symbole_a_placer in case_a_remplir.pretendants:
             self.__setitem__(index, symbole_a_placer)
             case_a_remplir.pretendants = []
-            self.compteur += 1
-            jauge_de_remplissage["value"] = self.compteur
-            jauge_de_remplissage.update()
+            self.augmenter_jauge()
             self.rafraichir_affichage()
             return self.reduire_pretendants_des_cousines_de_la_case(index)
         else:
             print("Ce symbole ne figure pas parmi les prétendants de la case d'index", index)
             return False
+
+    def augmenter_jauge(self):
+        self.compteur += 1
+        jauge_de_remplissage["value"] = self.compteur
+        jauge_de_remplissage.update()
 
     def reduire_pretendants_des_cousines_de_la_case(self, index):
         """
@@ -499,7 +522,7 @@ class Grille:
         """
         Génération d'une grille pleine en partant d'une grille vierge
         """
-        pdb.set_trace()
+        # pdb.set_trace()
         self.effacer_grille() 
         pioche.reinitialiser() 
         destinations_en_place = {'1':list(), '2':list(), '3':list(), '4':list(), '5':list(), '6':list(), '7':list(), '8':list(), '9':list()}
@@ -611,8 +634,7 @@ class Grille:
                 self[index] = None
             else:
                 self[index] = symbole
-                self.compteur +=1
-                jauge_de_remplissage["value"] = self.compteur
+                self.augmenter_jauge()
                 pioche.reduire_sac(symbole)
         self.rafraichir_affichage()
         self.restaurer_pretendants()
@@ -624,12 +646,16 @@ class Grille:
 
         à partir des prétendants de chacune des cases de la grille.
         """
-        self.destinations_envisageables = {'1': [], '2': [], '3': [], '4': [], '5': [], '6': [], '7': [], '8': [], '9': []}
+        #self.destinations_envisageables = {'1': [], '2': [], '3': [], '4': [], '5': [], '6': [], '7': [], '8': [], '9': []}
+        for symbole in self.SYMBOLES:
+            self.pioche[symbole].destinations_envisageables = set()
         for index in range(self.NBR_CASES):
             une_case = self.get_case(index)
             for symbole in self.SYMBOLES:
                 if symbole in une_case.pretendants:
-                    self.destinations_envisageables[symbole].append(index)
+                    #self.destinations_envisageables[symbole].append(index)
+                    self.pioche[symbole].destinations_envisageables.add(index)
+                    
 
 class Watchdog():
     """
@@ -853,15 +879,12 @@ class Pioche:
     ----------
     - symboles_a_placer
 
-
-
     méthodes:
     ---------
     - get_symboles_a_placer
     - get_sac
     - get_widget_cardinal_sac
-    - rafraichir_affichage
-
+    - selectionner_un_sac
 
     exemple:
     -------
@@ -882,7 +905,7 @@ class Pioche:
     SYMBOLES = ['1', '2', '3', '4', '5', '6', '7', '8', '9']
     COULEUR_INITIALE_SAC = '#d9d9d9'
     COULEUR_SELECTION_SAC = 'LightSteelBlue3'
-    police_X = "{dyuthi} 26"
+    police_X = "{dyuthi} 22"
     
     def __init__(self, cadre):
         """
@@ -890,11 +913,11 @@ class Pioche:
         chaque sac contenant chacun 9 symboles identiques
         """
         self.cadre = cadre
-        Message(self.cadre, name='msg_destinations_envisageables', text='', aspect= 800).pack(side=TOP)
+        Message(self.cadre, name='msg_destinations_envisageables', text='Destinations envisageables', aspect= 200).pack_forget()
         for index in range(1, self.NBR_SACS+1):
             Sac(self.cadre,
                 index,
-                name='{}'.format(index)).pack(side=LEFT, fill=X, expand=1)
+                name='{}'.format(index)).pack(side=LEFT, fill=BOTH, expand=1)
         Button(self.cadre, name='x', text='X', font= self.police_X).pack(side=LEFT, fill=BOTH, expand=True, padx=1, anchor="se")
         # lecture de  la pioche pour déterminer les symboles à placer
         self.symboles_a_placer = self.get_symboles_a_placer()
@@ -904,13 +927,14 @@ class Pioche:
         Montre les destinations envisageables.
         """
         root.nametowidget(str(self.cadre)+".msg_destinations_envisageables")['text'] = self[symbole].destinations_envisageables
+        root.nametowidget(str(self.cadre)+".msg_destinations_envisageables").pack()
 
-
-    def cacher_destinations_envisageables(self, event):
+    def cacher_destinations_envisageables(self):
         """
         Cache  les destinations envisageables.
         """
-        root.nametowidget(str(self.cadre)+".msg_destinations_envisageables")['text'] = ''
+        root.nametowidget(str(self.cadre)+".msg_destinations_envisageables").pack_forget()
+
 
     def __iter__(self):
         """
@@ -996,20 +1020,39 @@ class Pioche:
 
         quand on tape son nom dans l'interpréteur.
         """
-        pioche = ""
+        la_pioche_contient = ""
         for index in range(1, self.NBR_SACS+1):
-            if self.__getitem__(index).cardinal < 2:
-                pioche += "contient {} symbole '{}'\n".format(self.__getitem__(index).cardinal, self.__getitem__(index).symbole)
+            if self.__getitem__(index).cardinal < 2: # accord singulier/pluriel
+                la_pioche_contient += "contient {} symbole '{}'\n".format(self.__getitem__(index).cardinal, self.__getitem__(index).symbole)
             else:
-                pioche += "contient {} symboles '{}'\n".format(self.__getitem__(index).cardinal, self.__getitem__(index).symbole)
-        return pioche
+                la_pioche_contient += "contient {} symboles '{}'\n".format(self.__getitem__(index).cardinal, self.__getitem__(index).symbole)
+        return la_pioche_contient
 
-    def rafraichir_affichage(self, index_selection):
+    def deselectionner_le_bouton_effacer(self):
+        root.nametowidget(str(self.cadre)+'.x')['background'] = self.COULEUR_INITIALE_SAC
+        
+
+    def selectionner_le_bouton_effacer(self):
+        """
+        Affichage : sélectionner aucun sac et sélectionner X
+        """
+        self.deselectionner_tous_les_sacs()
+        root.nametowidget(str(self.cadre)+'.x')['background'] = 'red' # case X en rouge
+
+    def deselectionner_tous_les_sacs(self):
+        """
+        La pioche est affichée sans sac sélectionné
+        """
+        self.selectionner_un_sac(0) 
+        
+    def selectionner_un_sac(self, symbole):
         """
         Rafraîchi la couleur de la pioche dans tkinter
 
         Si un sac est sélectionné, il est affiché avec une couleur distinctive.
         """
+        self.deselectionner_le_bouton_effacer()
+        index_selection = int(symbole)
         for index in range(1, self.NBR_SACS+1):
             self[index].deselectionner()
         if index_selection == 0:  # code pour juste effacer la sélection
@@ -1106,32 +1149,29 @@ def cacher_les_index(event):
     """
     grille_sudoku.rafraichir_affichage()
 
-def deselectionner_le_bouton_effacer():
-    root.nametowidget('.pioche.x')['background'] = COULEUR_PIOCHE
-
-def deselectionner_les_cases_de_la_pioche():
-    pioche_sudoku.rafraichir_affichage(0)  # pioche affichée sans sélection
-
 def gestion_des_evenements_on_press(event):
     """
     Identifie l'élément cliqué par le joueur.
 
     Réagit en conséquence:
     - si le bouton effacer (X) est cliqué
-    - si une case de la grille est cliqué
     - si un sac de la pioche est cliqué
+    - si une case de la grille est cliqué
     """
-
+    
     # Cacher les destinations envisageables
-    pioche_sudoku.cacher_destinations_envisageables(event)
+    pioche_sudoku.cacher_destinations_envisageables()
     
     # Si le bouton effacer (X) est cliqué
     if type(event.widget) == Button and event.widget['text'] == 'X':
-        deselectionner_les_cases_de_la_pioche()
-        event.widget['background'] = 'red'  # case X en rouge
-        grille_sudoku.symbole_actif = 'X'
         label_symbole_actif['text'] = 'Sélection: X'
-        grille_sudoku.rafraichir_affichage()
+        grille_sudoku.selectionner_le_bouton_effacer()
+                
+    # Si un sac de la pioche est cliqué
+    if type(event.widget.master) == Sac:
+        symbole_a_activer = event.widget.master.symbole
+        label_symbole_actif['text'] = 'Sélection: ' + symbole_a_activer
+        grille_sudoku.activer_le_symbole(symbole_a_activer)
 
     # Si une case de la grille est cliqué
     if type(event.widget) == Case:
@@ -1145,35 +1185,31 @@ def gestion_des_evenements_on_press(event):
         else:
             if grille_sudoku.remplir_case(event.widget.index,
                                                 grille_sudoku.symbole_actif):
+                grille_sudoku.recalculer_les_destinations()
                 pioche_sudoku.reduire_sac(grille_sudoku.symbole_actif)
-                
-    # Si un sac de la pioche est cliqué
-    if type(event.widget.master) == Sac:
-        deselectionner_le_bouton_effacer()
-        pioche_sudoku.rafraichir_affichage(int(event.widget.master.symbole))
-        grille_sudoku.symbole_actif = event.widget.master.symbole
-        label_symbole_actif['text'] = 'Sélection: '+event.widget.master.symbole
-        grille_sudoku.rafraichir_affichage()
+        
 
 def gestion_des_evenements_on_release(event):
     """
     Il est nécessaire de rafraîchir l'affichage des prétendants.
-    au cas où le contenu d'une case vient d'être supprimé 
+    au cas où le contenu d'une case vient d'être supprimé.
     """
     if type(event.widget) == Case:
         label_pretendants['text'] = event.widget.pretendants
 
+
 def gestion_des_evenements_on_mouse_over(event):
     """
     Si la souris survole une case de la grille les prétendants sont affichés.
+    Si la souris survole le nombre de symbole restants les destinations
+    envisageables s'affichent.
     """
     if type(event.widget) == Case:
         label_pretendants['text'] = event.widget.pretendants
     if type(event.widget) == Label and type(event.widget.master) == Sac:
         print(event.widget.master.symbole)
-        pioche_sudoku.montrer_destinations_envisageables(event.widget.master.symbole)
-
-
+        pioche_sudoku.montrer_destinations_envisageables(
+            event.widget.master.symbole)
 
 
 def gestion_des_evenements_on_mouse_leave(event):
@@ -1251,7 +1287,7 @@ bouton_tirage = Button(cadre_gauche,
                        command = tirage)
 jauge_de_remplissage = ttk.Progressbar(cadre_gauche,
                               orient="vertical",
-                              length=300,
+                              length=200,
                               maximum = 81,
                               mode="determinate")
 
