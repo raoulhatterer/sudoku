@@ -878,6 +878,7 @@ class Pioche:
     attributs:
     ----------
     - symboles_a_placer
+    - selection : symbole selectionné
 
     méthodes:
     ---------
@@ -919,15 +920,17 @@ class Pioche:
                 index,
                 name='{}'.format(index)).pack(side=LEFT, fill=BOTH, expand=1)
         Button(self.cadre, name='x', text='X', font= self.police_X).pack(side=LEFT, fill=BOTH, expand=True, padx=1, anchor="se")
+        self.selection = None
         # lecture de  la pioche pour déterminer les symboles à placer
         self.symboles_a_placer = self.get_symboles_a_placer()
 
-    def montrer_destinations_envisageables(self, symbole):
+    def montrer_destinations_envisageables(self):
         """
         Montre les destinations envisageables.
         """
-        root.nametowidget(str(self.cadre)+".msg_destinations_envisageables")['text'] = self[symbole].destinations_envisageables
-        root.nametowidget(str(self.cadre)+".msg_destinations_envisageables").pack()
+        if self.selection:
+            root.nametowidget(str(self.cadre)+".msg_destinations_envisageables")['text'] = self[self.selection].destinations_envisageables
+            root.nametowidget(str(self.cadre)+".msg_destinations_envisageables").pack()
 
     def cacher_destinations_envisageables(self):
         """
@@ -1043,6 +1046,7 @@ class Pioche:
         """
         La pioche est affichée sans sac sélectionné
         """
+        self.selection = None
         self.selectionner_un_sac(0) 
         
     def selectionner_un_sac(self, symbole):
@@ -1051,8 +1055,9 @@ class Pioche:
 
         Si un sac est sélectionné, il est affiché avec une couleur distinctive.
         """
+        self.selection = symbole
+        index_selection = int(self.selection)
         self.deselectionner_le_bouton_effacer()
-        index_selection = int(symbole)
         for index in range(1, self.NBR_SACS+1):
             self[index].deselectionner()
         if index_selection == 0:  # code pour juste effacer la sélection
@@ -1204,12 +1209,11 @@ def gestion_des_evenements_on_mouse_over(event):
     Si la souris survole le nombre de symbole restants les destinations
     envisageables s'affichent.
     """
+    print(event.widget, event.widget.master)
     if type(event.widget) == Case:
         label_pretendants['text'] = event.widget.pretendants
     if type(event.widget) == Label and type(event.widget.master) == Sac:
-        print(event.widget.master.symbole)
-        pioche_sudoku.montrer_destinations_envisageables(
-            event.widget.master.symbole)
+        pioche_sudoku.montrer_destinations_envisageables()
 
 
 def gestion_des_evenements_on_mouse_leave(event):
@@ -1323,6 +1327,3 @@ root.bind("<Leave>", gestion_des_evenements_on_mouse_leave)
 # Boucle du programme
 root.mainloop()
 root.destroy()
-
-
-
