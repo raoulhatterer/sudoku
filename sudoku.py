@@ -422,9 +422,13 @@ class Grille:
         """
         for index in range(self.NBR_CASES):
             ma_case = self.get_case(index)
-            ma_case.pretendants = ['1', '2', '3', '4', '5', '6', '7', '8', '9']
+            if ma_case.contenu is None:
+                ma_case.pretendants = ['1', '2', '3', '4', '5', '6', '7', '8', '9']
+            else:
+                ma_case.pretendants = []
         for index in range(self.NBR_CASES):
-            if not(self.get_case(index).contenu is None):
+            ma_case = self.get_case(index)
+            if not(ma_case.contenu is None):
                 self.reduire_pretendants_des_cousines_de_la_case(index)
 
     def remplir_case(self, index, symbole_a_placer):
@@ -515,7 +519,7 @@ class Grille:
             case_examinee = self.get_case(index_case) 
             if case_examinee.contenu:
                 destinations_en_place[case_examinee.contenu].append(index_case)
-        self.recalculer_les_destinations()
+        self.recalculer_les_destinations_envisageables()
         self.placement_de_la_pioche_sur_la_grille(destinations_en_place, pioche, False)
 
     def tirage(self, pioche):
@@ -549,7 +553,7 @@ class Grille:
                 destinations_en_place[symbole_a_placer].append(index_case)
                 # Réduire la pioche
                 pioche.reduire_sac(symbole_a_placer)
-                self.recalculer_les_destinations()
+                self.recalculer_les_destinations_envisageables()
                 mon_watchdog.reset()
             elif mon_watchdog.est_actif() and  mon_watchdog.alarm():
                 mon_watchdog.reset()
@@ -573,7 +577,7 @@ class Grille:
                     element = (symbole, destination, self.destinations_envisageables[symbole].copy())
                     pile_a_jour.append(element)
                     self.remplir_case(destination, symbole)
-                    self.recalculer_les_destinations()
+                    self.recalculer_les_destinations_envisageables()
                 pile = pile_a_jour
                 # self.compteur = sauvegarde_compteur
             else:
@@ -638,9 +642,9 @@ class Grille:
                 pioche.reduire_sac(symbole)
         self.rafraichir_affichage()
         self.restaurer_pretendants()
-        self.recalculer_les_destinations()
+        self.recalculer_les_destinations_envisageables()
 
-    def recalculer_les_destinations(self):
+    def recalculer_les_destinations_envisageables(self):
         """
         Détermine les destinations possibles pour les symboles
 
@@ -1163,15 +1167,15 @@ def gestion_des_evenements_on_press(event):
     - si un sac de la pioche est cliqué
     - si une case de la grille est cliqué
     """
-    
+
     # Cacher les destinations envisageables
     pioche_sudoku.cacher_destinations_envisageables()
-    
+
     # Si le bouton effacer (X) est cliqué
     if type(event.widget) == Button and event.widget['text'] == 'X':
         label_symbole_actif['text'] = 'Sélection: X'
         grille_sudoku.selectionner_le_bouton_effacer()
-                
+
     # Si un sac de la pioche est cliqué
     if type(event.widget.master) == Sac:
         symbole_a_activer = event.widget.master.symbole
@@ -1183,14 +1187,14 @@ def gestion_des_evenements_on_press(event):
         if grille_sudoku.symbole_actif == 'X' and not(event.widget.contenu is None):
             symbole = event.widget.contenu  # sauvegarde avant effacement
             grille_sudoku.effacer_case(event.widget)
-            grille_sudoku.recalculer_les_destinations()
+            grille_sudoku.recalculer_les_destinations_envisageables()
             pioche_sudoku.remettre_dans_son_sac(symbole)
         elif grille_sudoku.symbole_actif == 'X' and event.widget.contenu is None:
             pass # ne rien faire la case est déjà vide
         else:
             if grille_sudoku.remplir_case(event.widget.index,
                                                 grille_sudoku.symbole_actif):
-                grille_sudoku.recalculer_les_destinations()
+                grille_sudoku.recalculer_les_destinations_envisageables()
                 pioche_sudoku.reduire_sac(grille_sudoku.symbole_actif)
         
 
