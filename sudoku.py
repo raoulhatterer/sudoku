@@ -33,8 +33,8 @@ class Case(Button):
     contenu : Une case non vide a un `contenu`, le symbole qui est affiché
     quand on tape le nom de la case dans l'interpréteur.
 
-    pretendants : Une case vide à des prétendants (valeurs possibles de la
-    case).
+    pretendants : Une case vide à des prétendants (symboles qu'il est  possible
+    de mettre cette case).
 
     index_cousines : Une case a des cases cousines qui sont soit dans la même
     ligne, soit dans la même colonne soit dans le même carré (3 x 3). Une case
@@ -139,7 +139,6 @@ class Grille:
     LARGEUR_GRILLE = LARGEUR_BLOC * LARGEUR_BLOC
     NBR_CASES = LARGEUR_GRILLE * LARGEUR_GRILLE
     SYMBOLES = ['1', '2', '3', '4', '5', '6', '7', '8', '9']
-    # destinations_envisageables = dict()
     compteur = 0
     
 
@@ -183,7 +182,7 @@ class Grille:
                                                  column=i,
                                                  sticky="nsew")
                 index += 1
-        self.restaurer_pretendants()
+    #    self.restaurer_pretendants()
 
     
 
@@ -273,10 +272,11 @@ class Grille:
 
     def __getitem__(self, index):
         """
-        Permet d'obtenir le symbole d'une case de la grille
-        avec ma_grille[index] où index est compris entre 0 et NBR_CASES-1.
+        Permet d'obtenir une case de la grille avec ma_grille[index]
+
+        où index est compris entre 0 et NBR_CASES-1.
         """
-        return self.get_case(index).__repr__()
+        return self.get_case(index)
 
     def __setitem__(self, index, symbole):
         """
@@ -622,7 +622,7 @@ class Grille:
         """
         grille_en_liste = list()
         for index in range(self.NBR_CASES):
-            grille_en_liste.append(self[index])
+            grille_en_liste.append(self[index].contenu)
         return grille_en_liste
 
     def grille_import(self, grille_en_liste, pioche):
