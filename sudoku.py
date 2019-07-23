@@ -109,10 +109,6 @@ class Grille:
     >>> mon_cadre.pack()
     >>> ma_pioche = Pioche(mon_cadre)
     >>> ma_grille = Grille(mon_cadre, ma_pioche)  # affichage de la grille dans tkinter
-    >>> ma_grille[0] # affichage fainéant d'une case dans l'interpréteur
-    '0'              # retourne une chaîne de caractères
-    >>> print(ma_grille[0]) # affiche fainéant la première case (d'index 0)
-    0
     >>> ma_case = ma_grille.get_case(0)
     >>> type(ma_case)
     <class '__main__.Case'>
@@ -208,7 +204,9 @@ class Grille:
         -------
         >>> root = Tk()
         >>> mon_cadre = Frame(root)
-        >>> grille_sudoku = Grille(mon_cadre)
+        >>> mon_cadre.pack()
+        >>> ma_pioche = Pioche(mon_cadre)
+        >>> ma_grille = Grille(mon_cadre, ma_pioche) # fait apparaître la grille
         >>> print(grille_sudoku.get_case(15).index_cousines)
         >>> print(grille_sudoku.get_case(15).contenu)
         >>> print(grille_sudoku.get_case(15).pretendants)
@@ -275,6 +273,10 @@ class Grille:
         Permet d'obtenir une case de la grille avec ma_grille[index]
 
         où index est compris entre 0 et NBR_CASES-1.
+
+        exemple:
+        -------
+        print(ma_grille[7].contenu)
         """
         return self.get_case(index)
 
@@ -283,6 +285,7 @@ class Grille:
         Permet d'écrire facilement un symbole dans une case de la grille.
 
         Le symbole doit être de type str.
+
         exemple:
         -------
         ma_grille[0] = '5'
@@ -311,7 +314,7 @@ class Grille:
         affichage = ""
         index = 0
         for index in range(self.NBR_CASES):
-            une_case = self.get_case(index)
+            une_case = self[index]
             if une_case.contenu is None:
                 affichage += '0'
             else:
@@ -357,7 +360,7 @@ class Grille:
         >>> ma_grille.rafraichir_affichage()
         """
         for index in range(self.NBR_CASES):
-            ma_case = self.get_case(index)
+            ma_case = self[index]
             if ma_case.contenu is None:
                 ma_case['text'] = ' '
             else:
@@ -380,7 +383,7 @@ class Grille:
         >>> ma_grille.afficher_les_index()
         """
         for index in range(self.NBR_CASES):
-            ma_case = self.get_case(index)
+            ma_case = self[index]
             ma_case['text'] = str(index)
 
     def effacer_grille(self):
@@ -393,11 +396,13 @@ class Grille:
         - la case est prête à accepter n'importe lequel des 9 symboles possibles
         """
         for index in range(self.NBR_CASES):
-            case_a_effacer = self.get_case(index)
+            case_a_effacer = self[index]
             case_a_effacer.contenu = None
             case_a_effacer['text'] = ' '
             case_a_effacer.pretendants = ['1', '2', '3', '4', '5', '6', '7', '8', '9']
-        pioche.reinitialiser()
+        self.symbole_actif = ''
+        self.rafraichir_affichage()
+        self.pioche.reinitialiser()
         self.compteur = 0
         jauge_de_remplissage["value"] = self.compteur
 
@@ -421,13 +426,13 @@ class Grille:
         en tenant compte du remplissage actuel de la grille.
         """
         for index in range(self.NBR_CASES):
-            ma_case = self.get_case(index)
+            ma_case = self[index]
             if ma_case.contenu is None:
                 ma_case.pretendants = ['1', '2', '3', '4', '5', '6', '7', '8', '9']
             else:
                 ma_case.pretendants = []
         for index in range(self.NBR_CASES):
-            ma_case = self.get_case(index)
+            ma_case = self[index]
             if not(ma_case.contenu is None):
                 self.reduire_pretendants_des_cousines_de_la_case(index)
 
@@ -435,7 +440,7 @@ class Grille:
         """
         Rempli la case d'index compris entre 0 et 80 avec `symbole_a_placer`.
         """
-        case_a_remplir = self.get_case(index)
+        case_a_remplir = self[index]
         if symbole_a_placer in case_a_remplir.pretendants:
             self.__setitem__(index, symbole_a_placer)
             case_a_remplir.pretendants = []
@@ -459,7 +464,7 @@ class Grille:
         Cette fonction retire le SYMBOLE contenu dans la case de la liste de leurs prétendants.
         Retourne False si une case vide se retrouve sans prétendants.
         """
-        ma_case = self.get_case(index)
+        ma_case = self[index]
         symbole = ma_case.contenu
         for index_cousine in ma_case.index_cousines:
             case_cousine = self.get_case(index_cousine)
@@ -526,7 +531,6 @@ class Grille:
         """
         Génération d'une grille pleine en partant d'une grille vierge
         """
-        # pdb.set_trace()
         self.effacer_grille() 
         pioche.reinitialiser() 
         destinations_en_place = {'1':list(), '2':list(), '3':list(), '4':list(), '5':list(), '6':list(), '7':list(), '8':list(), '9':list()}
@@ -654,7 +658,7 @@ class Grille:
         for symbole in self.SYMBOLES:
             self.pioche[symbole].destinations_envisageables = set()
         for index in range(self.NBR_CASES):
-            une_case = self.get_case(index)
+            une_case = self[index]
             for symbole in self.SYMBOLES:
                 if symbole in une_case.pretendants:
                     #self.destinations_envisageables[symbole].append(index)
@@ -1107,9 +1111,8 @@ class Pioche:
         en mettant 9 symboles identiques dans chaque sac.
         """
         for symbole in self.SYMBOLES:
-            sac_a_remplir = self.get_sac(symbole)
-            sac_a_remplir.cardinal = 9
-            self.get_widget_cardinal_sac(symbole)['text'] = 9
+            self[symbole].set_cardinal(9)
+        self.deselectionner_tous_les_sacs()
 
 
 # FONCTIONS
@@ -1125,9 +1128,8 @@ def vierge():
     """
     Efface la grille
     """
-    #pdb.set_trace()
     grille_sudoku.effacer_grille()
-    pioche_sudoku.reinitialiser()
+
 
 def exemple():
     """
@@ -1173,13 +1175,11 @@ def gestion_des_evenements_on_press(event):
 
     # Si le bouton effacer (X) est cliqué
     if type(event.widget) == Button and event.widget['text'] == 'X':
-        label_symbole_actif['text'] = 'Sélection: X'
         grille_sudoku.selectionner_le_bouton_effacer()
 
     # Si un sac de la pioche est cliqué
     if type(event.widget.master) == Sac:
         symbole_a_activer = event.widget.master.symbole
-        label_symbole_actif['text'] = 'Sélection: ' + symbole_a_activer
         grille_sudoku.activer_le_symbole(symbole_a_activer)
 
     # Si une case de la grille est cliqué
@@ -1261,7 +1261,7 @@ root.grid_rowconfigure(1, weight=1)
 root.grid_columnconfigure(0, weight=1)  # cadre_gauche cadre_central
 root.grid_columnconfigure(1, weight=1)  # et cadre_droite se partagent
 root.grid_columnconfigure(2, weight=1)  # l'espace horizontal à égalité
-pdb.set_trace()
+#pdb.set_trace()
 pioche_sudoku = Pioche(cadre_pioche)
 grille_sudoku = Grille(cadre_central, pioche_sudoku)
 
@@ -1269,10 +1269,6 @@ grille_sudoku = Grille(cadre_central, pioche_sudoku)
 bouton_index_cases = Button(cadre_gauche,
                             name='index_cases', # utilité à vérifier
                             text='Index des cases')
-label_symbole_actif = Label(cadre_gauche,
-                            name='lbl_symbole_actif', # utilité à vérifier
-                            text='Sélection: '+str(grille_sudoku.symbole_actif),
-                            background=COULEUR_CADRE_GAUCHE)
 label_pretendants = Label(cadre_gauche,
                           name='lbl_pretendants', # utilité à vérifier
                           text='Prétendants: ',
@@ -1301,7 +1297,6 @@ jauge_de_remplissage = ttk.Progressbar(cadre_gauche,
 
 
 bouton_index_cases.pack()
-label_symbole_actif.pack()
 label_pretendants.pack()
 bouton_vierge.pack()
 bouton_exemple.pack()
