@@ -1143,6 +1143,7 @@ def vierge():
     Efface la grille
     """
     grille_sudoku.effacer_grille()
+    label_pretendants['text'] = "Prétendants"
 
 
 def exemple():
@@ -1287,7 +1288,7 @@ bouton_index_cases = Button(cadre_gauche,
                             text='Index des cases')
 label_pretendants = Label(cadre_gauche,
                           name='lbl_pretendants', # utilité à vérifier
-                          text='Prétendants: ',
+                          text='Prétendants',
                           background=COULEUR_CADRE_GAUCHE)
 bouton_vierge = Button(cadre_gauche,
                         name='vierge', # utilité à vérifier
