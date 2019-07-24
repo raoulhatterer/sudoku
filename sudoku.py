@@ -143,7 +143,7 @@ class Grille:
     COULEUR_BLOCS_IMPAIRS = 'LightSteelBlue2'
     COULEUR_SELECTION_CASE = 'LightSteelBlue3'
 
-    symbole_actif = None
+    #symbole_actif = None
 
     def __init__(self, cadre, pioche):
         """
@@ -174,7 +174,7 @@ class Grille:
                      name='{}'.format(index),
                      text=' ',  # cases vides à l'initialisation
                      background=self.get_couleur_case(
-                         index, ' ', None)).grid(row=j,
+                         index, ' ')).grid(row=j,
                                                  column=i,
                                                  sticky="nsew")
                 index += 1
@@ -182,14 +182,14 @@ class Grille:
 
     
 
-    def get_couleur_case(self, index, symbole, symbole_actif):
+    def get_couleur_case(self, index, symbole):
         """
         Retourne la couleur à donner à la case de la grille.
 
         Il y a trois possibilités suivant que la case appartient à un bloc 3x3
         pair ou impair ou alors qu'elle comporte le symbole actif.
         """
-        if symbole == symbole_actif:
+        if symbole == self.pioche.get_symbole_actif():
             return self.COULEUR_SELECTION_CASE
         if self.get_bloc(index) % 2:
             return self.COULEUR_BLOCS_PAIRS
@@ -330,12 +330,11 @@ class Grille:
             index += 1
         return affichage
 
-    def selectionner_le_bouton_effacer(self):
+    def basculer_le_bouton_effacer(self):
         """
-        Sélectionne le bouton effacer et désactive les autres sélections
+        Bascule le bouton effacer et désactive les autres sélections
         """
-        self.pioche.selectionner_le_bouton_effacer()
-        self.symbole_actif = 'X'
+        self.pioche.basculer_le_bouton_effacer()
         self.rafraichir_affichage()
 
     def activer_le_symbole(self, symbole):
@@ -367,8 +366,7 @@ class Grille:
                 ma_case['text'] = ma_case.contenu
             ma_case['background'] = self.get_couleur_case(
                 index,
-                ma_case['text'],
-                self.symbole_actif)
+                ma_case['text'])
 
     def afficher_les_index(self):
         """
@@ -400,7 +398,7 @@ class Grille:
             case_a_effacer.contenu = None
             case_a_effacer['text'] = ' '
             case_a_effacer.pretendants = ['1', '2', '3', '4', '5', '6', '7', '8', '9']
-        self.symbole_actif = ''
+        self.symbole_actif = None
         self.rafraichir_affichage()
         self.pioche.reinitialiser()
         self.compteur = 0
@@ -532,7 +530,7 @@ class Grille:
         Génération d'une grille pleine en partant d'une grille vierge
         """
         self.effacer_grille() 
-        pioche.reinitialiser() 
+        self.pioche.reinitialiser() 
         destinations_en_place = {'1':list(), '2':list(), '3':list(), '4':list(), '5':list(), '6':list(), '7':list(), '8':list(), '9':list()}
         self.placement_de_la_pioche_sur_la_grille(destinations_en_place, pioche, True)
 
@@ -634,7 +632,7 @@ class Grille:
         Importe puis affiche une grille transmise sous forme de liste.
 
         """
-        pioche.reinitialiser()
+        self.pioche.reinitialiser()
         self.compteur = 0
         for index in range(self.NBR_CASES):
             symbole = grille_en_liste[index]
@@ -886,7 +884,7 @@ class Pioche:
     attributs:
     ----------
     - symboles_a_placer
-    - selection : symbole selectionné
+    - symbole_actif : symbole selectionné
 
     méthodes:
     ---------
@@ -914,7 +912,7 @@ class Pioche:
     SYMBOLES = ['1', '2', '3', '4', '5', '6', '7', '8', '9']
     COULEUR_INITIALE_SAC = '#d9d9d9'
     COULEUR_SELECTION_SAC = 'LightSteelBlue3'
-    police_X = "{dyuthi} 22"
+    police_X = "{dyuthi}"
     
     def __init__(self, cadre):
         """
@@ -927,8 +925,8 @@ class Pioche:
             Sac(self.cadre,
                 index,
                 name='{}'.format(index)).pack(side=LEFT, fill=BOTH, expand=1)
-        Button(self.cadre, name='x', text='X', font= self.police_X).pack(side=LEFT, fill=BOTH, expand=True, padx=1, anchor="se")
-        self.selection = None
+        Button(self.cadre, name='x', text='X', font= self.police_X).pack(side=RIGHT, fill=BOTH, expand=True, anchor="se")
+        self.symbole_actif = None
         # lecture de  la pioche pour déterminer les symboles à placer
         self.symboles_a_placer = self.get_symboles_a_placer()
 
@@ -936,9 +934,11 @@ class Pioche:
         """
         Montre les destinations envisageables.
         """
-        if self.selection:
-            root.nametowidget(str(self.cadre)+".msg_destinations_envisageables")['text'] = self[self.selection].destinations_envisageables
-            root.nametowidget(str(self.cadre)+".msg_destinations_envisageables").pack()
+        if self.symbole_actif and self.symbole_actif != 'X':
+            root.nametowidget(str(self.cadre)+".msg_destinations_envisageables")['text'] = self[self.symbole_actif].destinations_envisageables
+            root.nametowidget(str(self.cadre)+".x").pack_forget()
+            root.nametowidget(str(self.cadre)+".msg_destinations_envisageables").pack(side=LEFT)
+            root.nametowidget(str(self.cadre)+".x").pack(side=RIGHT, fill=BOTH, expand=True, padx=1)
 
     def cacher_destinations_envisageables(self):
         """
@@ -999,6 +999,7 @@ class Pioche:
         >>> ma_pioche.get_sac(1).cardinal
         9
         """
+        print( str(self.cadre),str(index))
         return root.nametowidget(str(self.cadre)+"."+str(index))
 
     
@@ -1040,22 +1041,28 @@ class Pioche:
         return la_pioche_contient
 
     def deselectionner_le_bouton_effacer(self):
+        self.symbole_actif = None
         root.nametowidget(str(self.cadre)+'.x')['background'] = self.COULEUR_INITIALE_SAC
         
 
-    def selectionner_le_bouton_effacer(self):
+    def basculer_le_bouton_effacer(self):
         """
-        Affichage : sélectionner aucun sac et sélectionner X
+        Affichage : bascule la sélection du X
         """
-        self.deselectionner_tous_les_sacs()
-        root.nametowidget(str(self.cadre)+'.x')['background'] = 'red' # case X en rouge
+        if self.symbole_actif == 'X':
+            self.deselectionner_tout()
+            self.deselectionner_le_bouton_effacer()
+        else:
+            self.deselectionner_tout()
+            self.symbole_actif = 'X'
+            root.nametowidget(str(self.cadre)+'.x')['background'] = 'red' # case X en rouge
 
-    def deselectionner_tous_les_sacs(self):
+    def deselectionner_tout(self):
         """
         La pioche est affichée sans sac sélectionné
         """
-        self.selection = None
-        self.selectionner_un_sac(0) 
+        self.symbole_actif = None
+        self.selectionner_un_sac(None) 
         
     def selectionner_un_sac(self, symbole):
         """
@@ -1063,18 +1070,25 @@ class Pioche:
 
         Si un sac est sélectionné, il est affiché avec une couleur distinctive.
         """
-        self.selection = symbole
-        index_selection = int(self.selection)
+        # désélection
         self.deselectionner_le_bouton_effacer()
         for index in range(1, self.NBR_SACS+1):
             self[index].deselectionner()
-        if index_selection == 0:  # code pour juste effacer la sélection
-            pass
-        elif index_selection <= 9:
-            self[index_selection].selectionner()
-        else:
-            raise IndexError
+        # sélection
+        if symbole:  
+            self.symbole_actif = symbole
+            index_selection = int(self.symbole_actif)
+            if index_selection <= 9:
+                self[index_selection].selectionner()
+            else:
+                raise IndexError
 
+    def get_symbole_actif(self):
+        """
+        Retourne le symbole actuellement sélectionné dans la pioche.
+        """
+        return self.symbole_actif
+        
     def get_symboles_a_placer(self):
         """
         Par lecture de la pioche, cette fonction retourne une liste
@@ -1108,11 +1122,11 @@ class Pioche:
         """
         Réinitialise la pioche
 
-        en mettant 9 symboles identiques dans chaque sac.
         """
         for symbole in self.SYMBOLES:
-            self[symbole].set_cardinal(9)
-        self.deselectionner_tous_les_sacs()
+            self[symbole].reinitialiser()
+        self.deselectionner_tout()
+
 
 
 # FONCTIONS
@@ -1175,7 +1189,7 @@ def gestion_des_evenements_on_press(event):
 
     # Si le bouton effacer (X) est cliqué
     if type(event.widget) == Button and event.widget['text'] == 'X':
-        grille_sudoku.selectionner_le_bouton_effacer()
+        grille_sudoku.basculer_le_bouton_effacer()
 
     # Si un sac de la pioche est cliqué
     if type(event.widget.master) == Sac:
@@ -1184,16 +1198,18 @@ def gestion_des_evenements_on_press(event):
 
     # Si une case de la grille est cliqué
     if type(event.widget) == Case:
-        if grille_sudoku.symbole_actif == 'X' and not(event.widget.contenu is None):
-            symbole = event.widget.contenu  # sauvegarde avant effacement
-            grille_sudoku.effacer_case(event.widget)
-            grille_sudoku.recalculer_les_destinations_envisageables()
-            pioche_sudoku.remettre_dans_son_sac(symbole)
-        elif grille_sudoku.symbole_actif == 'X' and event.widget.contenu is None:
-            pass # ne rien faire la case est déjà vide
+        print(pioche_sudoku.get_symbole_actif())
+        if pioche_sudoku.get_symbole_actif() == 'X':
+            if event.widget.contenu is None:
+                pass # ne rien faire la case est déjà vide
+            else:
+                symbole = event.widget.contenu  # sauvegarde avant effacement
+                grille_sudoku.effacer_case(event.widget)
+                grille_sudoku.recalculer_les_destinations_envisageables()
+                pioche_sudoku.remettre_dans_son_sac(symbole)
         else:
             if grille_sudoku.remplir_case(event.widget.index,
-                                                grille_sudoku.symbole_actif):
+                                                pioche_sudoku.get_symbole_actif()):
                 grille_sudoku.recalculer_les_destinations_envisageables()
                 pioche_sudoku.reduire_sac(grille_sudoku.symbole_actif)
         
@@ -1213,7 +1229,7 @@ def gestion_des_evenements_on_mouse_over(event):
     Si la souris survole le nombre de symbole restants les destinations
     envisageables s'affichent.
     """
-    print(event.widget, event.widget.master)
+    #print(event.widget, event.widget.master)
     if type(event.widget) == Case:
         label_pretendants['text'] = event.widget.pretendants
     if type(event.widget) == Label and type(event.widget.master) == Sac:
