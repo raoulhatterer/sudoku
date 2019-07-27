@@ -8,9 +8,11 @@ import pdb
 
 # Chargement du module tkinter
 from tkinter import Tk, Frame, Button, Label, Message
-from random import choice
 from tkinter import ttk
 from tkinter.constants import TOP, X, BOTTOM, LEFT, BOTH, RIGHT
+from random import choice
+from datetime import datetime,  timedelta
+
 
 # import sys
 # sys.setrecursionlimit(6000)
@@ -508,17 +510,16 @@ class Grille:
             self.__setitem__(index, symbole_a_placer)
             self.augmenter_jauge()
             case_a_remplir.pretendants = []
-            self.reduire_pretendants_des_cousines_de_la_case(index)
+            reduction_OK = self.reduire_pretendants_des_cousines_de_la_case(index) # peut conduire à une case sans contenu ni prétendants
             self.recalculer_les_destinations_envisageables()
             self.destinations_en_place[symbole_a_placer].append(index)
             self.pioche.reduire_sac(symbole_a_placer)
             self.rafraichir_affichage()
-            self.symboles_a_placer.pop(0)
-            print(self.symboles_a_placer)
-            return True
+            self.symboles_a_placer.remove(symbole_a_placer)
+            return reduction_OK
         else:
-            print("Ce symbole ne figure pas parmi les prétendants de la case\
-            d'index", index)
+            # print("Ce symbole ne figure pas parmi les prétendants de la case\
+            # d'index", index) ##
             return False
 
     def augmenter_jauge(self):
@@ -548,7 +549,7 @@ class Grille:
                 if symbole in pretendants:
                     pretendants.remove(symbole)
                 if not pretendants:
-                    print('Case', index_cousine, 'sans contenu ni prétendants')
+                    # print('Case', index_cousine, 'sans contenu ni prétendants') ##
                     return False
         return True
 
@@ -608,14 +609,18 @@ class Grille:
         Génération d'une grille pleine à partir de l'état actuel de la grille
         et de la pioche
         """
+        datetime_depart = datetime.now()
         mon_watchdog = Watchdog(watchdog_est_actif)
         pile = list()
+        dernier_placement_OK = True
         while self.symboles_a_placer:
             symbole_a_placer = self.symboles_a_placer[0]
-            if self.pioche.get_destinations_envisageables(symbole_a_placer)\
-               and self.placement_est_possible(
-                   self.destinations_en_place[symbole_a_placer],
-                   self.pioche.get_destinations_envisageables(symbole_a_placer)):
+            self.pioche.selectionner_un_sac(symbole_a_placer)
+            if self.pioche.get_destinations_envisageables(
+                    symbole_a_placer) and self.placement_est_possible(
+                        self.destinations_en_place[symbole_a_placer],
+                        self.pioche.get_destinations_envisageables(
+                            symbole_a_placer)) and dernier_placement_OK:
                 destinations = self.pioche.get_destinations_envisageables(
                     symbole_a_placer).copy()
                 index_case = choice(list(
@@ -624,35 +629,38 @@ class Grille:
                 pile.append((symbole_a_placer,
                             index_case,
                              destinations))
-                print('compteur:', self.compteur, 'pile', pile[-1])
-                self.remplir_case(index_case, symbole_a_placer)
+                #print('compteur:', self.compteur, 'pile', pile[-1]) ##
+                dernier_placement_OK = self.remplir_case(index_case, symbole_a_placer)
                 mon_watchdog.reset()
             elif mon_watchdog.est_actif() and mon_watchdog.alarm():
-                print("\n*** ALARME ***\n")
+                # print("\n*** ALARME ***\n") ##
                 # Retirer les 9 plus anciens symboles posés sur la grille
                 # et les renvoyer en fin de liste pour être placés
                 mon_watchdog.reset()
                 for i in range(9):
                     symbole_a_retirer, destination_liberee, sans_interet = pile.pop(0)
-                    print('Parmi', self.destinations_en_place[symbole_a_retirer])
+                    # print('Parmi', self.destinations_en_place[symbole_a_retirer]) ##
                     case_a_effacer = self[destination_liberee]
                     self.effacer_case(case_a_effacer)
-                    print('-------------retire',
-                          symbole_a_retirer, 'de', destination_liberee)
+                    # print('-------------retire',
+                    #      symbole_a_retirer, 'de', destination_liberee) ##
                     self.symboles_a_placer.pop(0)  # retiré à l'avant
                     self.symboles_a_placer.append(symbole_a_retirer)  # placé à la fin
             else:
                 # impasse détectée
+                dernier_placement_OK = True  # réinitialisation
                 # effacer la dernière case et restaurer les prétendants
                 mon_watchdog.update()
                 symbole_a_retirer, destination_problematique, destinations = pile.pop()
                 case_a_effacer = self[destination_problematique]
                 self.effacer_case(case_a_effacer)
-                print('-------------retire', destination_problematique)
+                # print('-------------retire', destination_problematique) ##
                 destinations.remove(destination_problematique)
                 self.pioche[symbole_a_retirer].destinations_envisageables = destinations
-            print('SP:', self.symboles_a_placer)
-        print('Tous les symboles on été placés')
+            # print('SP:', self.symboles_a_placer) ##
+        datetime_fin = datetime.now()
+        duree = datetime_fin - datetime_depart
+        print('Tous les symboles on été placés en', duree)
         return True
 
     def placement_est_possible(self, en_place, autres):
@@ -687,12 +695,12 @@ class Grille:
         Importe puis affiche une grille transmise sous forme de liste.
 
         """
-        self.pioche.reinitialiser()
-        self.symboles_a_placer = self.pioche.get_symboles_a_placer()
-        self.compteur = 0
+        self.effacer_grille()
         for index in range(self.NBR_CASES):
             symbole = grille_en_liste[index]
-            self.remplir_case(index, symbole)
+            if symbole != '0':
+                # print(index,'reçoit' ,symbole) ##
+                self.remplir_case(index, symbole)
 
     def recalculer_les_destinations_envisageables(self):
         """
@@ -1271,7 +1279,7 @@ def gestion_des_evenements_on_press(event):
 
     # Si une case de la grille est cliqué
     if type(event.widget) == Case:
-        print(pioche_sudoku.get_symbole_actif())
+        # print(pioche_sudoku.get_symbole_actif()) ##
         if pioche_sudoku.get_symbole_actif() == 'X':
             if event.widget.contenu is None:
                 pass  # ne rien faire la case est déjà vide
