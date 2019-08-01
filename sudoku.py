@@ -146,7 +146,7 @@ class Grille:
     - get_bloc
     - solveur
     - tirage
-    - placer_pioche_sur_grille_avec_WD
+    - placer_pioche_sur_grille
     - placement_est_possible
     - grille_export
     - grille_import
@@ -604,7 +604,7 @@ class Grille:
         self.symboles_a_placer = self.pioche.get_symboles_a_placer()
         pdb.set_trace()
         try:
-            self.placer_pioche_sur_grille_avec_WD(False)
+            self.placer_pioche_sur_grille(False)
         except:
             extype, value, tb = sys.exc_info()
             traceback.print_exc()
@@ -615,15 +615,15 @@ class Grille:
         Génération d'une grille pleine en partant d'une grille vierge
         """
         self.effacer_grille()
-        self.placer_pioche_sur_grille_avec_WD(True)
+        self.placer_pioche_sur_grille(True)
 
-    def placer_pioche_sur_grille_avec_WD(self, watchdog_est_actif):
+    def placer_pioche_sur_grille(self, avec_watchdog):
         """
         Génération d'une grille pleine à partir de l'état actuel de la grille
         et de la pioche
         """
         datetime_depart = datetime.now()
-        mon_watchdog = Watchdog(watchdog_est_actif)
+        mon_watchdog = Watchdog(avec_watchdog)
         cases_bloquees = self.destinations_en_place
         print("cases à bloquer", cases_bloquees)
         pile = list()
@@ -631,19 +631,17 @@ class Grille:
         while self.symboles_a_placer:
             symbole_a_placer = self.symboles_a_placer[0]
             self.pioche.focus_sur_sac(symbole_a_placer)
-            if self.pioche.get_destinations_envisageables(
-                    symbole_a_placer) and self.placement_est_possible(
-                        self.destinations_en_place[symbole_a_placer],
-                        self.pioche.get_destinations_envisageables(
-                            symbole_a_placer)) and dernier_placement_OK:
-                destinations = self.pioche.get_destinations_envisageables(
-                    symbole_a_placer).copy()
-                index_case = choice(list(
-                    self.pioche.get_destinations_envisageables(
-                        symbole_a_placer)))  # valeur au hasard
-                pile.append((symbole_a_placer,
-                            index_case,
-                             destinations))
+            self.pioche[symbole_a_placer].determine_combinaisons()
+            self.combinaison = self.pioche.choisir_combinaison_au_hasard(symbole_a_placer)
+            while not(self.placement_est_possible(
+                    self.destinations_en_place[symbole_a_placer],
+                    list(self.combinaison))):
+                self.pioche[symbole_a_placer].combinaisons.remove(self.combinaison)
+                self.combinaison = self.pioche.choisir_combinaison_au_hasard(symbole_a_placer)                
+            if self.pioche.combinaison_existe(
+                    symbole_a_placer) and dernier_placement_OK:
+                combinaisons = self.pioche[symbole_a_placer].combinaisons.copy()
+                pile.append((symbole_a_placer, self.combinaison, combinaisons))
                 dernier_placement_OK = self.remplir_case(index_case, symbole_a_placer)
                 #print('longueur pile après ajout:', len(pile), 'last in', pile[-1]) ##
                 mon_watchdog.reset()
@@ -725,7 +723,7 @@ class Grille:
 
     def recalculer_les_destinations_envisageables(self):
         """
-        Détermine les destinations possibles pour les symboles
+        Détermine toutes les destinations possibles pour les symboles
 
         à partir des prétendants de chacune des cases de la grille.
         """
@@ -782,6 +780,8 @@ class Sac(Frame):
     envisageables pour le prochain symbole tiré de ce sac.
     À l'initialisation chacune des 81 cases de la grille constitue une
     destination envisageable.
+    - combinaisons: ensemble des combinaisons de destinations envisageables
+
 
     Méthodes:
     ---------
@@ -795,6 +795,7 @@ class Sac(Frame):
     - retirer_un_element
     - get_destinations_envisageables
     - set_destinations_envisageables
+    - determine_combinaisons
     - selectionner
     - deselectionner
 
@@ -940,6 +941,19 @@ class Sac(Frame):
         """
         self.destinations_envisageables = destinations
 
+    def determine_combinaisons(self):
+        """
+        Génère l'ensemble des combinaisons de destinations envisageables
+        """
+        self.combinaisons = set(combinations(self.destinations_envisageables,self.cardinal))
+
+    def get_combinaisons(self):
+        """
+        Retourne l'ensemble des combinaisons envisageables où l'on pourrait
+        placer les symboles contenus dans le sac.
+        """
+        return self.combinaisons
+    
     def selectionner(self):
         """
         Active la couleur SELECTION du sac
@@ -970,15 +984,26 @@ class Pioche:
 
     attributs:
     ----------
-    - symboles_a_placer
-    - symbole_actif : symbole selectionné
+    - symboles_a_placer : liste de tous les symboles à placer
+    - symbole_actif : symbole sélectionné
 
     méthodes:
     ---------
-    - get_symboles_a_placer
+    - montrer_destinations_envisageables
+    - cacher_destinations_envisageables
     - get_sac
-    - get_widget_cardinal_sac
+    - deselectionner_le_bouton_effacer
+    - basculer_le_bouton_effacer
+    - deselectionner_tout
     - focus_sur_sac
+    - get_symbole_actif
+    - get_destinations_envisageables
+    - combinaison_existe
+    - choisir_combinaison_au_hasard
+    - get_symboles_a_placer
+    - reduire_sac
+    - remettre_dans_son_sac
+    - reinitialiser
 
     exemple:
     -------
@@ -1184,8 +1209,26 @@ class Pioche:
         return self.symbole_actif
 
     def get_destinations_envisageables(self, symbole):
+        """
+        Retourne l'ensemble des destinations_envisageables pour ce symbole
+        """
         return self[symbole].get_destinations_envisageables()
 
+    def combinaison_existe(self, symbole):
+        """
+        Retourne True s'il existe au moins une combinaison envisageable, False s'il n'y en a plus.
+        """
+        if len(self[symbole].get_combinaisons()):
+            return True
+        else:
+            return False
+
+    def choisir_combinaison_au_hasard(self, symbole):
+        """
+        Choisi une combinaison prise au hasard dans l'ensemble des combinaisons envisageables
+        """
+        return  choice(list(self[symbole].combinaisons))
+    
     def get_symboles_a_placer(self):
         """
         Par lecture de la pioche, cette fonction retourne une liste
@@ -1200,9 +1243,9 @@ class Pioche:
 
     def reduire_sac(self, symbole):
         """
-        Il faut réduire le nombre de symbole d'un sac de la pioche
+        Il faut réduire le nombre de symboles d'un sac de la pioche
 
-         à chaque fois qu'un symbole est placé sur la grille.
+        à chaque fois qu'un symbole est placé sur la grille.
         """
         self[symbole].retirer_un_element()
 
