@@ -3,15 +3,20 @@
 # Auteur : Raoul HATTERER
 
 # Pour debugger:
-import pdb
+# import pdb
 # pdb.set_trace()
+import pdb, traceback, sys
+
+
+
 
 # Chargement du module tkinter
 from tkinter import Tk, Frame, Button, Label, Message
 from tkinter import ttk
 from tkinter.constants import TOP, X, BOTTOM, LEFT, BOTH, RIGHT
 from random import choice
-from datetime import datetime,  timedelta
+from datetime import datetime
+from itertools import combinations
 
 
 # import sys
@@ -365,7 +370,7 @@ class Grille:
         """
         Sélectionne le bon symbole (sur la grille et dans la pioche)
         """
-        self.pioche.selectionner_un_sac(symbole)
+        self.pioche.focus_sur_sac(symbole)
         self.symbole_actif = symbole
         self.rafraichir_affichage()
 
@@ -461,9 +466,9 @@ class Grille:
         case_a_effacer.contenu = None
         self.diminuer_jauge()
         self.restaurer_pretendants()
-        grille_sudoku.recalculer_les_destinations_envisageables()
+        self.recalculer_les_destinations_envisageables()
         self.destinations_en_place[symbole].remove(case_a_effacer.index)
-        pioche_sudoku.remettre_dans_son_sac(symbole)
+        self.pioche.remettre_dans_son_sac(symbole)
         self.rafraichir_affichage()
         self.symboles_a_placer.insert(0, symbole)
 
@@ -473,6 +478,7 @@ class Grille:
         être replacé dans la pioche.
         """
         self.compteur -= 1
+        #print("Compteur:", self.compteur)
         jauge_de_remplissage["value"] = self.compteur
 
     def restaurer_pretendants(self):
@@ -499,8 +505,8 @@ class Grille:
         Puis demande la mise à jour:
         - de la jauge_de_remplissage
         - des prétendants
-        - des destinations envisageables
-        - des destinations en place
+        - des destinations_envisageables
+        - des destinations_en_place
         - de la pioche
         - de l'affichage
         - des symboles_a_placer
@@ -519,7 +525,7 @@ class Grille:
             return reduction_OK
         else:
             # print("Ce symbole ne figure pas parmi les prétendants de la case\
-            # d'index", index) ##
+            #  d'index", index) ##
             return False
 
     def augmenter_jauge(self):
@@ -528,6 +534,7 @@ class Grille:
         être replacé sur la grille.
         """
         self.compteur += 1
+        #print("Compteur:", self.compteur)
         jauge_de_remplissage["value"] = self.compteur
         jauge_de_remplissage.update()
 
@@ -549,7 +556,7 @@ class Grille:
                 if symbole in pretendants:
                     pretendants.remove(symbole)
                 if not pretendants:
-                    # print('Case', index_cousine, 'sans contenu ni prétendants') ##
+                    #print('Case', index_cousine, 'sans contenu ni prétendants') ##
                     return False
         return True
 
@@ -594,9 +601,15 @@ class Grille:
         """
         Complète la grille
         """
-        self.recalculer_les_destinations_envisageables()
-        self.placer_pioche_sur_grille_avec_WD(False)
-
+        self.symboles_a_placer = self.pioche.get_symboles_a_placer()
+        pdb.set_trace()
+        try:
+            self.placer_pioche_sur_grille_avec_WD(False)
+        except:
+            extype, value, tb = sys.exc_info()
+            traceback.print_exc()
+            pdb.post_mortem(tb)
+            
     def tirage(self, pioche):
         """
         Génération d'une grille pleine en partant d'une grille vierge
@@ -611,11 +624,13 @@ class Grille:
         """
         datetime_depart = datetime.now()
         mon_watchdog = Watchdog(watchdog_est_actif)
+        cases_bloquees = self.destinations_en_place
+        print("cases à bloquer", cases_bloquees)
         pile = list()
         dernier_placement_OK = True
         while self.symboles_a_placer:
             symbole_a_placer = self.symboles_a_placer[0]
-            self.pioche.selectionner_un_sac(symbole_a_placer)
+            self.pioche.focus_sur_sac(symbole_a_placer)
             if self.pioche.get_destinations_envisageables(
                     symbole_a_placer) and self.placement_est_possible(
                         self.destinations_en_place[symbole_a_placer],
@@ -629,20 +644,21 @@ class Grille:
                 pile.append((symbole_a_placer,
                             index_case,
                              destinations))
-                #print('compteur:', self.compteur, 'pile', pile[-1]) ##
                 dernier_placement_OK = self.remplir_case(index_case, symbole_a_placer)
+                #print('longueur pile après ajout:', len(pile), 'last in', pile[-1]) ##
                 mon_watchdog.reset()
             elif mon_watchdog.est_actif() and mon_watchdog.alarm():
-                # print("\n*** ALARME ***\n") ##
-                # Retirer les 9 plus anciens symboles posés sur la grille
-                # et les renvoyer en fin de liste pour être placés
+                print("\n*** ALARME ***\n") ##
+                # Retirer les plus anciens symboles identiques posés sur la grille
+                # et les renvoyer en fin de liste pour être placés en dernier
                 mon_watchdog.reset()
-                for i in range(9):
+                symbole_recherche = pile[0][0]
+                while pile and symbole_recherche == pile[0][0]:
                     symbole_a_retirer, destination_liberee, sans_interet = pile.pop(0)
-                    # print('Parmi', self.destinations_en_place[symbole_a_retirer]) ##
+                    #print('Parmi', self.destinations_en_place[symbole_a_retirer]) ##
                     case_a_effacer = self[destination_liberee]
                     self.effacer_case(case_a_effacer)
-                    # print('-------------retire',
+                    #print('-------------retire',
                     #      symbole_a_retirer, 'de', destination_liberee) ##
                     self.symboles_a_placer.pop(0)  # retiré à l'avant
                     self.symboles_a_placer.append(symbole_a_retirer)  # placé à la fin
@@ -653,11 +669,15 @@ class Grille:
                 mon_watchdog.update()
                 symbole_a_retirer, destination_problematique, destinations = pile.pop()
                 case_a_effacer = self[destination_problematique]
+                #print('-------------retire', destination_problematique) ##
                 self.effacer_case(case_a_effacer)
-                # print('-------------retire', destination_problematique) ##
                 destinations.remove(destination_problematique)
                 self.pioche[symbole_a_retirer].destinations_envisageables = destinations
-            # print('SP:', self.symboles_a_placer) ##
+                # if pile:
+                #     print('last in pile', pile[-1]) ##
+                # else:
+                #     print('pile vide')
+            #print('SP:', self.symboles_a_placer) ##
         datetime_fin = datetime.now()
         duree = datetime_fin - datetime_depart
         print('Tous les symboles on été placés en', duree)
@@ -701,6 +721,7 @@ class Grille:
             if symbole != '0':
                 # print(index,'reçoit' ,symbole) ##
                 self.remplir_case(index, symbole)
+        #self.recalculer_les_destinations_envisageables()
 
     def recalculer_les_destinations_envisageables(self):
         """
@@ -721,26 +742,32 @@ class Watchdog():
     """
     Signale quand l'exploration de l'arbre va trop profond.
     """
-    WATCHDOG_LIMIT = 7
+
+    watchdog_limit = 4
 
     def __init__(self, etat):
-        self.compteur = self.WATCHDOG_LIMIT
+        self.compteur = 0
         self.actif = etat
 
     def est_actif(self):
         return self.actif
 
     def reset(self):
-        self.compteur = self.WATCHDOG_LIMIT
+        self.compteur = 0
 
     def update(self):
-        self.compteur -= 1
+        self.compteur += 1
 
     def alarm(self):
-        if self.compteur == 0:
+        if self.compteur > self.watchdog_limit:
+            self.elargissement()
             return True
         else:
             return False
+
+    def elargissement(self):
+        self.watchdog_limit += 0.125
+        #print('WDL:',self.watchdog_limit)
 
 
 class Sac(Frame):
@@ -951,7 +978,7 @@ class Pioche:
     - get_symboles_a_placer
     - get_sac
     - get_widget_cardinal_sac
-    - selectionner_un_sac
+    - focus_sur_sac
 
     exemple:
     -------
@@ -1129,9 +1156,9 @@ class Pioche:
         La pioche est affichée sans sac sélectionné
         """
         self.symbole_actif = None
-        self.selectionner_un_sac(None)
+        self.focus_sur_sac(None)
 
-    def selectionner_un_sac(self, symbole):
+    def focus_sur_sac(self, symbole):
         """
         Rafraîchi la couleur de la pioche dans tkinter
 
