@@ -450,7 +450,7 @@ class Grille:
 
     def effacer_case(self, case_a_effacer):
         """
-        Efface le contenu de la case
+        Efface le contenu de la case s'il y en a un
 
         Puis demande la mise à jour:
         - de la jauge_de_remplissage
@@ -461,16 +461,17 @@ class Grille:
         - de l'affichage
         - des symboles_a_placer
         """
-        case_a_effacer['text'] = ' '
-        symbole = case_a_effacer.contenu
-        case_a_effacer.contenu = None
-        self.diminuer_jauge()
-        self.restaurer_pretendants()
-        self.recalculer_les_destinations_envisageables()
-        self.destinations_en_place[symbole].remove(case_a_effacer.index)
-        self.pioche.remettre_dans_son_sac(symbole)
-        self.rafraichir_affichage()
-        self.symboles_a_placer.insert(0, symbole)
+        if case_a_effacer.contenu:
+            case_a_effacer['text'] = ' '
+            symbole = case_a_effacer.contenu
+            case_a_effacer.contenu = None
+            self.diminuer_jauge()
+            self.restaurer_pretendants()
+            self.recalculer_les_destinations_envisageables()
+            self.destinations_en_place[symbole].remove(case_a_effacer.index)
+            self.pioche.remettre_dans_son_sac(symbole)
+            self.rafraichir_affichage()
+            self.symboles_a_placer.insert(0, symbole)
 
     def diminuer_jauge(self):
         """
@@ -480,6 +481,7 @@ class Grille:
         self.compteur -= 1
         #print("Compteur:", self.compteur)
         jauge_de_remplissage["value"] = self.compteur
+        jauge_de_remplissage.update()        
 
     def restaurer_pretendants(self):
         """
@@ -602,7 +604,7 @@ class Grille:
         Complète la grille
         """
         self.symboles_a_placer = self.pioche.get_symboles_a_placer()
-        pdb.set_trace()
+        #pdb.set_trace()
         try:
             self.placer_pioche_sur_grille(False)
         except:
@@ -628,22 +630,24 @@ class Grille:
         print("cases à bloquer", cases_bloquees)
         pile = list()
         dernier_placement_OK = True
+        determiner_combinaisons = True
         while self.symboles_a_placer:
             symbole_a_placer = self.symboles_a_placer[0]
-            self.pioche.focus_sur_sac(symbole_a_placer)
-            self.pioche[symbole_a_placer].determine_combinaisons()
-            self.combinaison = self.pioche.choisir_combinaison_au_hasard(symbole_a_placer)
-            while not(self.placement_est_possible(
-                    self.destinations_en_place[symbole_a_placer],
-                    list(self.combinaison))):
-                self.pioche[symbole_a_placer].combinaisons.remove(self.combinaison)
-                self.combinaison = self.pioche.choisir_combinaison_au_hasard(symbole_a_placer)                
-            if self.pioche.combinaison_existe(
-                    symbole_a_placer) and dernier_placement_OK:
-                combinaisons = self.pioche[symbole_a_placer].combinaisons.copy()
-                pile.append((symbole_a_placer, self.combinaison, combinaisons))
-                dernier_placement_OK = self.remplir_case(index_case, symbole_a_placer)
+            self.activer_le_symbole(symbole_a_placer)
+            if determiner_combinaisons:
+                self.combinaisons = self.determine_combinaisons(symbole_a_placer)
+            if self.combinaison_existe() and dernier_placement_OK:
+                self.combinaison_au_hasard = choice(list(self.combinaisons))
+                sauvegarde_combinaisons = self.combinaisons.copy()
+                pile.append((symbole_a_placer, self.combinaison_au_hasard, sauvegarde_combinaisons))
+                for emplacement in self.combinaison_au_hasard:
+                    dernier_placement_OK = dernier_placement_OK and self.remplir_case(emplacement, symbole_a_placer)
+                if not(dernier_placement_OK):
+                    for emplacement in self.combinaison_au_hasard:
+                        case_a_effacer = self.get_case(emplacement)
+                        self.effacer_case(case_a_effacer)
                 #print('longueur pile après ajout:', len(pile), 'last in', pile[-1]) ##
+                determiner_combinaisons = True
                 mon_watchdog.reset()
             elif mon_watchdog.est_actif() and mon_watchdog.alarm():
                 print("\n*** ALARME ***\n") ##
@@ -665,12 +669,15 @@ class Grille:
                 dernier_placement_OK = True  # réinitialisation
                 # effacer la dernière case et restaurer les prétendants
                 mon_watchdog.update()
-                symbole_a_retirer, destination_problematique, destinations = pile.pop()
-                case_a_effacer = self[destination_problematique]
-                #print('-------------retire', destination_problematique) ##
-                self.effacer_case(case_a_effacer)
-                destinations.remove(destination_problematique)
-                self.pioche[symbole_a_retirer].destinations_envisageables = destinations
+                symbole_a_retirer, combinaison_problematique, combinaisons = pile.pop()
+                self.activer_le_symbole(symbole_a_retirer)
+                for emplacement in combinaison_problematique:
+                    case_a_effacer = self[emplacement]
+                    #print('-------------retire', destination_problematique) ##
+                    self.effacer_case(case_a_effacer)
+                combinaisons.remove(combinaison_problematique)
+                self.combinaisons = combinaisons
+                determiner_combinaisons = False
                 # if pile:
                 #     print('last in pile', pile[-1]) ##
                 # else:
@@ -680,6 +687,21 @@ class Grille:
         duree = datetime_fin - datetime_depart
         print('Tous les symboles on été placés en', duree)
         return True
+
+    def determine_combinaisons(self, symbole):
+        """
+        Génère l'ensemble des combinaisons de destinations envisageables.
+        Interroge la pioche puis purge la liste des combinaisons
+        dont le placement est impossible.
+        """
+        combinaisons = self.pioche[symbole].get_combinaisons()
+        combinaisons_valables = set()
+        for combinaison in combinaisons:
+            if self.placement_est_possible(
+                    self.destinations_en_place[symbole],
+                    list(combinaison)):
+                combinaisons_valables.add(combinaison)
+        return combinaisons_valables
 
     def placement_est_possible(self, en_place, autres):
         """
@@ -698,6 +720,15 @@ class Grille:
             blocs_requis.add(self.get_bloc(destination))
         return (len(lignes_requises) == 9) and (
             len(colonnes_requises) == 9) and (len(blocs_requis) == 9)
+
+    def combinaison_existe(self):
+        """
+        Retourne True s'il existe au moins une combinaison envisageable, False s'il n'y en a plus.
+        """
+        if len(self.combinaisons):
+            return True
+        else:
+            return False
 
     def grille_export(self):
         """
@@ -780,8 +811,6 @@ class Sac(Frame):
     envisageables pour le prochain symbole tiré de ce sac.
     À l'initialisation chacune des 81 cases de la grille constitue une
     destination envisageable.
-    - combinaisons: ensemble des combinaisons de destinations envisageables
-
 
     Méthodes:
     ---------
@@ -795,7 +824,6 @@ class Sac(Frame):
     - retirer_un_element
     - get_destinations_envisageables
     - set_destinations_envisageables
-    - determine_combinaisons
     - selectionner
     - deselectionner
 
@@ -941,18 +969,11 @@ class Sac(Frame):
         """
         self.destinations_envisageables = destinations
 
-    def determine_combinaisons(self):
-        """
-        Génère l'ensemble des combinaisons de destinations envisageables
-        """
-        self.combinaisons = set(combinations(self.destinations_envisageables,self.cardinal))
-
     def get_combinaisons(self):
         """
-        Retourne l'ensemble des combinaisons envisageables où l'on pourrait
-        placer les symboles contenus dans le sac.
+        Génère puis retourne l'ensemble des combinaisons de destinations envisageables
         """
-        return self.combinaisons
+        return set(combinations(self.destinations_envisageables,self.cardinal))
     
     def selectionner(self):
         """
@@ -998,8 +1019,7 @@ class Pioche:
     - focus_sur_sac
     - get_symbole_actif
     - get_destinations_envisageables
-    - combinaison_existe
-    - choisir_combinaison_au_hasard
+    - get_combinaisons
     - get_symboles_a_placer
     - reduire_sac
     - remettre_dans_son_sac
@@ -1213,21 +1233,6 @@ class Pioche:
         Retourne l'ensemble des destinations_envisageables pour ce symbole
         """
         return self[symbole].get_destinations_envisageables()
-
-    def combinaison_existe(self, symbole):
-        """
-        Retourne True s'il existe au moins une combinaison envisageable, False s'il n'y en a plus.
-        """
-        if len(self[symbole].get_combinaisons()):
-            return True
-        else:
-            return False
-
-    def choisir_combinaison_au_hasard(self, symbole):
-        """
-        Choisi une combinaison prise au hasard dans l'ensemble des combinaisons envisageables
-        """
-        return  choice(list(self[symbole].combinaisons))
     
     def get_symboles_a_placer(self):
         """
@@ -1268,6 +1273,20 @@ class Pioche:
 
 
 # FONCTIONS
+
+def nCk(n, k):
+    """Nombre de combinaisons de n objets pris k a k"""
+    if k > n//2:
+        k = n-k
+    x = 1
+    y = 1
+    i = n-k+1
+    while i <= n:
+        x = (x*i)//y
+        y += 1
+        i += 1
+    return x
+
 
 def tirage():
     """
@@ -1465,7 +1484,7 @@ bouton_tirage = Button(cadre_gauche,
 jauge_de_remplissage = ttk.Progressbar(cadre_gauche,
                                        orient="vertical",
                                        length=200,
-                                       maximum = 81,
+                                       maximum=81,
                                        mode="determinate")
 
 
