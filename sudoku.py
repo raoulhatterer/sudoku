@@ -603,8 +603,8 @@ class Grille:
         """
         Complète la grille
         """
+        # pdb.set_trace()
         self.symboles_a_placer = self.pioche.get_symboles_a_placer()
-        #pdb.set_trace()
         try:
             self.placer_pioche_sur_grille(False)
         except:
@@ -816,6 +816,7 @@ class Sac(Frame):
     ---------
     - reinitialiser
     - get_symboles_a_placer
+    - get_nombre_combinaisons
     - get_symbole
     - set_symbole
     - get_cardinal
@@ -901,6 +902,13 @@ class Sac(Frame):
         ['5', '5', '5']
         """
         return list(self.symbole)*self.cardinal
+
+    def get_nombre_combinaisons(self):
+        """
+        Pour ce sac retourne le nombre de combinaisons compte tenu du nombre
+        de destinations_envisageables et du nombre de symboles dans le sac.
+        """
+        return nCr(len(self.destinations_envisageables), self.cardinal)
 
     def get_symbole(self):
         """
@@ -1237,14 +1245,21 @@ class Pioche:
     def get_symboles_a_placer(self):
         """
         Par lecture de la pioche, cette fonction retourne une liste
-        avec les symboles à placer sur la grille.
+        avec les symboles à placer sur la grille. Dans l'ordre croissant des combinaisons à calculer.
         ['1','1','1','1','1','1','1','1','1','2','2','2',...,'9','9']
         """
-        symboles_a_placer = list()
+        nombres_de_combinaisons = list()
         for symbole in self.SYMBOLES:
+            un_sac = self.get_sac(symbole)
+            nombres_de_combinaisons.append((un_sac.get_nombre_combinaisons(), symbole))
+        nombres_de_combinaisons_triees = sorted(nombres_de_combinaisons)
+        symboles_a_placer = list()
+        while nombres_de_combinaisons_triees:
+            nombre_de_combinaisons, symbole = nombres_de_combinaisons_triees.pop(0)
             un_sac = self.get_sac(symbole)
             symboles_a_placer.extend(un_sac.get_symboles_a_placer())
         return symboles_a_placer
+
 
     def reduire_sac(self, symbole):
         """
@@ -1274,13 +1289,15 @@ class Pioche:
 
 # FONCTIONS
 
-def nCk(n, k):
-    """Nombre de combinaisons de n objets pris k a k"""
-    if k > n//2:
-        k = n-k
+def nCr(n, r):
+    """
+    Retourne le nombre de combinaisons de n objets pris r a r
+    """
+    if r > n//2:
+        r = n-r
     x = 1
     y = 1
-    i = n-k+1
+    i = n-r+1
     while i <= n:
         x = (x*i)//y
         y += 1
