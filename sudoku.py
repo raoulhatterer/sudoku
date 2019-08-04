@@ -599,33 +599,67 @@ class Grille:
     #     fonction retourne False.
     #     """
 
-    def solveur(self, pioche):
-        """
-        Complète la grille
-        """
-        # pdb.set_trace()
-        self.symboles_a_placer = self.pioche.get_symboles_a_placer()
-        try:
-            self.placer_pioche_sur_grille(False)
-        except:
-            extype, value, tb = sys.exc_info()
-            traceback.print_exc()
-            pdb.post_mortem(tb)
-            
     def tirage(self, pioche):
         """
         Génération d'une grille pleine en partant d'une grille vierge
         """
         self.effacer_grille()
-        self.placer_pioche_sur_grille(True)
+        datetime_depart = datetime.now()
+        mon_watchdog = Watchdog(True)
+        pile = list()
+        dernier_placement_OK = True
+        while self.symboles_a_placer:
+            symbole_a_placer = self.symboles_a_placer[0]
+            self.pioche.focus_sur_sac(symbole_a_placer)
+            if self.pioche.get_destinations_envisageables(
+                    symbole_a_placer) and self.placement_est_possible(
+                        self.destinations_en_place[symbole_a_placer],
+                        self.pioche.get_destinations_envisageables(
+                            symbole_a_placer)) and dernier_placement_OK:
+                destinations = self.pioche.get_destinations_envisageables(
+                    symbole_a_placer).copy()
+                index_case = choice(list(
+                    self.pioche.get_destinations_envisageables(
+                        symbole_a_placer)))  # valeur au hasard
+                pile.append((symbole_a_placer,
+                            index_case,
+                             destinations))
+                dernier_placement_OK = self.remplir_case(index_case, symbole_a_placer)
+                mon_watchdog.reset()
+            elif mon_watchdog.est_actif() and mon_watchdog.alarm():
+                # Retirer les plus anciens symboles identiques posés sur la grille
+                # et les renvoyer en fin de liste pour être placés en dernier
+                mon_watchdog.reset()
+                symbole_recherche = pile[0][0]
+                while pile and symbole_recherche == pile[0][0]:
+                    symbole_a_retirer, destination_liberee, sans_interet = pile.pop(0)
+                    case_a_effacer = self[destination_liberee]
+                    self.effacer_case(case_a_effacer)
+                    self.symboles_a_placer.pop(0)  # retiré à l'avant
+                    self.symboles_a_placer.append(symbole_a_retirer)  # placé à la fin
+            else:
+                # impasse détectée
+                dernier_placement_OK = True  # réinitialisation
+                # effacer la dernière case et restaurer les prétendants
+                mon_watchdog.update()
+                symbole_a_retirer, destination_problematique, destinations = pile.pop()
+                case_a_effacer = self[destination_problematique]
+                self.effacer_case(case_a_effacer)
+                destinations.remove(destination_problematique)
+                self.pioche[symbole_a_retirer].destinations_envisageables = destinations
+        datetime_fin = datetime.now()
+        duree = datetime_fin - datetime_depart
+        print('Tous les symboles on été placés en', duree)
+        return True
 
-    def placer_pioche_sur_grille(self, avec_watchdog):
+    def solveur(self, pioche):
         """
         Génération d'une grille pleine à partir de l'état actuel de la grille
         et de la pioche
         """
+        # pdb.set_trace()
+        self.symboles_a_placer = self.pioche.get_symboles_a_placer()
         datetime_depart = datetime.now()
-        mon_watchdog = Watchdog(avec_watchdog)
         cases_bloquees = self.destinations_en_place
         print("cases à bloquer", cases_bloquees)
         pile = list()
@@ -646,43 +680,22 @@ class Grille:
                     for emplacement in self.combinaison_au_hasard:
                         case_a_effacer = self.get_case(emplacement)
                         self.effacer_case(case_a_effacer)
-                #print('longueur pile après ajout:', len(pile), 'last in', pile[-1]) ##
                 determiner_combinaisons = True
-                mon_watchdog.reset()
-            elif mon_watchdog.est_actif() and mon_watchdog.alarm():
-                print("\n*** ALARME ***\n") ##
-                # Retirer les plus anciens symboles identiques posés sur la grille
-                # et les renvoyer en fin de liste pour être placés en dernier
-                mon_watchdog.reset()
-                symbole_recherche = pile[0][0]
-                while pile and symbole_recherche == pile[0][0]:
-                    symbole_a_retirer, destination_liberee, sans_interet = pile.pop(0)
-                    #print('Parmi', self.destinations_en_place[symbole_a_retirer]) ##
-                    case_a_effacer = self[destination_liberee]
-                    self.effacer_case(case_a_effacer)
-                    #print('-------------retire',
-                    #      symbole_a_retirer, 'de', destination_liberee) ##
-                    self.symboles_a_placer.pop(0)  # retiré à l'avant
-                    self.symboles_a_placer.append(symbole_a_retirer)  # placé à la fin
+            elif not(pile):
+                print("Cette grille n'admet pas de solution!")
+                return False
             else:
                 # impasse détectée
                 dernier_placement_OK = True  # réinitialisation
-                # effacer la dernière case et restaurer les prétendants
-                mon_watchdog.update()
+                # effacer la dernière combinaison et restaurer les prétendants
                 symbole_a_retirer, combinaison_problematique, combinaisons = pile.pop()
                 self.activer_le_symbole(symbole_a_retirer)
                 for emplacement in combinaison_problematique:
                     case_a_effacer = self[emplacement]
-                    #print('-------------retire', destination_problematique) ##
                     self.effacer_case(case_a_effacer)
                 combinaisons.remove(combinaison_problematique)
                 self.combinaisons = combinaisons
                 determiner_combinaisons = False
-                # if pile:
-                #     print('last in pile', pile[-1]) ##
-                # else:
-                #     print('pile vide')
-            #print('SP:', self.symboles_a_placer) ##
         datetime_fin = datetime.now()
         duree = datetime_fin - datetime_depart
         print('Tous les symboles on été placés en', duree)
