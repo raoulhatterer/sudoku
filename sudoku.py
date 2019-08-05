@@ -10,18 +10,13 @@ import pdb, traceback, sys
 
 
 
-# Chargement du module tkinter
+# Chargement des modules
 from tkinter import Tk, Frame, Button, Label, Message
 from tkinter import ttk
 from tkinter.constants import TOP, X, BOTTOM, LEFT, BOTH, RIGHT
 from random import choice
 from datetime import datetime
 from itertools import combinations
-
-
-# import sys
-# sys.setrecursionlimit(6000)
-
 
 # CLASSES
 
@@ -605,7 +600,7 @@ class Grille:
         """
         self.effacer_grille()
         datetime_depart = datetime.now()
-        mon_watchdog = Watchdog(True)
+        mon_watchdog = Watchdog()
         pile = list()
         dernier_placement_OK = True
         while self.symboles_a_placer:
@@ -626,7 +621,7 @@ class Grille:
                              destinations))
                 dernier_placement_OK = self.remplir_case(index_case, symbole_a_placer)
                 mon_watchdog.reset()
-            elif mon_watchdog.est_actif() and mon_watchdog.alarm():
+            elif mon_watchdog.alarm():
                 # Retirer les plus anciens symboles identiques posés sur la grille
                 # et les renvoyer en fin de liste pour être placés en dernier
                 mon_watchdog.reset()
@@ -655,7 +650,8 @@ class Grille:
     def solveur(self, pioche):
         """
         Génération d'une grille pleine à partir de l'état actuel de la grille
-        et de la pioche
+        et de la pioche.
+        Chaque sac de la pioche est traité en tant qu'ensemble. 
         """
         # pdb.set_trace()
         self.symboles_a_placer = self.pioche.get_symboles_a_placer()
@@ -704,6 +700,8 @@ class Grille:
     def determine_combinaisons(self, symbole):
         """
         Génère l'ensemble des combinaisons de destinations envisageables.
+
+
         Interroge la pioche puis purge la liste des combinaisons
         dont le placement est impossible.
         """
@@ -761,9 +759,8 @@ class Grille:
         for index in range(self.NBR_CASES):
             symbole = grille_en_liste[index]
             if symbole != '0':
-                # print(index,'reçoit' ,symbole) ##
                 self.remplir_case(index, symbole)
-        #self.recalculer_les_destinations_envisageables()
+
 
     def recalculer_les_destinations_envisageables(self):
         """
@@ -787,12 +784,8 @@ class Watchdog():
 
     watchdog_limit = 4
 
-    def __init__(self, etat):
+    def __init__(self):
         self.compteur = 0
-        self.actif = etat
-
-    def est_actif(self):
-        return self.actif
 
     def reset(self):
         self.compteur = 0
@@ -809,7 +802,6 @@ class Watchdog():
 
     def elargissement(self):
         self.watchdog_limit += 0.125
-        #print('WDL:',self.watchdog_limit)
 
 
 class Sac(Frame):
@@ -1304,7 +1296,7 @@ class Pioche:
 
 def nCr(n, r):
     """
-    Retourne le nombre de combinaisons de n objets pris r a r
+    Retourne le nombre de combinaisons de n objets pris r à r
     """
     if r > n//2:
         r = n-r
