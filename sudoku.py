@@ -1491,8 +1491,10 @@ def gestion_des_evenements_on_mouse_over(event):
     """
     if type(event.widget) == Case:
         label_pretendants['text'] = event.widget.pretendants
-    if type(event.widget) == Label and type(event.widget.master) == Sac:
+    elif type(event.widget) == Label and type(event.widget.master) == Sac:
         pioche_sudoku.montrer_destinations_envisageables()
+    else:
+        label_pretendants['text'] = "Prétendants"
 
 
 def gestion_des_evenements_on_mouse_leave(event):
@@ -1553,26 +1555,28 @@ pioche_sudoku = Pioche(cadre_pioche)
 grille_sudoku = Grille(cadre_central, pioche_sudoku)
 
 # Création des éléments dans le cadre de gauche
-bouton_index_cases = Button(cadre_gauche,
-                            name='index_cases',
-                            text='Index des cases')
+
+les_boutons = Frame(cadre_gauche) 
 label_pretendants = Label(cadre_gauche,
                           name='lbl_pretendants',
                           text='Prétendants',
                           background=COULEUR_CADRE_GAUCHE)
-bouton_vierge = Button(cadre_gauche,
+bouton_index_cases = Button(les_boutons,
+                            name='index_cases',
+                            text='Index des cases')
+bouton_vierge = Button(les_boutons,
                        name='vierge',
                        text='Vierge',
                        command=vierge)
-bouton_exemple = Button(cadre_gauche,
+bouton_exemple = Button(les_boutons,
                         name='exemple',
                         text='Exemple',
                         command=exemple)
-bouton_solveur = Button(cadre_gauche,
+bouton_solveur = Button(les_boutons,
                         name='solveur',
                         text='Solveur',
                         command=solveur)
-bouton_tirage = Button(cadre_gauche,
+bouton_tirage = Button(les_boutons,
                        name='tirage',
                        text='Tirage',
                        command=tirage)
@@ -1585,10 +1589,11 @@ jauge_de_remplissage = ttk.Progressbar(cadre_gauche,
 
 bouton_index_cases.pack()
 label_pretendants.pack()
-bouton_vierge.pack()
-bouton_exemple.pack()
-bouton_solveur.pack()
-bouton_tirage.pack()
+les_boutons.pack()
+bouton_vierge.pack(fill=X)
+bouton_exemple.pack(fill=X)
+bouton_solveur.pack(fill=X)
+bouton_tirage.pack(fill=X)
 jauge_de_remplissage.pack(side=BOTTOM)
 
 # Disposition du conteneur cadre_bas
