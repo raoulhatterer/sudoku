@@ -7,9 +7,6 @@
 # pdb.set_trace()
 import pdb, traceback, sys
 
-
-
-
 # Chargement des modules
 from tkinter import Tk, Frame, Button, Label, Message
 from tkinter import ttk
@@ -19,6 +16,7 @@ from datetime import datetime
 from itertools import combinations
 
 # CLASSES
+
 
 class Case(Button):
     """
@@ -182,7 +180,8 @@ class Grille:
         self.destinations_en_place = {'1': list(), '2': list(), '3': list(),
                                       '4': list(), '5': list(), '6': list(),
                                       '7': list(), '8': list(), '9': list()}
-        self.symboles_a_placer, self.ordre_de_placement = self.pioche.get_symboles_a_placer_et_ordre()
+        self.symboles_a_placer, self.ordre_de_placement = \
+            self.pioche.get_symboles_a_placer_et_ordre()
         self.compteur = 0
 
         # Disposition du conteneur cadre qui contient la grille de sudoku
@@ -212,20 +211,23 @@ class Grille:
 
     def cacher_jauge_parcourt_combinaisons(self):
         """
-        Cache  la jaude de parcourt des combinaisons lorsque le solveur est inactif.
+        Cache  la jauge de parcourt des combinaisons lorsque le solveur est
+        inactif.
         """
         root.nametowidget(
             str(self.cadre)+".jauge_parcourt_combinaisons").grid_forget()
 
     def monter_jauge_parcourt_combinaisons(self):
         """
-        Montre la jauge de parcourt des combinaisons lorsque le solveur est actif.
+        Montre la jauge de parcourt des combinaisons lorsque le solveur est
+        actif.
         """
         root.nametowidget(
-            str(self.cadre)+".jauge_parcourt_combinaisons").grid(row=self.LARGEUR_GRILLE+1,
-                                                                 columnspan=self.LARGEUR_GRILLE+1,
-                                                                 pady=5,
-                                                                 sticky="ew")
+            str(self.cadre)+".jauge_parcourt_combinaisons").grid(
+                row=self.LARGEUR_GRILLE+1,
+                columnspan=self.LARGEUR_GRILLE+1,
+                pady=5,
+                sticky="ew")
 
     def get_couleur_case(self, index, symbole):
         """
@@ -496,9 +498,8 @@ class Grille:
         être replacé dans la pioche.
         """
         self.compteur -= 1
-        #print("Compteur:", self.compteur)
         jauge_de_remplissage["value"] = self.compteur
-        jauge_de_remplissage.update()        
+        jauge_de_remplissage.update()
 
     def restaurer_pretendants(self):
         """
@@ -535,7 +536,8 @@ class Grille:
             self.__setitem__(index, symbole_a_placer)
             self.augmenter_jauge_de_remplissage()
             case_a_remplir.pretendants = []
-            reduction_OK = self.reduire_pretendants_des_cousines_de_la_case(index) # peut conduire à une case sans contenu ni prétendants
+            reduction_OK = self.reduire_pretendants_des_cousines_de_la_case(
+                index)  # peut conduire à une case sans contenu ni prétendants
             self.recalculer_les_destinations_envisageables()
             self.destinations_en_place[symbole_a_placer].append(index)
             self.pioche.reduire_sac(symbole_a_placer)
@@ -553,7 +555,6 @@ class Grille:
         être replacé sur la grille.
         """
         self.compteur += 1
-        #print("Compteur:", self.compteur)
         jauge_de_remplissage["value"] = self.compteur
         jauge_de_remplissage.update()
 
@@ -575,7 +576,7 @@ class Grille:
                 if symbole in pretendants:
                     pretendants.remove(symbole)
                 if not pretendants:
-                    #print('Case', index_cousine, 'sans contenu ni prétendants') ##
+                    # Case index_cousine sans contenu ni prétendants
                     return False
         return True
 
@@ -638,9 +639,7 @@ class Grille:
                 index_case = choice(list(
                     self.pioche.get_destinations_envisageables(
                         symbole_a_placer)))  # valeur au hasard
-                pile.append((symbole_a_placer,
-                            index_case,
-                             destinations))
+                pile.append((symbole_a_placer, index_case, destinations))
                 dernier_placement_OK = self.remplir_case(index_case, symbole_a_placer)
                 mon_watchdog.reset()
             elif mon_watchdog.alarm():
@@ -673,17 +672,17 @@ class Grille:
         """
         Génération d'une grille pleine à partir de l'état actuel de la grille
         et de la pioche.
-        Chaque sac de la pioche est traité en tant qu'ensemble de symboles identiques. 
+        Chaque sac de la pioche est traité en tant qu'ensemble de symboles.
         """
-        pdb.set_trace()
+        #pdb.set_trace()
         datetime_depart = datetime.now()
         self.symboles_a_placer, self.ordre_de_placement = self.pioche.get_symboles_a_placer_et_ordre()
         self.monter_jauge_parcourt_combinaisons()
         cases_bloquees = self.destinations_en_place
         print("cases à bloquer", cases_bloquees)
         pile = list()
-        maximum_jauge = [1,1,1]
-        actuel_jauge = [1,1,1]        
+        maximum_jauge = [1, 1, 1]
+        actuel_jauge = [1, 1, 1]
         dernier_placement_OK = True
         determiner_combinaisons = True
         while self.symboles_a_placer:
@@ -691,33 +690,15 @@ class Grille:
             self.activer_le_symbole(symbole_a_placer)
             if determiner_combinaisons:
                 self.combinaisons = self.determine_combinaisons(symbole_a_placer)
-                if symbole_a_placer == self.ordre_de_placement[0]:
-                    maximum_jauge[0] = len(self.combinaisons)
-                elif symbole_a_placer == self.ordre_de_placement[1]:
-                    maximum_jauge[1] = len(self.combinaisons)
-                elif symbole_a_placer == self.ordre_de_placement[2]:
-                    maximum_jauge[2] = len(self.combinaisons)
+                self.reglage_maximum_jauge(symbole_a_placer, maximum_jauge, actuel_jauge)
             if self.combinaison_existe() and dernier_placement_OK:
-                if symbole_a_placer == self.ordre_de_placement[0]:
-                    actuel_jauge[0] = len(self.combinaisons)
-                    actuel_jauge[1] = maximum_jauge[1]
-                    actuel_jauge[2] = maximum_jauge[2]                    
-                    parcourt = 0.1+3*(maximum_jauge[0]-actuel_jauge[0])/maximum_jauge[0]+(maximum_jauge[1]-actuel_jauge[1])/maximum_jauge[1]+0.1*(maximum_jauge[2]-actuel_jauge[2])/maximum_jauge[2]
-                    root.nametowidget(str(self.cadre)+".jauge_parcourt_combinaisons")["value"] = parcourt 
-                elif symbole_a_placer == self.ordre_de_placement[1]:
-                    actuel_jauge[1] = len(self.combinaisons)
-                    actuel_jauge[2] = maximum_jauge[2]                                        
-                    parcourt = 0.1+3*(maximum_jauge[0]-actuel_jauge[0])/maximum_jauge[0]+(maximum_jauge[1]-actuel_jauge[1])/maximum_jauge[1]+0.1*(maximum_jauge[2]-actuel_jauge[2])/maximum_jauge[2]
-                    root.nametowidget(str(self.cadre)+".jauge_parcourt_combinaisons")["value"] = parcourt
-                elif symbole_a_placer == self.ordre_de_placement[2]:
-                    actuel_jauge[2] = len(self.combinaisons)
-                    parcourt = 0.1+3*(maximum_jauge[0]-actuel_jauge[0])/maximum_jauge[0]+(maximum_jauge[1]-actuel_jauge[1])/maximum_jauge[1]+0.1*(maximum_jauge[2]-actuel_jauge[2])/maximum_jauge[2]
-                    root.nametowidget(str(self.cadre)+".jauge_parcourt_combinaisons")["value"] = parcourt
+                self.reglage_actuel_jauge(symbole_a_placer, actuel_jauge, maximum_jauge)
                 self.combinaison_au_hasard = choice(list(self.combinaisons))
                 sauvegarde_combinaisons = self.combinaisons.copy()
                 pile.append((symbole_a_placer, self.combinaison_au_hasard, sauvegarde_combinaisons))
                 for emplacement in self.combinaison_au_hasard:
-                    dernier_placement_OK = dernier_placement_OK and self.remplir_case(emplacement, symbole_a_placer)
+                    dernier_placement_OK = dernier_placement_OK and\
+                        self.remplir_case(emplacement, symbole_a_placer)
                 if not(dernier_placement_OK):
                     for emplacement in self.combinaison_au_hasard:
                         case_a_effacer = self.get_case(emplacement)
@@ -744,6 +725,46 @@ class Grille:
         print('Tous les symboles on été placés en', duree)
         self.cacher_jauge_parcourt_combinaisons()
         return True
+
+    def reglage_actuel_jauge(self, symbole_a_placer, actuel_jauge, maximum_jauge):
+        """
+        On explore d'autres branches en restant à la même profondeur
+        """
+        if symbole_a_placer == self.ordre_de_placement[0]:
+            actuel_jauge[0] = len(self.combinaisons)
+            actuel_jauge[1] = maximum_jauge[1]
+            actuel_jauge[2] = maximum_jauge[2]
+        elif symbole_a_placer == self.ordre_de_placement[1]:
+            actuel_jauge[1] = len(self.combinaisons)
+            actuel_jauge[2] = maximum_jauge[2]
+        elif symbole_a_placer == self.ordre_de_placement[2]:
+            actuel_jauge[2] = len(self.combinaisons)
+        else:
+            return
+        self.update_jauge_de_parcourt(maximum_jauge, actuel_jauge)
+
+    def reglage_maximum_jauge(self, symbole_a_placer, maximum_jauge, actuel_jauge):
+        """
+        On explore une autre branche à une autre profondeur.
+        """
+        if symbole_a_placer == self.ordre_de_placement[0]:
+            maximum_jauge[0] = len(self.combinaisons)
+        elif symbole_a_placer == self.ordre_de_placement[1]:
+            maximum_jauge[1] = len(self.combinaisons)
+        elif symbole_a_placer == self.ordre_de_placement[2]:
+            maximum_jauge[2] = len(self.combinaisons)
+
+    def update_jauge_de_parcourt(self, maximum_jauge, actuel_jauge):
+        """
+        La jauge de parcourt indique la portion parcourue dans l'arbre des
+        combinaisons possibles.
+        """
+        parcourt = 0.1 +\
+            3*(maximum_jauge[0]-actuel_jauge[0])/maximum_jauge[0] +\
+            (maximum_jauge[1]-actuel_jauge[1])/maximum_jauge[1] +\
+            0.1*(maximum_jauge[2]-actuel_jauge[2])/maximum_jauge[2]
+        root.nametowidget(
+            str(self.cadre)+".jauge_parcourt_combinaisons")["value"] = parcourt
 
     def determine_combinaisons(self, symbole):
         """
@@ -782,7 +803,8 @@ class Grille:
 
     def combinaison_existe(self):
         """
-        Retourne True s'il existe au moins une combinaison envisageable, False s'il n'y en a plus.
+        Retourne True s'il existe au moins une combinaison envisageable,
+        False s'il n'y en a plus.
         """
         if len(self.combinaisons):
             return True
@@ -808,7 +830,6 @@ class Grille:
             symbole = grille_en_liste[index]
             if symbole != '0':
                 self.remplir_case(index, symbole)
-
 
     def recalculer_les_destinations_envisageables(self):
         """
@@ -1032,10 +1053,11 @@ class Sac(Frame):
 
     def get_combinaisons(self):
         """
-        Génère puis retourne l'ensemble des combinaisons de destinations envisageables
+        Génère puis retourne l'ensemble des combinaisons de destinations
+        envisageables
         """
-        return set(combinations(self.destinations_envisageables,self.cardinal))
-    
+        return set(combinations(self.destinations_envisageables, self.cardinal))
+
     def selectionner(self):
         """
         Active la couleur SELECTION du sac
@@ -1294,17 +1316,19 @@ class Pioche:
         Retourne l'ensemble des destinations_envisageables pour ce symbole
         """
         return self[symbole].get_destinations_envisageables()
-    
+
     def get_symboles_a_placer_et_ordre(self):
         """
         Par lecture de la pioche, cette fonction retourne deux listes:
-        - une avec les symboles à placer sur la grille dans l'ordre croissant des combinaisons à calculer
+        - une avec les symboles à placer sur la grille dans l'ordre croissant
+        des combinaisons à calculer
         - une avec l'ordre des symboles_a_placer
         """
         nombres_de_combinaisons = list()
         for symbole in self.SYMBOLES:
             un_sac = self.get_sac(symbole)
-            nombres_de_combinaisons.append((un_sac.get_nombre_combinaisons(), symbole))
+            nombres_de_combinaisons.append((un_sac.get_nombre_combinaisons(),
+                                            symbole))
         nombres_de_combinaisons_triees = sorted(nombres_de_combinaisons)
         symboles_a_placer = list()
         ordre_de_placement = list()
@@ -1314,7 +1338,6 @@ class Pioche:
             symboles_a_placer.extend(un_sac.get_symboles_a_placer())
             ordre_de_placement.extend(symbole)
         return (symboles_a_placer, ordre_de_placement)
-
 
     def reduire_sac(self, symbole):
         """
