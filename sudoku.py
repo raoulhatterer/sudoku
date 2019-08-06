@@ -10,7 +10,7 @@ import pdb, traceback, sys
 # Chargement des modules
 from tkinter import Tk, Frame, Button, Label, Message
 from tkinter import ttk
-from tkinter.constants import TOP, X, BOTTOM, LEFT, BOTH, RIGHT
+from tkinter.constants import TOP, X, BOTTOM, LEFT, BOTH, RIGHT, FLAT, DISABLED, ACTIVE, NORMAL
 from random import choice
 from datetime import datetime
 from itertools import combinations
@@ -455,6 +455,7 @@ class Grille:
         for index in range(self.NBR_CASES):
             self[index].contenu = None
             self[index]['text'] = ' '
+            self[index]['state'] = NORMAL
             self[index].pretendants = ['1', '2', '3', '4',
                                        '5', '6', '7', '8', '9']
         self.destinations_en_place = {'1': list(), '2': list(), '3': list(),
@@ -617,9 +618,11 @@ class Grille:
     #     fonction retourne False.
     #     """
 
-    def tirage(self, pioche):
+    def tirage(self):
         """
-        Génération d'une grille pleine en partant d'une grille vierge
+        Génération d'une grille pleine en partant d'une grille vierge.
+        À tour de rôle, chaque symbole de la pioche est placé aléatoirement
+        sur la grille à une position autorisée.
         """
         self.effacer_grille()
         datetime_depart = datetime.now()
@@ -663,23 +666,24 @@ class Grille:
                 self.effacer_case(case_a_effacer)
                 destinations.remove(destination_problematique)
                 self.pioche[symbole_a_retirer].destinations_envisageables = destinations
+        self.pioche.deselectionner_tout()
+        self.pioche.deselectionner_le_bouton_effacer()
+        self.symbole_actif = None
+        self.rafraichir_affichage()
         datetime_fin = datetime.now()
         duree = datetime_fin - datetime_depart
         print('Tous les symboles on été placés en', duree)
         return True
 
-    def solveur(self, pioche):
+    def solveur(self):
         """
-        Génération d'une grille pleine à partir de l'état actuel de la grille
-        et de la pioche.
+        Génération d'une grille pleine à partir de l'état actuel de la grille.
         Chaque sac de la pioche est traité en tant qu'ensemble de symboles.
         """
-        #pdb.set_trace()
         datetime_depart = datetime.now()
         self.symboles_a_placer, self.ordre_de_placement = self.pioche.get_symboles_a_placer_et_ordre()
         self.monter_jauge_parcourt_combinaisons()
-        cases_bloquees = self.destinations_en_place
-        print("cases à bloquer", cases_bloquees)
+        self.congeler()
         pile = list()
         maximum_jauge = [1, 1, 1]
         actuel_jauge = [1, 1, 1]
@@ -720,10 +724,14 @@ class Grille:
                 combinaisons.remove(combinaison_problematique)
                 self.combinaisons = combinaisons
                 determiner_combinaisons = False
+        self.cacher_jauge_parcourt_combinaisons()
+        self.pioche.deselectionner_tout()
+        self.pioche.deselectionner_le_bouton_effacer()
+        self.symbole_actif = None
+        self.rafraichir_affichage()
         datetime_fin = datetime.now()
         duree = datetime_fin - datetime_depart
         print('Tous les symboles on été placés en', duree)
-        self.cacher_jauge_parcourt_combinaisons()
         return True
 
     def reglage_actuel_jauge(self, symbole_a_placer, actuel_jauge, maximum_jauge):
@@ -844,6 +852,17 @@ class Grille:
             for symbole in self.SYMBOLES:
                 if symbole in une_case.pretendants:
                     self.pioche[symbole].destinations_envisageables.add(index)
+
+    def congeler(self):
+        """
+        Congélation des cases en place pour obtenir la grille à résoudre.
+        """
+        cases_congelees = self.destinations_en_place
+        for symbole in self.SYMBOLES:
+            liste_cases = cases_congelees[symbole]
+            for index in liste_cases:
+                case_congelee = self.get_case(index)
+                case_congelee['state'] = DISABLED
 
 
 class Watchdog():
@@ -1387,7 +1406,7 @@ def tirage():
     """
     Remplissage d'une grille complète
     """
-    grille_sudoku.tirage(pioche_sudoku)
+    grille_sudoku.tirage()
 
 
 def vierge():
@@ -1418,7 +1437,14 @@ def solveur():
     """
     Remplissage d'une grille complète
     """
-    grille_sudoku.solveur(pioche_sudoku)
+    grille_sudoku.solveur()
+
+
+def congeler():
+    """
+    Congèle les symboles en place sur la grille.
+    """
+    grille_sudoku.congeler()
 
 
 def afficher_les_index(event):
@@ -1462,11 +1488,10 @@ def gestion_des_evenements_on_press(event):
         grille_sudoku.activer_le_symbole(symbole_a_activer)
 
     # Si une case de la grille est cliqué
-    if type(event.widget) == Case:
-        # print(pioche_sudoku.get_symbole_actif()) ##
+    if (type(event.widget) == Case) and (event.widget['state'] == ACTIVE):
         if pioche_sudoku.get_symbole_actif() == 'X':
             if event.widget.contenu is None:
-                pass  # ne rien faire la case est déjà vide
+                pass  # ne rien faire (case déjà vide ou congelée)
             else:
                 grille_sudoku.effacer_case(event.widget)
         else:
@@ -1556,7 +1581,7 @@ grille_sudoku = Grille(cadre_central, pioche_sudoku)
 
 # Création des éléments dans le cadre de gauche
 
-les_boutons = Frame(cadre_gauche) 
+les_boutons = Frame(cadre_gauche)
 label_pretendants = Label(cadre_gauche,
                           name='lbl_pretendants',
                           text='Prétendants',
@@ -1580,6 +1605,10 @@ bouton_tirage = Button(les_boutons,
                        name='tirage',
                        text='Tirage',
                        command=tirage)
+bouton_congeler = Button(les_boutons,
+                         name='congeler',
+                         text='Congeler',
+                         command=congeler)
 jauge_de_remplissage = ttk.Progressbar(cadre_gauche,
                                        orient="vertical",
                                        length=200,
@@ -1594,6 +1623,7 @@ bouton_vierge.pack(fill=X)
 bouton_exemple.pack(fill=X)
 bouton_solveur.pack(fill=X)
 bouton_tirage.pack(fill=X)
+bouton_congeler.pack(fill=X)
 jauge_de_remplissage.pack(side=BOTTOM)
 
 # Disposition du conteneur cadre_bas
