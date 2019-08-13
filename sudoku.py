@@ -8,12 +8,13 @@
 import pdb, traceback, sys
 
 # Chargement des modules
-from tkinter import Tk, Frame, Button, Label, Message
+from tkinter import Tk, Frame, Button, Label, Message, LabelFrame, Scale
 from tkinter import ttk
 from tkinter.constants import TOP, X, BOTTOM, LEFT, BOTH, RIGHT, FLAT, DISABLED, ACTIVE, NORMAL
 from random import choice
 from datetime import datetime
 from itertools import combinations
+
 
 # CLASSES
 
@@ -183,7 +184,7 @@ class Grille:
         self.symboles_a_placer, self.ordre_de_placement = \
             self.pioche.get_symboles_a_placer_et_ordre()
         self.compteur = 0
-
+        
         # Disposition du conteneur cadre qui contient la grille de sudoku
         for row in range(self.LARGEUR_GRILLE):
             cadre.rowconfigure(row, weight=1)
@@ -393,9 +394,10 @@ class Grille:
         self.symbole_actif = symbole
         self.rafraichir_affichage()
 
-    def rafraichir_affichage(self):
+    def rafraichir_affichage(self, secret=False):
         """
         Affiche le contenu des cases dans tkinter.
+        Sauf si SECRET vaut True.
 
         exemple:
         -------
@@ -406,15 +408,16 @@ class Grille:
         >>> ma_grille[0] = '5'
         >>> ma_grille.rafraichir_affichage()
         """
-        for index in range(self.NBR_CASES):
-            ma_case = self[index]
-            if ma_case.contenu is None:
-                ma_case['text'] = ' '
-            else:
-                ma_case['text'] = ma_case.contenu
-            ma_case['background'] = self.get_couleur_case(
-                index,
-                ma_case['text'])
+        if not(secret):
+            for index in range(self.NBR_CASES):
+                ma_case = self[index]
+                if ma_case.contenu is None:
+                    ma_case['text'] = ' '
+                else:
+                    ma_case['text'] = ma_case.contenu
+                ma_case['background'] = self.get_couleur_case(
+                    index,
+                    ma_case['text'])
 
     def afficher_les_index(self):
         """
@@ -468,7 +471,7 @@ class Grille:
         jauge_de_remplissage["value"] = self.compteur
         self.symboles_a_placer, self.ordre_de_placement = self.pioche.get_symboles_a_placer_et_ordre()
 
-    def effacer_case(self, case_a_effacer):
+    def effacer_case(self, case_a_effacer, secret=False):
         """
         Efface le contenu de la case s'il y en a un
 
@@ -490,7 +493,7 @@ class Grille:
             self.recalculer_les_destinations_envisageables()
             self.destinations_en_place[symbole].remove(case_a_effacer.index)
             self.pioche.remettre_dans_son_sac(symbole)
-            self.rafraichir_affichage()
+            self.rafraichir_affichage(secret)
             self.symboles_a_placer.insert(0, symbole)
 
     def diminuer_jauge_de_remplissage(self):
@@ -519,7 +522,7 @@ class Grille:
             if not(ma_case.contenu is None):
                 self.reduire_pretendants_des_cousines_de_la_case(index)
 
-    def remplir_case(self, index, symbole_a_placer):
+    def remplir_case(self, index, symbole_a_placer, secret=False):
         """
         Rempli la case d'index compris entre 0 et 80 avec `symbole_a_placer`.
 
@@ -542,7 +545,7 @@ class Grille:
             self.recalculer_les_destinations_envisageables()
             self.destinations_en_place[symbole_a_placer].append(index)
             self.pioche.reduire_sac(symbole_a_placer)
-            self.rafraichir_affichage()
+            self.rafraichir_affichage(secret)
             self.symboles_a_placer.remove(symbole_a_placer)
             return reduction_OK
         else:
@@ -608,21 +611,29 @@ class Grille:
 
     # def tirage_debutant(self):
     #     """
-    #     |----------+---------+-------------+-----------|------------------+
-    #     | niveau   | restant | pourcentage |   détail  | restant à placer |
-    #     |----------+---------+-------------+-----------|------------------+
-    #     | Débutant |      24 |          30 | 112233444 |    887766555     |
-    #     |----------+---------+-------------+-----------|------------------+
-
+    #     |-----------+---------+-------------+-----------+------------------+
+    #     | niveau    | restant | pourcentage |   détail  | restant à placer |
+    #     |-----------+---------+-------------+-----------+------------------+
+    #     | Débutant  |      24 |          30 | 112233444 |    887766555     |
+    #     |-----------+---------+-------------+-----------+------------------+
+    #     | Facile    |      37 |          46 | 333444556 |    666555443     |
+    #     |-----------+---------+-------------+-----------+------------------+
+    #     | Moyen     |      48 |          59 | 334466688 |    665533311     |
+    #     |-----------+---------+-------------+-----------+------------------+
+    #     | Difficile |      52 |          64 | 356666677 |    643333322     |
+    #     |-----------+---------+-------------+-----------+------------------+
+    #     | Extrême   |      56 |          69 | 455666888 |    544333111     |
+    #
     #     Si le tirage réussi, la fonction retourne True. S'il échoue, la
     #     fonction retourne False.
     #     """
 
-    def tirage(self):
+    def tirage(self, secret=False):
         """
         Génération d'une grille pleine en partant d'une grille vierge.
         À tour de rôle, chaque symbole de la pioche est placé aléatoirement
         sur la grille à une position autorisée.
+        Si SECRET vaut True le contenu des cases demeure caché.
         """
         self.effacer_grille()
         datetime_depart = datetime.now()
@@ -631,7 +642,8 @@ class Grille:
         dernier_placement_OK = True
         while self.symboles_a_placer:
             symbole_a_placer = self.symboles_a_placer[0]
-            self.pioche.focus_sur_sac(symbole_a_placer)
+            if not(secret):
+                self.pioche.focus_sur_sac(symbole_a_placer)
             if self.pioche.get_destinations_envisageables(
                     symbole_a_placer) and self.placement_est_possible(
                         self.destinations_en_place[symbole_a_placer],
@@ -643,7 +655,7 @@ class Grille:
                     self.pioche.get_destinations_envisageables(
                         symbole_a_placer)))  # valeur au hasard
                 pile.append((symbole_a_placer, index_case, destinations))
-                dernier_placement_OK = self.remplir_case(index_case, symbole_a_placer)
+                dernier_placement_OK = self.remplir_case(index_case, symbole_a_placer, secret)
                 mon_watchdog.reset()
             elif mon_watchdog.alarm():
                 # Retirer les plus anciens symboles identiques posés sur la grille
@@ -653,7 +665,7 @@ class Grille:
                 while pile and symbole_recherche == pile[0][0]:
                     symbole_a_retirer, destination_liberee, sans_interet = pile.pop(0)
                     case_a_effacer = self[destination_liberee]
-                    self.effacer_case(case_a_effacer)
+                    self.effacer_case(case_a_effacer, secret=True)
                     self.symboles_a_placer.pop(0)  # retiré à l'avant
                     self.symboles_a_placer.append(symbole_a_retirer)  # placé à la fin
             else:
@@ -663,13 +675,13 @@ class Grille:
                 mon_watchdog.update()
                 symbole_a_retirer, destination_problematique, destinations = pile.pop()
                 case_a_effacer = self[destination_problematique]
-                self.effacer_case(case_a_effacer)
+                self.effacer_case(case_a_effacer, secret)
                 destinations.remove(destination_problematique)
                 self.pioche[symbole_a_retirer].destinations_envisageables = destinations
         self.pioche.deselectionner_tout()
         self.pioche.deselectionner_le_bouton_effacer()
         self.symbole_actif = None
-        self.rafraichir_affichage()
+        self.rafraichir_affichage(secret)
         datetime_fin = datetime.now()
         duree = datetime_fin - datetime_depart
         print('Tous les symboles on été placés en', duree)
@@ -1384,6 +1396,7 @@ class Pioche:
         self.deselectionner_tout()
 
 
+
 # FONCTIONS
 
 def nCr(n, r):
@@ -1407,7 +1420,6 @@ def tirage():
     Remplissage d'une grille complète
     """
     grille_sudoku.tirage()
-
 
 def vierge():
     """
@@ -1464,7 +1476,33 @@ def cacher_les_index(event):
     """
     grille_sudoku.rafraichir_affichage()
 
+def choix_du_niveau():
+    """
+    Permet de choisir le niveau de la partie
+    """
+    print('On désactive les boutons')    
+    # Désactiver les boutons
+    for child in les_boutons.winfo_children():
+        child.configure(state=DISABLED)    
+    # Afficher l'interface permettant de commencer_la_partie
+    echelle_niveaux.pack(padx=5, pady=5)
+    bouton_jouer.configure(state=DISABLED)    
+    bouton_jouer.pack()
+    label_patientez.pack()
+    grille_sudoku.tirage(secret=True)
+    label_patientez.pack_forget()
+    bouton_jouer.configure(state=NORMAL)
+    print(grille_sudoku)
+    print(niveau)
 
+def commencer_la_partie():
+    print("choix_du_niveau")
+    bouton_jouer.configure(state=DISABLED)
+    niveau = echelle_niveaux.get()
+    print(niveau)
+    for child in les_boutons.winfo_children():
+        child.configure(state=NORMAL)
+    
 def gestion_des_evenements_on_press(event):
     """
     Identifie l'élément cliqué par le joueur.
@@ -1529,9 +1567,13 @@ def gestion_des_evenements_on_mouse_leave(event):
 
 COULEUR_CADRE_HAUT = 'lavender'
 COULEUR_CADRE_GAUCHE = 'lavender'
-COULEUR_CADRE_DROIT = 'lavender'
+COULEUR_CADRE_CENTRAL = 'lavender'
+COULEUR_CADRE_DROITE = 'lavender'
 COULEUR_PIOCHE = '#d9d9d9'
 COULEUR_CADRE_BAS = 'lavender'
+
+# Niveau par défaut
+niveau = 30 
 
 # APPLICATION Tkinter
 
@@ -1542,12 +1584,12 @@ root.title('Sudoku')
 cadre_haut = Frame(root, name='en_tete',
                    background=COULEUR_CADRE_HAUT,
                    width=640, height=50)
-cadre_gauche = Frame(root, name='gauche',
+cadre_gauche = Frame(root, name='boutons',
                      background=COULEUR_CADRE_GAUCHE,
                      height=400)
 cadre_central = Frame(root, name='grille_sudoku',
-                      background='lavender')
-cadre_droite = Frame(root, name='droite',
+                      background=COULEUR_CADRE_CENTRAL)
+cadre_droite = Frame(root, name='niveau',
                      background='lavender')
 cadre_separation_verticale = Frame(root, name='separation',
                                    background='lavender',
@@ -1609,21 +1651,30 @@ bouton_congeler = Button(les_boutons,
                          name='congeler',
                          text='Congeler',
                          command=congeler)
+niveaux = Button(les_boutons, text="Nouvelle partie", command=choix_du_niveau)
 jauge_de_remplissage = ttk.Progressbar(cadre_gauche,
                                        orient="vertical",
                                        length=200,
                                        maximum=81,
                                        mode="determinate")
-
+echelle_niveaux = Scale(cadre_droite, orient='horizontal',
+                        from_=30, to=70,
+                        background=COULEUR_CADRE_DROITE,
+                        resolution=1, tickinterval=5,
+                        length=200,
+                        label='Niveau (% restant à placer)')
+label_patientez = Label(cadre_droite, text="Patientez SVP", background=COULEUR_CADRE_DROITE)
+bouton_jouer = Button(cadre_droite, text="Jouer", command=commencer_la_partie)
 
 bouton_index_cases.pack()
 label_pretendants.pack()
-les_boutons.pack()
+les_boutons.pack(padx=5, pady=5)
 bouton_vierge.pack(fill=X)
 bouton_exemple.pack(fill=X)
 bouton_solveur.pack(fill=X)
 bouton_tirage.pack(fill=X)
 bouton_congeler.pack(fill=X)
+niveaux.pack(fill=X)
 jauge_de_remplissage.pack(side=BOTTOM)
 
 # Disposition du conteneur cadre_bas
