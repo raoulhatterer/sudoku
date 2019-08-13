@@ -8,9 +8,10 @@
 import pdb, traceback, sys
 
 # Chargement des modules
-from tkinter import Tk, Frame, Button, Label, Message, LabelFrame, Scale
-from tkinter import ttk
-from tkinter.constants import TOP, X, BOTTOM, LEFT, BOTH, RIGHT, FLAT, DISABLED, ACTIVE, NORMAL
+from tkinter import Tk, ttk, Frame, Button, Label, Message, LabelFrame, Scale,\
+    Checkbutton, IntVar
+from tkinter.constants import TOP, X, BOTTOM, LEFT, BOTH, RIGHT,\
+    DISABLED, ACTIVE, NORMAL
 from random import choice, randrange
 from datetime import datetime
 from itertools import combinations
@@ -184,7 +185,7 @@ class Grille:
         self.symboles_a_placer, self.ordre_de_placement = \
             self.pioche.get_symboles_a_placer_et_ordre()
         self.compteur = 0
-        
+
         # Disposition du conteneur cadre qui contient la grille de sudoku
         for row in range(self.LARGEUR_GRILLE):
             cadre.rowconfigure(row, weight=1)
@@ -469,7 +470,8 @@ class Grille:
         self.pioche.reinitialiser()
         self.compteur = 0
         jauge_de_remplissage["value"] = self.compteur
-        self.symboles_a_placer, self.ordre_de_placement = self.pioche.get_symboles_a_placer_et_ordre()
+        self.symboles_a_placer, self.ordre_de_placement =\
+            self.pioche.get_symboles_a_placer_et_ordre()
 
     def effacer_case(self, case_a_effacer, secret=False):
         """
@@ -655,7 +657,8 @@ class Grille:
                     self.pioche.get_destinations_envisageables(
                         symbole_a_placer)))  # valeur au hasard
                 pile.append((symbole_a_placer, index_case, destinations))
-                dernier_placement_OK = self.remplir_case(index_case, symbole_a_placer, secret)
+                dernier_placement_OK =\
+                    self.remplir_case(index_case, symbole_a_placer, secret)
                 mon_watchdog.reset()
             elif mon_watchdog.alarm():
                 # Retirer les plus anciens symboles identiques posés sur la grille
@@ -693,7 +696,8 @@ class Grille:
         Chaque sac de la pioche est traité en tant qu'ensemble de symboles.
         """
         datetime_depart = datetime.now()
-        self.symboles_a_placer, self.ordre_de_placement = self.pioche.get_symboles_a_placer_et_ordre()
+        self.symboles_a_placer, self.ordre_de_placement =\
+            self.pioche.get_symboles_a_placer_et_ordre()
         self.monter_jauge_parcourt_combinaisons()
         self.congeler()
         pile = list()
@@ -841,7 +845,7 @@ class Grille:
             self.effacer_case(self[index], secret=True)
         self.congeler()
         self.rafraichir_affichage()
-        
+
     def grille_export(self):
         """
         Exporte la grille sudoku sous forme de liste.
@@ -860,7 +864,7 @@ class Grille:
         for index in range(self.NBR_CASES):
             symbole = grille_en_liste[index]
             if symbole != '0':
-                self.remplir_case(index, symbole,secret=True)
+                self.remplir_case(index, symbole, secret=True)
         self.congeler()
         self.rafraichir_affichage()
 
@@ -1193,7 +1197,7 @@ class Pioche:
         """
         Montre les destinations envisageables.
         """
-        if self.symbole_actif and self.symbole_actif != 'X':
+        if self.symbole_actif and self.symbole_actif != 'X' and aide_pioche.get():
             root.nametowidget(
                 str(self.cadre)+".msg_destinations_envisageables")['text'] = \
                     self[self.symbole_actif].destinations_envisageables
@@ -1409,8 +1413,17 @@ class Pioche:
         self.deselectionner_tout()
 
 
-
 # FONCTIONS
+
+def affichage_pretendants():
+    """
+    Affiche ou masque les prétendants suivant que la case d'aide est cochée ou non
+    """
+    if aide_grille.get():
+        label_pretendants.pack()
+    else:
+        label_pretendants.pack_forget()
+
 
 def nCr(n, r):
     """
@@ -1433,6 +1446,7 @@ def tirage():
     Remplissage d'une grille complète
     """
     grille_sudoku.tirage()
+
 
 def vierge():
     """
@@ -1489,16 +1503,17 @@ def cacher_les_index(event):
     """
     grille_sudoku.rafraichir_affichage()
 
+
 def choix_du_niveau():
     """
     Permet de choisir le niveau de la partie
     """
     # Désactiver les boutons
     for child in les_boutons.winfo_children():
-        child.configure(state=DISABLED)    
+        child.configure(state=DISABLED)
     # Afficher l'interface permettant de commencer_la_partie
     echelle_niveaux.pack(padx=5, pady=5)
-    bouton_jouer.configure(state=DISABLED)    
+    bouton_jouer.configure(state=DISABLED)
     bouton_jouer.pack()
     label_patientez.pack()
     # Procéder au tirage d'une grille complète
@@ -1515,7 +1530,8 @@ def commencer_la_partie():
     grille_sudoku.purger(niveau)
     for child in les_boutons.winfo_children():
         child.configure(state=NORMAL)
-    
+
+
 def gestion_des_evenements_on_press(event):
     """
     Identifie l'élément cliqué par le joueur.
@@ -1586,12 +1602,16 @@ COULEUR_PIOCHE = '#d9d9d9'
 COULEUR_CADRE_BAS = 'lavender'
 
 # Niveau par défaut
-niveau = 30 
+niveau = 30
+
 
 # APPLICATION Tkinter
 
 root = Tk()
 root.title('Sudoku')
+# Aides
+aide_grille = IntVar()
+aide_pioche = IntVar()
 
 # Création des conteneurs principaux
 cadre_haut = Frame(root, name='en_tete',
@@ -1637,7 +1657,7 @@ grille_sudoku = Grille(cadre_central, pioche_sudoku)
 # Création des éléments dans le cadre de gauche
 
 les_boutons = Frame(cadre_gauche)
-label_pretendants = Label(cadre_gauche,
+label_pretendants = Label(cadre_haut,
                           name='lbl_pretendants',
                           text='Prétendants',
                           background=COULEUR_CADRE_GAUCHE)
@@ -1669,7 +1689,23 @@ jauge_de_remplissage = ttk.Progressbar(cadre_gauche,
                                        length=200,
                                        maximum=81,
                                        mode="determinate")
+
+# Création des éléments dans le cadre de droite
+
 cadre_jouer = Frame(cadre_droite, background=COULEUR_CADRE_DROITE)
+cadre_aides = LabelFrame(cadre_jouer, text='aides',
+                         background=COULEUR_CADRE_DROITE)
+check_grille = Checkbutton(cadre_aides, text="Grille",
+                           variable=aide_grille,
+                           onvalue=1, offvalue=0,
+                           background=COULEUR_CADRE_DROITE,
+                           command=affichage_pretendants)
+check_grille.select()
+check_pioche = Checkbutton(cadre_aides, text="Pioche",
+                           variable=aide_pioche, onvalue=1,
+                           offvalue=0,
+                           background=COULEUR_CADRE_DROITE)
+check_pioche.select()
 niveaux = Button(cadre_jouer, text="Nouvelle partie", command=choix_du_niveau)
 echelle_niveaux = Scale(cadre_jouer, orient='horizontal',
                         from_=30, to=70,
@@ -1677,7 +1713,8 @@ echelle_niveaux = Scale(cadre_jouer, orient='horizontal',
                         resolution=1, tickinterval=5,
                         length=200,
                         label='Niveau (% restant à placer)')
-label_patientez = Label(cadre_jouer, text="Patientez SVP", background=COULEUR_CADRE_DROITE)
+label_patientez = Label(cadre_jouer, text="Patientez SVP",
+                        background=COULEUR_CADRE_DROITE)
 bouton_jouer = Button(cadre_jouer, text="Jouer", command=commencer_la_partie)
 
 bouton_index_cases.pack(fill=X)
@@ -1689,6 +1726,9 @@ bouton_solveur.pack(fill=X)
 bouton_tirage.pack(fill=X)
 bouton_congeler.pack(fill=X)
 cadre_jouer.pack(padx=5, pady=5)
+cadre_aides.pack(fill=X, pady=15)
+check_grille.pack(fill=X, side=LEFT)
+check_pioche.pack(fill=X, side=LEFT)
 niveaux.pack(fill=X)
 jauge_de_remplissage.pack(side=BOTTOM)
 
