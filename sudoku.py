@@ -9,9 +9,9 @@ import pdb, traceback, sys
 
 # Chargement des modules
 from tkinter import Tk, ttk, Frame, Button, Label, Message, LabelFrame, Scale,\
-    Checkbutton, IntVar
+    Checkbutton, IntVar, StringVar
 from tkinter.constants import TOP, X, BOTTOM, LEFT, BOTH, RIGHT,\
-    DISABLED, ACTIVE, NORMAL
+    DISABLED, ACTIVE, NORMAL, SUNKEN
 from random import choice, randrange
 from datetime import datetime
 from itertools import combinations
@@ -115,6 +115,8 @@ class Grille:
 
     méthodes:
     ---------
+    - cacher_jauge_parcourt_combinaisons
+    -monter_jauge_parcourt_combinaisons
     - get_couleur_case
     - get_case
     - get_index_cousines
@@ -200,6 +202,7 @@ class Grille:
                      self.get_index_cousines(index),
                      name='{}'.format(index),
                      text=' ',  # cases vides à l'initialisation
+                     disabledforeground='saddle brown',
                      background=self.get_couleur_case(
                          index, ' ')).grid(row=j,
                                            column=i,
@@ -456,6 +459,9 @@ class Grille:
 
         Les cases sont prêtes à accepter n'importe lequel des 9 symboles
         """
+        timer_on(False)
+        duree.set("0:00:00")
+
         for index in range(self.NBR_CASES):
             self[index].contenu = None
             self[index]['text'] = ' '
@@ -611,25 +617,6 @@ class Grille:
         """
         return self.get_colonne(index)//3 + (self.get_ligne(index)//3)*3
 
-    # def tirage_debutant(self):
-    #     """
-    #     |-----------+---------+-------------+-----------+------------------+
-    #     | niveau    | restant | pourcentage |   détail  | restant à placer |
-    #     |-----------+---------+-------------+-----------+------------------+
-    #     | Débutant  |      24 |          30 | 112233444 |    887766555     |
-    #     |-----------+---------+-------------+-----------+------------------+
-    #     | Facile    |      37 |          46 | 333444556 |    666555443     |
-    #     |-----------+---------+-------------+-----------+------------------+
-    #     | Moyen     |      48 |          59 | 334466688 |    665533311     |
-    #     |-----------+---------+-------------+-----------+------------------+
-    #     | Difficile |      52 |          64 | 356666677 |    643333322     |
-    #     |-----------+---------+-------------+-----------+------------------+
-    #     | Extrême   |      56 |          69 | 455666888 |    544333111     |
-    #
-    #     Si le tirage réussi, la fonction retourne True. S'il échoue, la
-    #     fonction retourne False.
-    #     """
-
     def tirage(self, secret=False):
         """
         Génération d'une grille pleine en partant d'une grille vierge.
@@ -695,6 +682,12 @@ class Grille:
         Génération d'une grille pleine à partir de l'état actuel de la grille.
         Chaque sac de la pioche est traité en tant qu'ensemble de symboles.
         """
+        global depart_timer
+        if len(self.symboles_a_placer) > 58:
+            return False  # Trop de combinaisons à générer
+        timer_on(False)
+        depart_timer = datetime.now()
+        timer_on()
         datetime_depart = datetime.now()
         self.symboles_a_placer, self.ordre_de_placement =\
             self.pioche.get_symboles_a_placer_et_ordre()
@@ -748,6 +741,7 @@ class Grille:
         datetime_fin = datetime.now()
         duree = datetime_fin - datetime_depart
         print('Tous les symboles on été placés en', duree)
+        traiter_victoire()
         return True
 
     def reglage_actuel_jauge(self, symbole_a_placer, actuel_jauge, maximum_jauge):
@@ -783,10 +777,13 @@ class Grille:
         La jauge de parcourt indique la portion parcourue dans l'arbre des
         combinaisons possibles.
         """
-        parcourt = 0.1 +\
-            3*(maximum_jauge[0]-actuel_jauge[0])/maximum_jauge[0] +\
-            (maximum_jauge[1]-actuel_jauge[1])/maximum_jauge[1] +\
-            0.1*(maximum_jauge[2]-actuel_jauge[2])/maximum_jauge[2]
+        parcourt = 0.1
+        if maximum_jauge[0]:
+            parcourt += 3*(maximum_jauge[0]-actuel_jauge[0])/maximum_jauge[0]
+        if maximum_jauge[1]:
+            parcourt += (maximum_jauge[1]-actuel_jauge[1])/maximum_jauge[1]
+        if maximum_jauge[2]:
+            parcourt += 0.1*(maximum_jauge[2]-actuel_jauge[2])/maximum_jauge[2]
         root.nametowidget(
             str(self.cadre)+".jauge_parcourt_combinaisons")["value"] = parcourt
 
@@ -1507,7 +1504,21 @@ def cacher_les_index(event):
 def choix_du_niveau():
     """
     Permet de choisir le niveau de la partie
+    |-----------+---------+-------------+
+    | niveau    | restant | pourcentage |
+    |-----------+---------+-------------+
+    | Débutant  |      24 |          30 |
+    |-----------+---------+-------------+
+    | Facile    |      37 |          46 |
+    |-----------+---------+-------------+
+    | Moyen     |      48 |          59 |
+    |-----------+---------+-------------+
+    | Difficile |      52 |          64 |
+    |-----------+---------+-------------+
+    | Extrême   |      56 |          69 |
     """
+    timer_on(False)
+    duree.set("0:00:00")
     # Désactiver les boutons
     for child in les_boutons.winfo_children():
         child.configure(state=DISABLED)
@@ -1519,15 +1530,40 @@ def choix_du_niveau():
     # Procéder au tirage d'une grille complète
     grille_sudoku.tirage(secret=True)
     label_patientez.pack_forget()
+    bouton_index_cases.configure(state=DISABLED)
+    bouton_niveaux.configure(state=DISABLED)
     bouton_jouer.configure(state=NORMAL)
-    print(grille_sudoku)
+
+
+def timer_on(on=True):
+    """
+    Permet de chronométrer le temps de résolution
+    """
+    global after_id
+    if on:
+        difference = datetime.now()-depart_timer
+        duree.set(str(difference).split('.', 2)[0])
+        after_id = root.after(1000, timer_on)
+    elif after_id is not None:
+        root.after_cancel(after_id)
+        after_id = None
 
 
 def commencer_la_partie():
+    """
+    Commence la partie
+    """
+    global depart_timer
+    bouton_index_cases.configure(state=NORMAL)
     bouton_jouer.configure(state=DISABLED)
+    bouton_niveaux.configure(state=NORMAL)
     # Préparer la grille pour le niveau choisi par le joueur
     niveau = echelle_niveaux.get()
     grille_sudoku.purger(niveau)
+    # Lancer le chronomètre
+    depart_timer = datetime.now()
+    timer_on()
+    # Afficher les boutons de gauche car un abandon est toujours possible
     for child in les_boutons.winfo_children():
         child.configure(state=NORMAL)
 
@@ -1564,6 +1600,17 @@ def gestion_des_evenements_on_press(event):
         else:
             grille_sudoku.remplir_case(event.widget.index,
                                        pioche_sudoku.get_symbole_actif())
+            # Victoire détectée
+            if not(grille_sudoku.symboles_a_placer):
+                traiter_victoire()
+
+
+def traiter_victoire():
+    """
+    En cas de résolution réussie
+    """
+    timer_on(False)
+    label_timer.configure(background=COULEUR_VICTOIRE)
 
 
 def gestion_des_evenements_on_release(event):
@@ -1578,8 +1625,8 @@ def gestion_des_evenements_on_release(event):
 def gestion_des_evenements_on_mouse_over(event):
     """
     Si la souris survole une case de la grille les prétendants sont affichés.
-    Si la souris survole le nombre de symbole restants les destinations
-    envisageables s'affichent.
+    Si la souris survole le nombre de symbole restants dans la pioche les
+    destinations envisageables s'affichent.
     """
     if type(event.widget) == Case:
         label_pretendants['text'] = event.widget.pretendants
@@ -1590,7 +1637,11 @@ def gestion_des_evenements_on_mouse_over(event):
 
 
 def gestion_des_evenements_on_mouse_leave(event):
-    pass
+    """
+    Contrôle de passage à autre chose après victoire.
+    """
+    if grille_sudoku.symboles_a_placer:
+        label_timer.configure(background=COULEUR_PIOCHE)
 
 # CONSTANTES
 
@@ -1600,7 +1651,7 @@ COULEUR_CADRE_CENTRAL = 'lavender'
 COULEUR_CADRE_DROITE = 'lavender'
 COULEUR_PIOCHE = '#d9d9d9'
 COULEUR_CADRE_BAS = 'lavender'
-
+COULEUR_VICTOIRE = 'green2'
 # Niveau par défaut
 niveau = 30
 
@@ -1608,15 +1659,19 @@ niveau = 30
 # APPLICATION Tkinter
 
 root = Tk()
-root.title('Sudoku')
+root.title('Sudoku (Raoul Hatterer Lycée de la Méditerranée à La Ciotat)')
 # Aides
 aide_grille = IntVar()
 aide_pioche = IntVar()
+# Timer
+duree = StringVar()
+duree.set("0:00:00")
+after_id = None
 
 # Création des conteneurs principaux
 cadre_haut = Frame(root, name='en_tete',
                    background=COULEUR_CADRE_HAUT,
-                   width=640, height=50)
+                   width=640, height=20)
 cadre_gauche = Frame(root, name='boutons',
                      background=COULEUR_CADRE_GAUCHE,
                      height=400)
@@ -1656,26 +1711,11 @@ grille_sudoku = Grille(cadre_central, pioche_sudoku)
 
 # Création des éléments dans le cadre de gauche
 
-les_boutons = Frame(cadre_gauche)
-label_pretendants = Label(cadre_haut,
-                          name='lbl_pretendants',
-                          text='Prétendants',
-                          background=COULEUR_CADRE_GAUCHE)
-bouton_index_cases = Button(les_boutons,
-                            name='index_cases',
-                            text='Index des cases')
+les_boutons = Frame(cadre_gauche, background=COULEUR_CADRE_GAUCHE)
 bouton_vierge = Button(les_boutons,
                        name='vierge',
                        text='Vierge',
                        command=vierge)
-bouton_exemple = Button(les_boutons,
-                        name='exemple',
-                        text='Exemple difficile',
-                        command=exemple_diffile)
-bouton_solveur = Button(les_boutons,
-                        name='solveur',
-                        text='Solveur',
-                        command=solveur)
 bouton_tirage = Button(les_boutons,
                        name='tirage',
                        text='Tirage',
@@ -1684,6 +1724,17 @@ bouton_congeler = Button(les_boutons,
                          name='congeler',
                          text='Congeler',
                          command=congeler)
+bouton_exemple = Button(les_boutons,
+                        name='exemple',
+                        text='Exemple difficile',
+                        command=exemple_diffile)
+bouton_solveur = Button(les_boutons,
+                        name='solveur',
+                        text='Solveur',
+                        foreground='saddle brown',
+                        command=solveur)
+label_timer = Label(cadre_gauche, textvariable=duree,
+                    font=('Helvetica', 24), relief=SUNKEN)
 jauge_de_remplissage = ttk.Progressbar(cadre_gauche,
                                        orient="vertical",
                                        length=200,
@@ -1692,6 +1743,11 @@ jauge_de_remplissage = ttk.Progressbar(cadre_gauche,
 
 # Création des éléments dans le cadre de droite
 
+cadre_pretendants = Frame(cadre_droite, background=COULEUR_CADRE_DROITE)
+label_pretendants = Label(cadre_pretendants,
+                          name='lbl_pretendants',
+                          text='Prétendants',
+                          background=COULEUR_CADRE_DROITE)
 cadre_jouer = Frame(cadre_droite, background=COULEUR_CADRE_DROITE)
 cadre_aides = LabelFrame(cadre_jouer, text='aides',
                          background=COULEUR_CADRE_DROITE)
@@ -1700,13 +1756,17 @@ check_grille = Checkbutton(cadre_aides, text="Grille",
                            onvalue=1, offvalue=0,
                            background=COULEUR_CADRE_DROITE,
                            command=affichage_pretendants)
-check_grille.select()
 check_pioche = Checkbutton(cadre_aides, text="Pioche",
                            variable=aide_pioche, onvalue=1,
                            offvalue=0,
                            background=COULEUR_CADRE_DROITE)
-check_pioche.select()
-niveaux = Button(cadre_jouer, text="Nouvelle partie", command=choix_du_niveau)
+bouton_index_cases = Button(cadre_jouer,
+                            name='index_cases',
+                            text='Index des cases')
+bouton_niveaux = Button(cadre_jouer, text="Nouvelle partie",
+                        font=('Helvetica', 12),
+                        background='LightSteelBlue3',
+                        command=choix_du_niveau)
 echelle_niveaux = Scale(cadre_jouer, orient='horizontal',
                         from_=30, to=70,
                         background=COULEUR_CADRE_DROITE,
@@ -1717,19 +1777,21 @@ label_patientez = Label(cadre_jouer, text="Patientez SVP",
                         background=COULEUR_CADRE_DROITE)
 bouton_jouer = Button(cadre_jouer, text="Jouer", command=commencer_la_partie)
 
-bouton_index_cases.pack(fill=X)
-label_pretendants.pack()
+# label_pretendants.pack()
 les_boutons.pack(padx=5, pady=5)
 bouton_vierge.pack(fill=X)
-bouton_exemple.pack(fill=X)
-bouton_solveur.pack(fill=X)
 bouton_tirage.pack(fill=X)
 bouton_congeler.pack(fill=X)
+bouton_exemple.pack(fill=X)
+bouton_solveur.pack(fill=X, pady=10)
+label_timer.pack(padx=15, pady=10, ipadx=5)
+cadre_pretendants.pack(padx=5)
 cadre_jouer.pack(padx=5, pady=5)
 cadre_aides.pack(fill=X, pady=15)
 check_grille.pack(fill=X, side=LEFT)
 check_pioche.pack(fill=X, side=LEFT)
-niveaux.pack(fill=X)
+bouton_index_cases.pack(fill=X)
+bouton_niveaux.pack(fill=X, pady=5)
 jauge_de_remplissage.pack(side=BOTTOM)
 
 # Disposition du conteneur cadre_bas
