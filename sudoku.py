@@ -11,7 +11,7 @@ import pdb, traceback, sys
 from tkinter import Tk, Frame, Button, Label, Message, LabelFrame, Scale
 from tkinter import ttk
 from tkinter.constants import TOP, X, BOTTOM, LEFT, BOTH, RIGHT, FLAT, DISABLED, ACTIVE, NORMAL
-from random import choice
+from random import choice, randrange
 from datetime import datetime
 from itertools import combinations
 
@@ -831,6 +831,17 @@ class Grille:
         else:
             return False
 
+    def purger(self, niveau):
+        """
+        Purge la grille jusqu'à avoir un pourcentage de cases non remplies égal à niveau.
+        """
+        nombre_de_cases_a_placer = int(niveau*self.NBR_CASES/100)
+        while len(self.symboles_a_placer) < nombre_de_cases_a_placer:
+            index = randrange(81)
+            self.effacer_case(self[index], secret=True)
+        self.congeler()
+        self.rafraichir_affichage()
+        
     def grille_export(self):
         """
         Exporte la grille sudoku sous forme de liste.
@@ -849,7 +860,9 @@ class Grille:
         for index in range(self.NBR_CASES):
             symbole = grille_en_liste[index]
             if symbole != '0':
-                self.remplir_case(index, symbole)
+                self.remplir_case(index, symbole,secret=True)
+        self.congeler()
+        self.rafraichir_affichage()
 
     def recalculer_les_destinations_envisageables(self):
         """
@@ -1429,7 +1442,7 @@ def vierge():
     label_pretendants['text'] = "Prétendants"
 
 
-def exemple():
+def exemple_diffile():
     """
     Charge un exemple
     """
@@ -1480,7 +1493,6 @@ def choix_du_niveau():
     """
     Permet de choisir le niveau de la partie
     """
-    print('On désactive les boutons')    
     # Désactiver les boutons
     for child in les_boutons.winfo_children():
         child.configure(state=DISABLED)    
@@ -1489,17 +1501,18 @@ def choix_du_niveau():
     bouton_jouer.configure(state=DISABLED)    
     bouton_jouer.pack()
     label_patientez.pack()
+    # Procéder au tirage d'une grille complète
     grille_sudoku.tirage(secret=True)
     label_patientez.pack_forget()
     bouton_jouer.configure(state=NORMAL)
     print(grille_sudoku)
-    print(niveau)
+
 
 def commencer_la_partie():
-    print("choix_du_niveau")
     bouton_jouer.configure(state=DISABLED)
+    # Préparer la grille pour le niveau choisi par le joueur
     niveau = echelle_niveaux.get()
-    print(niveau)
+    grille_sudoku.purger(niveau)
     for child in les_boutons.winfo_children():
         child.configure(state=NORMAL)
     
@@ -1637,8 +1650,8 @@ bouton_vierge = Button(les_boutons,
                        command=vierge)
 bouton_exemple = Button(les_boutons,
                         name='exemple',
-                        text='Exemple',
-                        command=exemple)
+                        text='Exemple difficile',
+                        command=exemple_diffile)
 bouton_solveur = Button(les_boutons,
                         name='solveur',
                         text='Solveur',
@@ -1651,22 +1664,23 @@ bouton_congeler = Button(les_boutons,
                          name='congeler',
                          text='Congeler',
                          command=congeler)
-niveaux = Button(les_boutons, text="Nouvelle partie", command=choix_du_niveau)
 jauge_de_remplissage = ttk.Progressbar(cadre_gauche,
                                        orient="vertical",
                                        length=200,
                                        maximum=81,
                                        mode="determinate")
-echelle_niveaux = Scale(cadre_droite, orient='horizontal',
+cadre_jouer = Frame(cadre_droite, background=COULEUR_CADRE_DROITE)
+niveaux = Button(cadre_jouer, text="Nouvelle partie", command=choix_du_niveau)
+echelle_niveaux = Scale(cadre_jouer, orient='horizontal',
                         from_=30, to=70,
                         background=COULEUR_CADRE_DROITE,
                         resolution=1, tickinterval=5,
                         length=200,
                         label='Niveau (% restant à placer)')
-label_patientez = Label(cadre_droite, text="Patientez SVP", background=COULEUR_CADRE_DROITE)
-bouton_jouer = Button(cadre_droite, text="Jouer", command=commencer_la_partie)
+label_patientez = Label(cadre_jouer, text="Patientez SVP", background=COULEUR_CADRE_DROITE)
+bouton_jouer = Button(cadre_jouer, text="Jouer", command=commencer_la_partie)
 
-bouton_index_cases.pack()
+bouton_index_cases.pack(fill=X)
 label_pretendants.pack()
 les_boutons.pack(padx=5, pady=5)
 bouton_vierge.pack(fill=X)
@@ -1674,6 +1688,7 @@ bouton_exemple.pack(fill=X)
 bouton_solveur.pack(fill=X)
 bouton_tirage.pack(fill=X)
 bouton_congeler.pack(fill=X)
+cadre_jouer.pack(padx=5, pady=5)
 niveaux.pack(fill=X)
 jauge_de_remplissage.pack(side=BOTTOM)
 
