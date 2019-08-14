@@ -5,17 +5,19 @@
 # Pour debugger:
 # import pdb
 # pdb.set_trace()
-import pdb, traceback, sys
+#import pdb, traceback, sys
 
 # Chargement des modules
 from tkinter import Tk, ttk, Frame, Button, Label, Message, LabelFrame, Scale,\
-    Checkbutton, IntVar, StringVar
-from tkinter.constants import TOP, X, BOTTOM, LEFT, BOTH, RIGHT,\
+    Checkbutton, IntVar, StringVar, Menu, BooleanVar
+from tkinter.constants import TOP, X, TOP, BOTTOM, LEFT, BOTH, RIGHT,\
     DISABLED, ACTIVE, NORMAL, SUNKEN
 from random import choice, randrange
 from datetime import datetime
 from itertools import combinations
 
+#  localisation 
+langue = 'fr'
 
 # CLASSES
 
@@ -167,6 +169,8 @@ class Grille:
     COULEUR_BLOCS_PAIRS = 'LightSteelBlue1'
     COULEUR_BLOCS_IMPAIRS = 'LightSteelBlue2'
     COULEUR_SELECTION_CASE = 'LightSteelBlue3'
+    # Police
+    police_case = "{helvetica} 20"
 
     def __init__(self, cadre, pioche):
         """
@@ -201,6 +205,7 @@ class Grille:
                      index,
                      self.get_index_cousines(index),
                      name='{}'.format(index),
+                     font=self.police_case,
                      text=' ',  # cases vides à l'initialisation
                      disabledforeground='saddle brown',
                      background=self.get_couleur_case(
@@ -683,6 +688,20 @@ class Grille:
         Chaque sac de la pioche est traité en tant qu'ensemble de symboles.
         """
         global depart_timer
+        self.congeler()
+
+        # Élimination des singletons
+        singleton_possible = True
+        while singleton_possible:
+            singleton_possible = False
+            for index in range(self.NBR_CASES):
+                if len(self[index].pretendants) == 1:
+                    symbole = self[index].pretendants[0]
+                    print(index, symbole)
+                    self.remplir_case(index, symbole)
+                    singleton_possible = True
+
+        # Parcours des combinaisons
         if len(self.symboles_a_placer) > 58:
             return False  # Trop de combinaisons à générer
         timer_on(False)
@@ -692,7 +711,6 @@ class Grille:
         self.symboles_a_placer, self.ordre_de_placement =\
             self.pioche.get_symboles_a_placer_et_ordre()
         self.monter_jauge_parcourt_combinaisons()
-        self.congeler()
         pile = list()
         maximum_jauge = [1, 1, 1]
         actuel_jauge = [1, 1, 1]
@@ -1409,8 +1427,56 @@ class Pioche:
             self[symbole].reinitialiser()
         self.deselectionner_tout()
 
-
 # FONCTIONS
+
+
+def localisation(langue):
+    """
+    Texte figurant sur les boutons et les labels.
+    """
+    bouton_nouveau.configure(text={'fr': 'Nouveau',
+                                   'en': 'New',
+                                   'el': 'Καινουργιο'}[langue])
+    bouton_tirage.configure(text={'fr': 'Tirage complet',
+                                  'en': 'Full draw',
+                                  'el': 'Πλήρης κλήρωση'}[langue])
+    bouton_congeler.configure(text={'fr': 'Congeler',
+                                    'en': 'Freeze',
+                                    'el': 'Πάγωμα'}[langue])
+    bouton_exemple.configure(text={'fr': 'Exemple difficile',
+                                   'en': 'Difficult example',
+                                   'el': 'Δύσκολο παράδειγμα'}[langue])
+    bouton_solveur.configure(text={'fr': 'Solveur',
+                                   'en': 'solver',
+                                   'el': 'Διαλύτης'}[langue])
+    label_pretendants.configure(text={'fr': 'Prétendants',
+                                      'en': 'Suitors',
+                                      'el': 'Διαλύτης'}[langue])
+    cadre_aides.configure(text={'fr': 'aides',
+                                'en': 'Aids',
+                                'el': 'Βοηθήματα'}[langue])
+    check_grille.configure(text={'fr': "Grille",
+                                 'en': "Grid",
+                                 'el': "Πλέγμα"}[langue])
+    check_pioche.configure(text={'fr': "Pioche",
+                                 'en': "Pick",
+                                 'el': "Αξίνα"}[langue])
+    bouton_index_cases.configure(text={'fr': 'Index des cases',
+                                       'en': 'Indexes of Boxes',
+                                       'el': 'Δείκτες των κουτιών'}[langue])
+    bouton_niveaux.configure(text={'fr': "Nouvelle partie",
+                                   'en': "New game",
+                                   'el': "Νέο παιχνίδι"}[langue])
+    label_patientez.configure(text={'fr': "Patientez SVP",
+                                    'en': "Please wait",
+                                    'el':"Παρακαλώ περιμένετε"}[langue])
+    bouton_jouer.configure(text={'fr': "Jouer",
+                                 'en': "Play",
+                                 'el': "Παίζω"}[langue])
+    bouton_quitter.configure(text={'fr': 'Quitter',
+                                   'en': 'Quit',
+                                   'el': 'Εγκαταλείπω'}[langue])
+
 
 def affichage_pretendants():
     """
@@ -1445,12 +1511,14 @@ def tirage():
     grille_sudoku.tirage()
 
 
-def vierge():
+def nouveau():
     """
     Efface la grille
     """
     grille_sudoku.effacer_grille()
-    label_pretendants['text'] = "Prétendants"
+    label_pretendants.configure(text={'fr': 'Prétendants',
+                                      'en': 'Suitors',
+                                      'el': 'Διαλύτης'}[langue])
 
 
 def exemple_diffile():
@@ -1549,6 +1617,33 @@ def timer_on(on=True):
         after_id = None
 
 
+def anglais():
+    """
+    Passe l'interface en anglais
+    """
+    global langue
+    langue = 'en'
+    localisation(langue)
+
+
+def francais():
+    """
+    Passe l'interface en français
+    """
+    global langue
+    langue = 'fr'
+    localisation(langue)
+
+
+def grec():
+    """
+    Passe l'interface en grec
+    """
+    global langue
+    langue = 'el'
+    localisation(langue)
+
+
 def commencer_la_partie():
     """
     Commence la partie
@@ -1633,15 +1728,21 @@ def gestion_des_evenements_on_mouse_over(event):
     elif type(event.widget) == Label and type(event.widget.master) == Sac:
         pioche_sudoku.montrer_destinations_envisageables()
     else:
-        label_pretendants['text'] = "Prétendants"
+        label_pretendants.configure(text={'fr': 'Prétendants',
+                                          'en': 'Suitors',
+                                          'el': 'Διαλύτης'}[langue])
 
 
 def gestion_des_evenements_on_mouse_leave(event):
     """
-    Contrôle de passage à autre chose après victoire.
     """
+    global langue
+    # Contrôle de passage à autre chose après victoire.
     if grille_sudoku.symboles_a_placer:
         label_timer.configure(background=COULEUR_PIOCHE)
+    # Mise à jour du menu (utile en cas de changement de langue)
+    updatemenu()
+
 
 # CONSTANTES
 
@@ -1710,27 +1811,17 @@ pioche_sudoku = Pioche(cadre_pioche)
 grille_sudoku = Grille(cadre_central, pioche_sudoku)
 
 # Création des éléments dans le cadre de gauche
-
 les_boutons = Frame(cadre_gauche, background=COULEUR_CADRE_GAUCHE)
-bouton_vierge = Button(les_boutons,
-                       name='vierge',
-                       text='Vierge',
-                       command=vierge)
+
+bouton_nouveau = Button(les_boutons,
+                        command=nouveau)
 bouton_tirage = Button(les_boutons,
-                       name='tirage',
-                       text='Tirage',
                        command=tirage)
 bouton_congeler = Button(les_boutons,
-                         name='congeler',
-                         text='Congeler',
                          command=congeler)
 bouton_exemple = Button(les_boutons,
-                        name='exemple',
-                        text='Exemple difficile',
                         command=exemple_diffile)
 bouton_solveur = Button(les_boutons,
-                        name='solveur',
-                        text='Solveur',
                         foreground='saddle brown',
                         command=solveur)
 label_timer = Label(cadre_gauche, textvariable=duree,
@@ -1745,25 +1836,21 @@ jauge_de_remplissage = ttk.Progressbar(cadre_gauche,
 
 cadre_pretendants = Frame(cadre_droite, background=COULEUR_CADRE_DROITE)
 label_pretendants = Label(cadre_pretendants,
-                          name='lbl_pretendants',
-                          text='Prétendants',
                           background=COULEUR_CADRE_DROITE)
 cadre_jouer = Frame(cadre_droite, background=COULEUR_CADRE_DROITE)
-cadre_aides = LabelFrame(cadre_jouer, text='aides',
+cadre_aides = LabelFrame(cadre_jouer,
                          background=COULEUR_CADRE_DROITE)
-check_grille = Checkbutton(cadre_aides, text="Grille",
+check_grille = Checkbutton(cadre_aides,
                            variable=aide_grille,
                            onvalue=1, offvalue=0,
                            background=COULEUR_CADRE_DROITE,
                            command=affichage_pretendants)
-check_pioche = Checkbutton(cadre_aides, text="Pioche",
+check_pioche = Checkbutton(cadre_aides,
                            variable=aide_pioche, onvalue=1,
                            offvalue=0,
                            background=COULEUR_CADRE_DROITE)
-bouton_index_cases = Button(cadre_jouer,
-                            name='index_cases',
-                            text='Index des cases')
-bouton_niveaux = Button(cadre_jouer, text="Nouvelle partie",
+bouton_index_cases = Button(cadre_jouer)
+bouton_niveaux = Button(cadre_jouer,
                         font=('Helvetica', 12),
                         background='LightSteelBlue3',
                         command=choix_du_niveau)
@@ -1773,16 +1860,16 @@ echelle_niveaux = Scale(cadre_jouer, orient='horizontal',
                         resolution=1, tickinterval=5,
                         length=200,
                         label='Niveau (% restant à placer)')
-label_patientez = Label(cadre_jouer, text="Patientez SVP",
+label_patientez = Label(cadre_jouer,
                         background=COULEUR_CADRE_DROITE)
-bouton_jouer = Button(cadre_jouer, text="Jouer",
+bouton_jouer = Button(cadre_jouer,
                       font=('Helvetica', 12),
                       background='LightSteelBlue3',
                       command=commencer_la_partie)
 
 # label_pretendants.pack()
-les_boutons.pack(padx=5, pady=5)
-bouton_vierge.pack(fill=X)
+les_boutons.pack(padx=5, pady=5, side=TOP)
+bouton_nouveau.pack(fill=X)
 bouton_tirage.pack(fill=X)
 bouton_congeler.pack(fill=X)
 bouton_exemple.pack(fill=X)
@@ -1801,10 +1888,97 @@ jauge_de_remplissage.pack(side=BOTTOM)
 cadre_bas.columnconfigure(0, weight=1)
 
 # Création du bouton quitter dans cadre_bas
-bouton_quitter = Button(cadre_bas, text='Quitter', command=root.quit)
+bouton_quitter = Button(cadre_bas,
+                        command=root.quit)
 
 # Disposition du bouton quitter
 bouton_quitter.grid(sticky="nsew")
+localisation(langue)
+
+
+def updatemenu():
+    """
+    Permet:
+    - la mise à jour du menu en tenant compte de la langue sélectionnée
+    - d'afficher ou de cacher outils et chronomètre.
+    """
+    global langue, afficher_outils, afficher_chronometre
+    menubar.entryconfig(1, label={'fr': 'Fichier',
+                                  'en': 'File',
+                                  'el': 'Αρχείο'}[langue])
+    menubar.entryconfig(2, label={'fr': 'Langue',
+                                  'en': 'Language',
+                                  'el': 'Γλώσσα'}[langue])
+    menubar.entryconfig(3, label={'fr': 'Afficher',
+                                  'en': 'Display',
+                                  'el': 'Απεικόνιση'}[langue])
+    menubar.entryconfig(4, label={'fr': 'À propos',
+                                  'en': 'About',
+                                  'el': 'Σχετικά με'}[langue])
+    menu_fichiers.entryconfig(0, label={'fr': 'Nouveau',
+                                        'en': 'New',
+                                        'el': 'Καινουργιο'}[langue])
+    menu_fichiers.entryconfig(4, label={'fr': 'Quitter',
+                                        'en': 'Quit',
+                                        'el': 'Εγκαταλείπω'}[langue])    
+    menu_afficher.entryconfig(0, label={'fr': "Outils développeur",
+                                        'en': 'Developer Tools',
+                                        'el': "Εργαλεία προγραμματιστή"}[langue])
+    menu_afficher.entryconfig(1, label={'fr': "Chronomètre",
+                                        'en': 'Stopwatch',
+                                        'el': "Χρονόμετρο"}[langue])
+
+    # Afficher/cacher les outils
+    if afficher_outils.get() and afficher_chronometre.get():
+        label_timer.pack_forget()
+        les_boutons.pack(padx=5, pady=5, side=TOP)
+        label_timer.pack(padx=15, pady=10, ipadx=5)
+    elif afficher_outils.get():
+        les_boutons.pack(padx=5, pady=5, side=TOP)
+        label_timer.pack_forget()
+    elif afficher_chronometre.get():
+        label_timer.pack(padx=15, pady=10, ipadx=5)
+        les_boutons.pack_forget()
+    else:
+        les_boutons.pack_forget()
+        label_timer.pack_forget()
+
+
+afficher_outils = BooleanVar()
+afficher_outils.set(True)
+afficher_chronometre = BooleanVar()
+afficher_chronometre.set(True)
+
+# crée une barre de menu
+menubar = Menu(root)
+# crée un menu pulldown 'menu_fichier'
+menu_fichiers = Menu(menubar, tearoff=0, postcommand=updatemenu)
+menu_fichiers.add_command(command=nouveau)
+menu_fichiers.add_command(label='Ouvrir...')
+menu_fichiers.add_command(label='Enregistrer')
+menu_fichiers.add_separator()
+menu_fichiers.add_command(command=root.quit)
+# ajoute 'menu_fichier' à 'menubar'
+menubar.add_cascade(menu=menu_fichiers)
+# crée un menu pulldown 'menu_langue'
+menu_langue = Menu(menubar, tearoff=0, postcommand=updatemenu)
+menu_langue.add_command(label='English', command=anglais)
+menu_langue.add_command(label='Français', command=francais)
+menu_langue.add_command(label='Ελληνικά', command=grec)
+# ajoute 'menu_langue' à 'menubar'
+menubar.add_cascade(menu=menu_langue)
+# crée un menu pulldown 'menu_langue'
+menu_afficher = Menu(menubar, tearoff=0, postcommand=updatemenu)
+menu_afficher.add_checkbutton(onvalue=True, offvalue=False, variable=afficher_outils)
+menu_afficher.add_checkbutton(onvalue=True, offvalue=False, variable=afficher_chronometre)
+# ajoute 'menu_afficher' à 'menubar'
+menubar.add_cascade(menu=menu_afficher)
+# crée une commande toplevel pour 'à propos'
+menubar.add_command()
+# affiche le menu
+updatemenu()
+root.config(menu=menubar)
+
 
 # Contrôleur évolué: Souris (Types d'évènements gérés)
 bouton_index_cases.bind("<ButtonPress>", afficher_les_index)
