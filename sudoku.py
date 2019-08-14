@@ -1775,7 +1775,10 @@ echelle_niveaux = Scale(cadre_jouer, orient='horizontal',
                         label='Niveau (% restant à placer)')
 label_patientez = Label(cadre_jouer, text="Patientez SVP",
                         background=COULEUR_CADRE_DROITE)
-bouton_jouer = Button(cadre_jouer, text="Jouer", command=commencer_la_partie)
+bouton_jouer = Button(cadre_jouer, text="Jouer",
+                      font=('Helvetica', 12),
+                      background='LightSteelBlue3',
+                      command=commencer_la_partie)
 
 # label_pretendants.pack()
 les_boutons.pack(padx=5, pady=5)
