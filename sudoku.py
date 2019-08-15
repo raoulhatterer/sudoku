@@ -169,8 +169,9 @@ class Grille:
     COULEUR_BLOCS_PAIRS = 'LightSteelBlue1'
     COULEUR_BLOCS_IMPAIRS = 'LightSteelBlue2'
     COULEUR_SELECTION_CASE = 'LightSteelBlue3'
-    # Police
+    # Polices
     police_case = "{helvetica} 20"
+    police_index = "{helvetica} 14"    
 
     def __init__(self, cadre, pioche):
         """
@@ -418,31 +419,27 @@ class Grille:
         >>> ma_grille.rafraichir_affichage()
         """
         if not(secret):
+            # rétablir le texte au cas où l'on avait demandé l'affichage des index
             for index in range(self.NBR_CASES):
                 ma_case = self[index]
                 if ma_case.contenu is None:
                     ma_case['text'] = ' '
                 else:
                     ma_case['text'] = ma_case.contenu
+                # mettre à jour la couleur du fond 
                 ma_case['background'] = self.get_couleur_case(
                     index,
                     ma_case['text'])
+                ma_case['font'] = self.police_case
+                    
 
     def afficher_les_index(self):
         """
         Révèle dans tkinter les index des 81 cases à la place du contenu.
-
-        exemple:
-        -------
-        >>> root = Tk()
-        >>> mon_cadre = Frame(root)
-        >>> mon_cadre.pack()
-        >>> ma_grille = Grille(mon_cadre)
-        >>> ma_grille.afficher_les_index()
         """
         for index in range(self.NBR_CASES):
             ma_case = self[index]
-            ma_case['text'] = str(index)
+            ma_case.configure(text=str(index), font=self.police_index)
 
     def effacer_grille(self):
         """
@@ -1438,7 +1435,7 @@ def localisation(langue):
                                    'el': 'Καθαρίστε το πλέγμα'}[langue])
     bouton_remplissage.configure(text={'fr': 'Remplissage complet',
                                   'en': 'Full draw',
-                                  'el': 'Πλήρης κλήρωση'}[langue])
+                                  'el': 'Αυτόματο γέμισμα'}[langue])
     bouton_congeler.configure(text={'fr': 'Congeler',
                                     'en': 'Freeze',
                                     'el': 'Πάγωμα'}[langue])
@@ -1447,7 +1444,7 @@ def localisation(langue):
                                    'el': 'Δύσκολο παράδειγμα'}[langue])
     bouton_solveur.configure(text={'fr': 'Solveur',
                                    'en': 'solver',
-                                   'el': 'Διαλύτης'}[langue])
+                                   'el': 'Λύση'}[langue])
     label_pretendants.configure(text={'fr': 'Prétendants',
                                       'en': 'Suitors',
                                       'el': 'Διαλύτης'}[langue])
@@ -1459,7 +1456,7 @@ def localisation(langue):
                                  'el': "Πλέγμα"}[langue])
     check_pioche.configure(text={'fr': "Pioche",
                                  'en': "Pick",
-                                 'el': "Αξίνα"}[langue])
+                                 'el': "Επιλογή"}[langue])
     bouton_index_cases.configure(text={'fr': 'Index des cases',
                                        'en': 'Indexes of Boxes',
                                        'el': 'Δείκτες των κουτιών'}[langue])
@@ -1744,12 +1741,13 @@ def gestion_des_evenements_on_mouse_over(event):
         label_pretendants['text'] = event.widget.pretendants
     elif type(event.widget) == Label and type(event.widget.master) == Sac:
         pioche_sudoku.montrer_destinations_envisageables()
+    elif type(event.widget) != Label:
+        # Mise à jour du menu (utile en cas de changement de langue)
+        updatemenu()
     else:
         label_pretendants.configure(text={'fr': 'Prétendants',
                                           'en': 'Suitors',
                                           'el': 'Διαλύτης'}[langue])
-    # Mise à jour du menu (utile en cas de changement de langue)
-    updatemenu()
 
 
 def gestion_des_evenements_on_mouse_leave(event):
