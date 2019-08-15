@@ -129,7 +129,7 @@ class Grille:
     - __setitem__
     - __len__
     - __repr__
-    - basculer_le_bouton_effacer
+    - basculer_le_bouton_effacerX
     - activer_le_symbole
     - rafraichir_affichage
     - afficher_les_index
@@ -144,7 +144,7 @@ class Grille:
     - get_ligne
     - get_bloc
     - solveur
-    - tirage
+    - remplissage
     - placer_pioche_sur_grille
     - placement_est_possible
     - grille_export
@@ -388,11 +388,11 @@ class Grille:
             index += 1
         return affichage
 
-    def basculer_le_bouton_effacer(self):
+    def basculer_le_bouton_effacerX(self):
         """
         Bascule le bouton effacer et désactive les autres sélections
         """
-        self.pioche.basculer_le_bouton_effacer()
+        self.pioche.basculer_le_bouton_effacerX()
         self.rafraichir_affichage()
 
     def activer_le_symbole(self, symbole):
@@ -622,7 +622,7 @@ class Grille:
         """
         return self.get_colonne(index)//3 + (self.get_ligne(index)//3)*3
 
-    def tirage(self, secret=False):
+    def remplissage(self, secret=False):
         """
         Génération d'une grille pleine en partant d'une grille vierge.
         À tour de rôle, chaque symbole de la pioche est placé aléatoirement
@@ -674,7 +674,7 @@ class Grille:
                 destinations.remove(destination_problematique)
                 self.pioche[symbole_a_retirer].destinations_envisageables = destinations
         self.pioche.deselectionner_tout()
-        self.pioche.deselectionner_le_bouton_effacer()
+        self.pioche.deselectionner_le_bouton_effacerX()
         self.symbole_actif = None
         self.rafraichir_affichage(secret)
         datetime_fin = datetime.now()
@@ -697,7 +697,6 @@ class Grille:
             for index in range(self.NBR_CASES):
                 if len(self[index].pretendants) == 1:
                     symbole = self[index].pretendants[0]
-                    print(index, symbole)
                     self.remplir_case(index, symbole)
                     singleton_possible = True
 
@@ -753,7 +752,7 @@ class Grille:
                 determiner_combinaisons = False
         self.cacher_jauge_parcourt_combinaisons()
         self.pioche.deselectionner_tout()
-        self.pioche.deselectionner_le_bouton_effacer()
+        self.pioche.deselectionner_le_bouton_effacerX()
         self.symbole_actif = None
         self.rafraichir_affichage()
         datetime_fin = datetime.now()
@@ -1159,8 +1158,8 @@ class Pioche:
     - montrer_destinations_envisageables
     - cacher_destinations_envisageables
     - get_sac
-    - deselectionner_le_bouton_effacer
-    - basculer_le_bouton_effacer
+    - deselectionner_le_bouton_effacerX
+    - basculer_le_bouton_effacerX
     - deselectionner_tout
     - focus_sur_sac
     - get_symbole_actif
@@ -1324,18 +1323,18 @@ class Pioche:
                     self.__getitem__(index).cardinal, self.__getitem__(index).symbole)
         return la_pioche_contient
 
-    def deselectionner_le_bouton_effacer(self):
+    def deselectionner_le_bouton_effacerX(self):
         self.symbole_actif = None
         root.nametowidget(
             str(self.cadre)+'.x')['background'] = self.COULEUR_INITIALE_SAC
 
-    def basculer_le_bouton_effacer(self):
+    def basculer_le_bouton_effacerX(self):
         """
         Affichage : bascule la sélection du X
         """
         if self.symbole_actif == 'X':
             self.deselectionner_tout()
-            self.deselectionner_le_bouton_effacer()
+            self.deselectionner_le_bouton_effacerX()
         else:
             self.deselectionner_tout()
             self.symbole_actif = 'X'
@@ -1356,7 +1355,7 @@ class Pioche:
         Si un sac est sélectionné, il est affiché avec une couleur distinctive.
         """
         # désélection
-        self.deselectionner_le_bouton_effacer()
+        self.deselectionner_le_bouton_effacerX()
         for index in range(1, self.NBR_SACS+1):
             self[index].deselectionner()
         # sélection
@@ -1434,10 +1433,10 @@ def localisation(langue):
     """
     Texte figurant sur les boutons et les labels.
     """
-    bouton_nouveau.configure(text={'fr': 'Nouveau',
-                                   'en': 'New',
-                                   'el': 'Καινουργιο'}[langue])
-    bouton_tirage.configure(text={'fr': 'Tirage complet',
+    bouton_effacer_grille.configure(text={'fr': 'Effacer la grille',
+                                   'en': 'Clear grid',
+                                   'el': 'Καθαρίστε το πλέγμα'}[langue])
+    bouton_remplissage.configure(text={'fr': 'Remplissage complet',
                                   'en': 'Full draw',
                                   'el': 'Πλήρης κλήρωση'}[langue])
     bouton_congeler.configure(text={'fr': 'Congeler',
@@ -1467,12 +1466,15 @@ def localisation(langue):
     bouton_niveaux.configure(text={'fr': "Nouvelle partie",
                                    'en': "New game",
                                    'el': "Νέο παιχνίδι"}[langue])
+    bouton_recommencer.configure(text={'fr': "Recommencer",
+                                       'en': "Start again",
+                                       'el': "Να ξεκινήσει και πάλι"}[langue])
     label_patientez.configure(text={'fr': "Patientez SVP",
                                     'en': "Please wait",
                                     'el':"Παρακαλώ περιμένετε"}[langue])
-    bouton_jouer.configure(text={'fr': "Jouer",
-                                 'en': "Play",
-                                 'el': "Παίζω"}[langue])
+    bouton_commencer.configure(text={'fr': "Commencer",
+                                 'en': "Start",
+                                 'el': "Αρχή"}[langue])
     bouton_quitter.configure(text={'fr': 'Quitter',
                                    'en': 'Quit',
                                    'el': 'Εγκαταλείπω'}[langue])
@@ -1504,14 +1506,14 @@ def nCr(n, r):
     return x
 
 
-def tirage():
+def remplissage():
     """
     Remplissage d'une grille complète
     """
-    grille_sudoku.tirage()
+    grille_sudoku.remplissage()
 
 
-def nouveau():
+def effacer_grille():
     """
     Efface la grille
     """
@@ -1523,7 +1525,7 @@ def nouveau():
 
 def exemple_diffile():
     """
-    Charge un exemple
+    Charge un exemple connu (pour analyse ou comparaison)
     """
     grille_sudoku.grille_import(['0', '6', '0', '0', '0', '0', '0', '0', '8',
                                  '0', '0', '7', '6', '9', '3', '0', '0', '0',
@@ -1571,7 +1573,8 @@ def cacher_les_index(event):
 
 def choix_du_niveau():
     """
-    Permet de choisir le niveau de la partie
+    Le joueur vient de lancer une nouvelle partie.
+    Cette fonction permet de choisir le niveau de la partie.
     |-----------+---------+-------------+
     | niveau    | restant | pourcentage |
     |-----------+---------+-------------+
@@ -1585,22 +1588,26 @@ def choix_du_niveau():
     |-----------+---------+-------------+
     | Extrême   |      56 |          69 |
     """
+    # Arrêter le chronomètre (au cas où le joueur a lancé la nouvelle partie
+    # pour interrompre une partie précédente)
     timer_on(False)
     duree.set("0:00:00")
     # Désactiver les boutons
     for child in les_boutons.winfo_children():
         child.configure(state=DISABLED)
-    # Afficher l'interface permettant de commencer_la_partie
+    # Afficher l'interface permettant de choisir le niveau
     echelle_niveaux.pack(padx=5, pady=5)
-    bouton_jouer.configure(state=DISABLED)
-    bouton_jouer.pack()
+    bouton_commencer.configure(state=DISABLED)
+    bouton_recommencer.configure(state=DISABLED)
+    bouton_commencer.pack()
     label_patientez.pack()
-    # Procéder au tirage d'une grille complète
-    grille_sudoku.tirage(secret=True)
+    # Procéder au remplissage d'une grille complète
+    grille_sudoku.remplissage(secret=True)
     label_patientez.pack_forget()
     bouton_index_cases.configure(state=DISABLED)
     bouton_niveaux.configure(state=DISABLED)
-    bouton_jouer.configure(state=NORMAL)
+    bouton_commencer.configure(state=NORMAL)
+    
 
 
 def timer_on(on=True):
@@ -1643,18 +1650,27 @@ def grec():
     langue = 'el'
     localisation(langue)
 
-
+def recommencer_la_partie():
+    global depart_timer
+    grille_sudoku.grille_import(sauvegarde_partie, pioche_sudoku)
+    # Lancer le chronomètre
+    depart_timer = datetime.now()
+    timer_on()
+    
+    
 def commencer_la_partie():
     """
     Commence la partie
     """
-    global depart_timer
+    global depart_timer, sauvegarde_partie
     bouton_index_cases.configure(state=NORMAL)
-    bouton_jouer.configure(state=DISABLED)
+    bouton_commencer.configure(state=DISABLED)
+    bouton_recommencer.configure(state=NORMAL)    
     bouton_niveaux.configure(state=NORMAL)
     # Préparer la grille pour le niveau choisi par le joueur
     niveau = echelle_niveaux.get()
     grille_sudoku.purger(niveau)
+    sauvegarde_partie = grille_sudoku.grille_export()
     # Lancer le chronomètre
     depart_timer = datetime.now()
     timer_on()
@@ -1678,7 +1694,7 @@ def gestion_des_evenements_on_press(event):
 
     # Si le bouton effacer (X) est cliqué
     if type(event.widget) == Button and event.widget['text'] == 'X':
-        grille_sudoku.basculer_le_bouton_effacer()
+        grille_sudoku.basculer_le_bouton_effacerX()
 
     # Si un sac de la pioche est cliqué
     if type(event.widget.master) == Sac:
@@ -1723,6 +1739,7 @@ def gestion_des_evenements_on_mouse_over(event):
     Si la souris survole le nombre de symbole restants dans la pioche les
     destinations envisageables s'affichent.
     """
+    global langue
     if type(event.widget) == Case:
         label_pretendants['text'] = event.widget.pretendants
     elif type(event.widget) == Label and type(event.widget.master) == Sac:
@@ -1731,17 +1748,16 @@ def gestion_des_evenements_on_mouse_over(event):
         label_pretendants.configure(text={'fr': 'Prétendants',
                                           'en': 'Suitors',
                                           'el': 'Διαλύτης'}[langue])
+    # Mise à jour du menu (utile en cas de changement de langue)
+    updatemenu()
 
 
 def gestion_des_evenements_on_mouse_leave(event):
     """
+    Contrôle de passage à autre chose après victoire.
     """
-    global langue
-    # Contrôle de passage à autre chose après victoire.
     if grille_sudoku.symboles_a_placer:
         label_timer.configure(background=COULEUR_PIOCHE)
-    # Mise à jour du menu (utile en cas de changement de langue)
-    updatemenu()
 
 
 # CONSTANTES
@@ -1813,10 +1829,10 @@ grille_sudoku = Grille(cadre_central, pioche_sudoku)
 # Création des éléments dans le cadre de gauche
 les_boutons = Frame(cadre_gauche, background=COULEUR_CADRE_GAUCHE)
 
-bouton_nouveau = Button(les_boutons,
-                        command=nouveau)
-bouton_tirage = Button(les_boutons,
-                       command=tirage)
+bouton_effacer_grille = Button(les_boutons,
+                        command=effacer_grille)
+bouton_remplissage = Button(les_boutons,
+                       command=remplissage)
 bouton_congeler = Button(les_boutons,
                          command=congeler)
 bouton_exemple = Button(les_boutons,
@@ -1862,15 +1878,18 @@ echelle_niveaux = Scale(cadre_jouer, orient='horizontal',
                         label='Niveau (% restant à placer)')
 label_patientez = Label(cadre_jouer,
                         background=COULEUR_CADRE_DROITE)
-bouton_jouer = Button(cadre_jouer,
+bouton_commencer = Button(cadre_jouer,
                       font=('Helvetica', 12),
                       background='LightSteelBlue3',
                       command=commencer_la_partie)
+bouton_recommencer = Button(cadre_jouer,
+                            state=DISABLED,
+                            command=recommencer_la_partie)
 
 # label_pretendants.pack()
 les_boutons.pack(padx=5, pady=5, side=TOP)
-bouton_nouveau.pack(fill=X)
-bouton_tirage.pack(fill=X)
+bouton_effacer_grille.pack(fill=X)
+bouton_remplissage.pack(fill=X)
 bouton_congeler.pack(fill=X)
 bouton_exemple.pack(fill=X)
 bouton_solveur.pack(fill=X, pady=10)
@@ -1882,6 +1901,7 @@ check_grille.pack(fill=X, side=LEFT)
 check_pioche.pack(fill=X, side=LEFT)
 bouton_index_cases.pack(fill=X)
 bouton_niveaux.pack(fill=X, pady=5)
+bouton_recommencer.pack(fill=X)
 jauge_de_remplissage.pack(side=BOTTOM)
 
 # Disposition du conteneur cadre_bas
@@ -1915,9 +1935,9 @@ def updatemenu():
     menubar.entryconfig(4, label={'fr': 'À propos',
                                   'en': 'About',
                                   'el': 'Σχετικά με'}[langue])
-    menu_fichiers.entryconfig(0, label={'fr': 'Nouveau',
-                                        'en': 'New',
-                                        'el': 'Καινουργιο'}[langue])
+    menu_fichiers.entryconfig(0, label={'fr': 'Effacer la grille',
+                                   'en': 'Clear grid',
+                                   'el': 'Καθαρίστε το πλέγμα'}[langue])
     menu_fichiers.entryconfig(4, label={'fr': 'Quitter',
                                         'en': 'Quit',
                                         'el': 'Εγκαταλείπω'}[langue])    
@@ -1953,7 +1973,7 @@ afficher_chronometre.set(True)
 menubar = Menu(root)
 # crée un menu pulldown 'menu_fichier'
 menu_fichiers = Menu(menubar, tearoff=0, postcommand=updatemenu)
-menu_fichiers.add_command(command=nouveau)
+menu_fichiers.add_command(command=effacer_grille)
 menu_fichiers.add_command(label='Ouvrir...')
 menu_fichiers.add_command(label='Enregistrer')
 menu_fichiers.add_separator()
