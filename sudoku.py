@@ -10,13 +10,16 @@
 # Chargement des modules
 from tkinter import Tk, ttk, Frame, Button, Label, Message, LabelFrame, Scale,\
     Checkbutton, IntVar, StringVar, Menu, BooleanVar
-from tkinter.constants import TOP, X, TOP, BOTTOM, LEFT, BOTH, RIGHT,\
+from tkinter.constants import TOP, X, BOTTOM, LEFT, BOTH, RIGHT,\
     DISABLED, ACTIVE, NORMAL, SUNKEN
 from random import choice, randrange
 from datetime import datetime
 from itertools import combinations
+from tkinter.filedialog import askopenfile, asksaveasfile
+from tkinter.messagebox import showerror
+import csv
 
-#  localisation 
+#  localisation
 langue = 'fr'
 
 # CLASSES
@@ -169,9 +172,10 @@ class Grille:
     COULEUR_BLOCS_PAIRS = 'LightSteelBlue1'
     COULEUR_BLOCS_IMPAIRS = 'LightSteelBlue2'
     COULEUR_SELECTION_CASE = 'LightSteelBlue3'
+    COULEUR_VICTOIRE = 'green4'
     # Polices
     police_case = "{helvetica} 20"
-    police_index = "{helvetica} 14"    
+    police_index = "{helvetica} 14"
 
     def __init__(self, cadre, pioche):
         """
@@ -371,7 +375,6 @@ class Grille:
         son `contenu` est affiché sous forme d'une grille 9 x 9.
         """
         affichage = ""
-        index = 0
         for index in range(self.NBR_CASES):
             une_case = self[index]
             if une_case.contenu is None:
@@ -426,12 +429,11 @@ class Grille:
                     ma_case['text'] = ' '
                 else:
                     ma_case['text'] = ma_case.contenu
-                # mettre à jour la couleur du fond 
+                ma_case['foreground'] = 'black'
                 ma_case['background'] = self.get_couleur_case(
                     index,
                     ma_case['text'])
                 ma_case['font'] = self.police_case
-                    
 
     def afficher_les_index(self):
         """
@@ -440,6 +442,14 @@ class Grille:
         for index in range(self.NBR_CASES):
             ma_case = self[index]
             ma_case.configure(text=str(index), font=self.police_index)
+
+    def afficher_la_victoire(self):
+        """
+        Révèle dans tkinter les index des 81 cases à la place du contenu.
+        """
+        for index in range(self.NBR_CASES):
+            ma_case = self[index]
+            ma_case.configure(foreground=self.COULEUR_VICTOIRE)
 
     def effacer_grille(self):
         """
@@ -866,6 +876,24 @@ class Grille:
             grille_en_liste.append(self[index].contenu)
         return grille_en_liste
 
+    def grille_export_csv(self):
+        """
+        Exporte la grille sudoku sous forme de chaîne csv.
+        """
+        grille_en_chaineCSV = str()
+        index = 0
+        for ligne in range(self.LARGEUR_GRILLE):
+            for colonne in range(self.LARGEUR_GRILLE):
+                if self[index].contenu:
+                    grille_en_chaineCSV += self[index].contenu
+                else:
+                    grille_en_chaineCSV += '0'
+                if colonne < 8:
+                    grille_en_chaineCSV += ';'
+                index +=1
+            grille_en_chaineCSV += '\n'
+        return grille_en_chaineCSV
+
     def grille_import(self, grille_en_liste, pioche):
         """
         Importe puis affiche une grille transmise sous forme de liste.
@@ -903,6 +931,38 @@ class Grille:
             for index in liste_cases:
                 case_congelee = self.get_case(index)
                 case_congelee['state'] = DISABLED
+
+    def file_load(self):
+        fichier = askopenfile(filetypes=(("fichiers Sudoku", "*.sdk"),
+                                           ("fichiers CSV", "*.csv"),
+                                           ("Tous les fichiers", "*.*") ))
+        if fichier:
+            try:
+                # print(fichier.name)
+                # print(fichier.readlines())
+                extension = fichier.name.rpartition('.')[-1]
+                if extension == 'csv':
+                    reader = csv.reader(fichier, delimiter=";")
+                    liste = list()
+                    for ligne in reader:
+                        for symbole in ligne:
+                            liste.append(str(symbole))
+                self.grille_import(liste, self.pioche)
+            except:
+                showerror("Problème à l'importation du fichier",
+                          "%s\nFormat non compatible" % fichier.name)
+            return
+
+    def file_save(self):
+        f = asksaveasfile(mode='w',
+                          defaultextension=".csv",
+                          filetypes=(("fichiers Sudoku", "*.sdk"),
+                                     ("fichiers CSV", "*.csv"),
+                                     ("Tous les fichiers", "*.*")))
+        if f is None: # asksaveasfile return `None` if dialog closed with "cancel".
+            return
+        f.write(self.grille_export_csv())
+        f.close()
 
 
 class Watchdog():
@@ -1115,7 +1175,8 @@ class Sac(Frame):
         Génère puis retourne l'ensemble des combinaisons de destinations
         envisageables
         """
-        return set(combinations(self.destinations_envisageables, self.cardinal))
+        return set(combinations(self.destinations_envisageables,
+                                self.cardinal))
 
     def selectionner(self):
         """
@@ -1431,11 +1492,11 @@ def localisation(langue):
     Texte figurant sur les boutons et les labels.
     """
     bouton_effacer_grille.configure(text={'fr': 'Effacer la grille',
-                                   'en': 'Clear grid',
-                                   'el': 'Καθαρίστε το πλέγμα'}[langue])
+                                          'en': 'Clear grid',
+                                          'el': 'Καθαρίστε το πλέγμα'}[langue])
     bouton_remplissage.configure(text={'fr': 'Remplissage complet',
-                                  'en': 'Full draw',
-                                  'el': 'Αυτόματο γέμισμα'}[langue])
+                                       'en': 'Full draw',
+                                       'el': 'Αυτόματο γέμισμα'}[langue])
     bouton_congeler.configure(text={'fr': 'Congeler',
                                     'en': 'Freeze',
                                     'el': 'Πάγωμα'}[langue])
@@ -1470,11 +1531,19 @@ def localisation(langue):
                                     'en': "Please wait",
                                     'el':"Παρακαλώ περιμένετε"}[langue])
     bouton_commencer.configure(text={'fr': "Commencer",
-                                 'en': "Start",
-                                 'el': "Αρχή"}[langue])
+                                     'en': "Start",
+                                     'el': "Αρχή"}[langue])
     bouton_quitter.configure(text={'fr': 'Quitter',
                                    'en': 'Quit',
                                    'el': 'Εγκαταλείπω'}[langue])
+
+
+def file_load():
+    grille_sudoku.file_load()
+
+
+def file_save():
+    grille_sudoku.file_save()
 
 
 def affichage_pretendants():
@@ -1604,7 +1673,6 @@ def choix_du_niveau():
     bouton_index_cases.configure(state=DISABLED)
     bouton_niveaux.configure(state=DISABLED)
     bouton_commencer.configure(state=NORMAL)
-    
 
 
 def timer_on(on=True):
@@ -1647,14 +1715,15 @@ def grec():
     langue = 'el'
     localisation(langue)
 
+
 def recommencer_la_partie():
     global depart_timer
     grille_sudoku.grille_import(sauvegarde_partie, pioche_sudoku)
     # Lancer le chronomètre
     depart_timer = datetime.now()
     timer_on()
-    
-    
+
+
 def commencer_la_partie():
     """
     Commence la partie
@@ -1662,7 +1731,7 @@ def commencer_la_partie():
     global depart_timer, sauvegarde_partie
     bouton_index_cases.configure(state=NORMAL)
     bouton_commencer.configure(state=DISABLED)
-    bouton_recommencer.configure(state=NORMAL)    
+    bouton_recommencer.configure(state=NORMAL)
     bouton_niveaux.configure(state=NORMAL)
     # Préparer la grille pour le niveau choisi par le joueur
     niveau = echelle_niveaux.get()
@@ -1719,6 +1788,7 @@ def traiter_victoire():
     """
     timer_on(False)
     label_timer.configure(background=COULEUR_VICTOIRE)
+    grille_sudoku.afficher_la_victoire()
 
 
 def gestion_des_evenements_on_release(event):
@@ -1828,9 +1898,9 @@ grille_sudoku = Grille(cadre_central, pioche_sudoku)
 les_boutons = Frame(cadre_gauche, background=COULEUR_CADRE_GAUCHE)
 
 bouton_effacer_grille = Button(les_boutons,
-                        command=effacer_grille)
+                               command=effacer_grille)
 bouton_remplissage = Button(les_boutons,
-                       command=remplissage)
+                            command=remplissage)
 bouton_congeler = Button(les_boutons,
                          command=congeler)
 bouton_exemple = Button(les_boutons,
@@ -1877,9 +1947,9 @@ echelle_niveaux = Scale(cadre_jouer, orient='horizontal',
 label_patientez = Label(cadre_jouer,
                         background=COULEUR_CADRE_DROITE)
 bouton_commencer = Button(cadre_jouer,
-                      font=('Helvetica', 12),
-                      background='LightSteelBlue3',
-                      command=commencer_la_partie)
+                          font=('Helvetica', 12),
+                          background='LightSteelBlue3',
+                          command=commencer_la_partie)
 bouton_recommencer = Button(cadre_jouer,
                             state=DISABLED,
                             command=recommencer_la_partie)
@@ -1934,8 +2004,8 @@ def updatemenu():
                                   'en': 'About',
                                   'el': 'Σχετικά με'}[langue])
     menu_fichiers.entryconfig(0, label={'fr': 'Effacer la grille',
-                                   'en': 'Clear grid',
-                                   'el': 'Καθαρίστε το πλέγμα'}[langue])
+                                        'en': 'Clear grid',
+                                        'el': 'Καθαρίστε το πλέγμα'}[langue])
     menu_fichiers.entryconfig(4, label={'fr': 'Quitter',
                                         'en': 'Quit',
                                         'el': 'Εγκαταλείπω'}[langue])    
@@ -1972,8 +2042,8 @@ menubar = Menu(root)
 # crée un menu pulldown 'menu_fichier'
 menu_fichiers = Menu(menubar, tearoff=0, postcommand=updatemenu)
 menu_fichiers.add_command(command=effacer_grille)
-menu_fichiers.add_command(label='Ouvrir...')
-menu_fichiers.add_command(label='Enregistrer')
+menu_fichiers.add_command(label='Ouvrir...', command=file_load)
+menu_fichiers.add_command(label='Enregistrer', command=file_save)
 menu_fichiers.add_separator()
 menu_fichiers.add_command(command=root.quit)
 # ajoute 'menu_fichier' à 'menubar'
