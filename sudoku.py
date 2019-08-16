@@ -1682,7 +1682,6 @@ def choix_du_niveau():
     bouton_niveaux.configure(state=DISABLED)
     bouton_commencer.configure(state=NORMAL)
 
-
 def timer_on(on=True):
     """
     Permet de chronométrer le temps de résolution
@@ -1776,11 +1775,14 @@ def gestion_des_evenements_on_press(event):
         symbole_a_activer = event.widget.master.symbole
         grille_sudoku.activer_le_symbole(symbole_a_activer)
 
-    # Si une case de la grille est cliqué
+    # Si une case de la grille est cliquée
+    if (type(event.widget) == Case) and (event.widget.contenu):
+        symbole_a_activer = event.widget.contenu
+        grille_sudoku.activer_le_symbole(symbole_a_activer)
     if (type(event.widget) == Case) and (event.widget['state'] == ACTIVE):
         if pioche_sudoku.get_symbole_actif() == 'X':
             if event.widget.contenu is None:
-                pass  # ne rien faire (case déjà vide ou congelée)
+                pass  # ne rien faire (case déjà vide)
             else:
                 grille_sudoku.effacer_case(event.widget)
         else:
@@ -1956,7 +1958,7 @@ echelle_niveaux = Scale(cadre_jouer, orient='horizontal',
 label_patientez = Label(cadre_jouer,
                         background=COULEUR_CADRE_DROITE)
 bouton_commencer = Button(cadre_jouer,
-                          font=('Helvetica', 12),
+                          font=('Helvetica', 16),
                           background='LightSteelBlue3',
                           command=commencer_la_partie)
 bouton_recommencer = Button(cadre_jouer,
