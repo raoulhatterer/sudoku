@@ -1515,13 +1515,13 @@ def localisation(langue):
                                  'el': "Επιλογή"}[langue])
     bouton_index_cases.configure(text={'fr': 'Index des cases',
                                        'en': 'Indexes of Boxes',
-                                       'el': 'Δείκτες των κουτιών'}[langue])
+                                       'el': 'Δείκτες των τετραγώνων'}[langue])
     bouton_niveaux.configure(text={'fr': "Nouvelle partie",
                                    'en': "New game",
                                    'el': "Νέο παιχνίδι"}[langue])
     bouton_recommencer.configure(text={'fr': "Recommencer",
                                        'en': "Start again",
-                                       'el': "Να ξεκινήσει και πάλι"}[langue])
+                                       'el': "Επανεκκίνηση"}[langue])
     label_patientez.configure(text={'fr': "Patientez SVP",
                                     'en': "Please wait",
                                     'el':"Παρακαλώ περιμένετε"}[langue])
@@ -1530,7 +1530,7 @@ def localisation(langue):
                                      'el': "Αρχή"}[langue])
     bouton_quitter.configure(text={'fr': 'Quitter',
                                    'en': 'Quit',
-                                   'el': 'Εγκαταλείπω'}[langue])
+                                   'el': 'Τερματισμός'}[langue])
 
 
 def file_load():
@@ -1670,6 +1670,7 @@ def choix_du_niveau():
         child.configure(state=DISABLED)
     # Afficher l'interface permettant de choisir le niveau
     echelle_niveaux.pack(padx=5, pady=5)
+    echelle_niveaux.set(50)
     bouton_commencer.configure(state=DISABLED)
     bouton_recommencer.configure(state=DISABLED)
     bouton_commencer.pack()
@@ -2014,9 +2015,15 @@ def updatemenu():
     menu_fichiers.entryconfig(0, label={'fr': 'Effacer la grille',
                                         'en': 'Clear grid',
                                         'el': 'Καθαρίστε το πλέγμα'}[langue])
+    menu_fichiers.entryconfig(1, label={'fr': 'Ouvrir...',
+                                        'en': 'Open...',
+                                        'el': 'Άνοιγμα...'}[langue])
+    menu_fichiers.entryconfig(2, label={'fr': 'Enregistrer',
+                                        'en': 'Save',
+                                        'el': 'Αποθήκευση'}[langue])
     menu_fichiers.entryconfig(4, label={'fr': 'Quitter',
                                         'en': 'Quit',
-                                        'el': 'Εγκαταλείπω'}[langue])    
+                                        'el': 'Τερματισμός'}[langue])    
     menu_afficher.entryconfig(0, label={'fr': "Outils développeur",
                                         'en': 'Developer Tools',
                                         'el': "Εργαλεία προγραμματιστή"}[langue])
@@ -2039,9 +2046,10 @@ def updatemenu():
         les_boutons.pack_forget()
         label_timer.pack_forget()
 
-
+# Ne pas afficher les outils développeur au démarrage
 afficher_outils = BooleanVar()
-afficher_outils.set(True)
+afficher_outils.set(False)
+# Afficher le chronomètre au démarrage
 afficher_chronometre = BooleanVar()
 afficher_chronometre.set(True)
 
@@ -2050,8 +2058,8 @@ menubar = Menu(root)
 # crée un menu pulldown 'menu_fichier'
 menu_fichiers = Menu(menubar, tearoff=0, postcommand=updatemenu)
 menu_fichiers.add_command(command=effacer_grille)
-menu_fichiers.add_command(label='Ouvrir...', command=file_load)
-menu_fichiers.add_command(label='Enregistrer', command=file_save)
+menu_fichiers.add_command(command=file_load)
+menu_fichiers.add_command(command=file_save)
 menu_fichiers.add_separator()
 menu_fichiers.add_command(command=root.quit)
 # ajoute 'menu_fichier' à 'menubar'
