@@ -2106,7 +2106,7 @@ menu_langue.add_command(label='Ελληνικά', command=grec)
 menubar.add_cascade(menu=menu_langue)
 # crée un menu pulldown 'menu_langue'
 menu_afficher = Menu(menubar, tearoff=0, postcommand=updatemenu)
-menu_afficher.add_checkbutton(onvalue=True, offvalue=False, variable=afficher_onutils)
+menu_afficher.add_checkbutton(onvalue=True, offvalue=False, variable=afficher_outils)
 menu_afficher.add_checkbutton(onvalue=True, offvalue=False, variable=afficher_chronometre)
 # ajoute 'menu_afficher' à 'menubar'
 menubar.add_cascade(menu=menu_afficher)
