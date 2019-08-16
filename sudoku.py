@@ -9,7 +9,7 @@
 
 # Chargement des modules
 from tkinter import Tk, ttk, Frame, Button, Label, Message, LabelFrame, Scale,\
-    Checkbutton, IntVar, StringVar, Menu, BooleanVar
+    Checkbutton, IntVar, StringVar, Menu, BooleanVar, Toplevel
 from tkinter.constants import TOP, X, BOTTOM, LEFT, BOTH, RIGHT,\
     DISABLED, ACTIVE, NORMAL, SUNKEN
 from random import choice, randrange
@@ -17,7 +17,9 @@ from datetime import datetime
 from itertools import combinations
 from tkinter.filedialog import askopenfile, asksaveasfile
 from tkinter.messagebox import showerror
-import csv
+from csv import reader
+from  webbrowser import open_new
+
 
 #  localisation
 langue = 'fr'
@@ -936,7 +938,7 @@ class Grille:
                 # print(fichier.readlines())
                 extension = fichier.name.rpartition('.')[-1]
                 if extension == 'csv':
-                    reader = csv.reader(fichier, delimiter=";")
+                    reader = reader(fichier, delimiter=";")
                     liste = list()
                     for ligne in reader:
                         for symbole in ligne:
@@ -1839,6 +1841,61 @@ def gestion_des_evenements_on_mouse_leave(event):
         label_timer.configure(background=COULEUR_PIOCHE)
 
 
+def updatemenu():
+    """
+    Permet:
+    - la mise à jour du menu en tenant compte de la langue sélectionnée
+    - d'afficher ou de cacher outils et chronomètre.
+    """
+    global langue, afficher_outils, afficher_chronometre
+    menubar.entryconfig(1, label={'fr': 'Fichier',
+                                  'en': 'File',
+                                  'el': 'Αρχείο'}[langue])
+    menubar.entryconfig(2, label={'fr': 'Langue',
+                                  'en': 'Language',
+                                  'el': 'Γλώσσα'}[langue])
+    menubar.entryconfig(3, label={'fr': 'Afficher',
+                                  'en': 'Display',
+                                  'el': 'Απεικόνιση'}[langue])
+    menubar.entryconfig(4, label={'fr': 'À propos',
+                                  'en': 'About',
+                                  'el': 'Σχετικά με'}[langue])
+    menu_fichiers.entryconfig(0, label={'fr': 'Effacer la grille',
+                                        'en': 'Clear grid',
+                                        'el': 'Καθαρίστε το πλέγμα'}[langue])
+    menu_fichiers.entryconfig(1, label={'fr': 'Ouvrir...',
+                                        'en': 'Open...',
+                                        'el': 'Άνοιγμα...'}[langue])
+    menu_fichiers.entryconfig(2, label={'fr': 'Enregistrer',
+                                        'en': 'Save',
+                                        'el': 'Αποθήκευση'}[langue])
+    menu_fichiers.entryconfig(4, label={'fr': 'Quitter',
+                                        'en': 'Quit',
+                                        'el': 'Τερματισμός'}[langue])    
+    menu_afficher.entryconfig(0, label={'fr': "Outils développeur",
+                                        'en': 'Developer Tools',
+                                        'el': "Εργαλεία προγραμματιστή"}[langue])
+    menu_afficher.entryconfig(1, label={'fr': "Chronomètre",
+                                        'en': 'Stopwatch',
+                                        'el': "Χρονόμετρο"}[langue])
+
+    # Afficher/cacher les outils
+    if afficher_outils.get() and afficher_chronometre.get():
+        label_timer.pack_forget()
+        les_boutons.pack(padx=5, pady=5, side=TOP)
+        label_timer.pack(padx=15, pady=10, ipadx=5)
+    elif afficher_outils.get():
+        les_boutons.pack(padx=5, pady=5, side=TOP)
+        label_timer.pack_forget()
+    elif afficher_chronometre.get():
+        label_timer.pack(padx=15, pady=10, ipadx=5)
+        les_boutons.pack_forget()
+    else:
+        les_boutons.pack_forget()
+        label_timer.pack_forget()
+
+
+
 # CONSTANTES
 
 COULEUR_CADRE_HAUT = 'lavender'
@@ -1885,7 +1942,7 @@ cadre_bas = Frame(root, name='pied_de_page',
                   background=COULEUR_CADRE_BAS,
                   height=60)
 
-# Disposition des conteneurs principaux
+# Placement des conteneurs principaux
 cadre_haut.grid(row=0, columnspan=3,  sticky="nsew")
 cadre_gauche.grid(row=1, column=0, sticky="nsew")
 cadre_central.grid(row=1, column=1,  sticky="nsew")
@@ -1965,7 +2022,7 @@ bouton_recommencer = Button(cadre_jouer,
                             state=DISABLED,
                             command=recommencer_la_partie)
 
-# label_pretendants.pack()
+# placement des widgets à l'écran
 les_boutons.pack(padx=5, pady=5, side=TOP)
 bouton_effacer_grille.pack(fill=X)
 bouton_remplissage.pack(fill=X)
@@ -1994,60 +2051,21 @@ bouton_quitter = Button(cadre_bas,
 bouton_quitter.grid(sticky="nsew")
 localisation(langue)
 
-
-def updatemenu():
+def apropos():
     """
-    Permet:
-    - la mise à jour du menu en tenant compte de la langue sélectionnée
-    - d'afficher ou de cacher outils et chronomètre.
+    Fenêtre à propos: auteur et date
     """
-    global langue, afficher_outils, afficher_chronometre
-    menubar.entryconfig(1, label={'fr': 'Fichier',
-                                  'en': 'File',
-                                  'el': 'Αρχείο'}[langue])
-    menubar.entryconfig(2, label={'fr': 'Langue',
-                                  'en': 'Language',
-                                  'el': 'Γλώσσα'}[langue])
-    menubar.entryconfig(3, label={'fr': 'Afficher',
-                                  'en': 'Display',
-                                  'el': 'Απεικόνιση'}[langue])
-    menubar.entryconfig(4, label={'fr': 'À propos',
-                                  'en': 'About',
-                                  'el': 'Σχετικά με'}[langue])
-    menu_fichiers.entryconfig(0, label={'fr': 'Effacer la grille',
-                                        'en': 'Clear grid',
-                                        'el': 'Καθαρίστε το πλέγμα'}[langue])
-    menu_fichiers.entryconfig(1, label={'fr': 'Ouvrir...',
-                                        'en': 'Open...',
-                                        'el': 'Άνοιγμα...'}[langue])
-    menu_fichiers.entryconfig(2, label={'fr': 'Enregistrer',
-                                        'en': 'Save',
-                                        'el': 'Αποθήκευση'}[langue])
-    menu_fichiers.entryconfig(4, label={'fr': 'Quitter',
-                                        'en': 'Quit',
-                                        'el': 'Τερματισμός'}[langue])    
-    menu_afficher.entryconfig(0, label={'fr': "Outils développeur",
-                                        'en': 'Developer Tools',
-                                        'el': "Εργαλεία προγραμματιστή"}[langue])
-    menu_afficher.entryconfig(1, label={'fr': "Chronomètre",
-                                        'en': 'Stopwatch',
-                                        'el': "Χρονόμετρο"}[langue])
+    top = Toplevel(root)
+    top.title("About this application...")
+    auteur = Label(top, text="Raoul HATTERER")
+    date = Label(top, text="2019")
+    auteur.pack(padx=20,pady=10)
+    date.pack(padx=20,pady=10)
+    button = Button(top,text="Dismiss", command=top.destroy)
+    button.pack(padx=20,pady=10)
 
-    # Afficher/cacher les outils
-    if afficher_outils.get() and afficher_chronometre.get():
-        label_timer.pack_forget()
-        les_boutons.pack(padx=5, pady=5, side=TOP)
-        label_timer.pack(padx=15, pady=10, ipadx=5)
-    elif afficher_outils.get():
-        les_boutons.pack(padx=5, pady=5, side=TOP)
-        label_timer.pack_forget()
-    elif afficher_chronometre.get():
-        label_timer.pack(padx=15, pady=10, ipadx=5)
-        les_boutons.pack_forget()
-    else:
-        les_boutons.pack_forget()
-        label_timer.pack_forget()
 
+# MENU
 # Ne pas afficher les outils développeur au démarrage
 afficher_outils = BooleanVar()
 afficher_outils.set(False)
@@ -2080,7 +2098,7 @@ menu_afficher.add_checkbutton(onvalue=True, offvalue=False, variable=afficher_ch
 # ajoute 'menu_afficher' à 'menubar'
 menubar.add_cascade(menu=menu_afficher)
 # crée une commande toplevel pour 'à propos'
-menubar.add_command()
+menubar.add_command(command=apropos)
 # affiche le menu
 updatemenu()
 root.config(menu=menubar)
