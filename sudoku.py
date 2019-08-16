@@ -18,7 +18,7 @@ from itertools import combinations
 from tkinter.filedialog import askopenfile, asksaveasfile
 from tkinter.messagebox import showerror
 from csv import reader
-from  webbrowser import open_new
+from webbrowser import open_new
 
 
 #  localisation
@@ -693,7 +693,7 @@ class Grille:
         Chaque sac de la pioche est traité en tant qu'ensemble de symboles.
         """
         timer_on(False)
-        duree.set("0:00:00")        
+        duree.set("0:00:00")
         self.depart_timer = datetime.now()
         timer_on()
         self.congeler()
@@ -886,7 +886,7 @@ class Grille:
                     grille_en_chaineCSV += '0'
                 if colonne < 8:
                     grille_en_chaineCSV += ';'
-                index +=1
+                index += 1
             grille_en_chaineCSV += '\n'
         return grille_en_chaineCSV
 
@@ -930,17 +930,15 @@ class Grille:
 
     def file_load(self):
         fichier = askopenfile(filetypes=(("fichiers Sudoku", "*.sdk"),
-                                           ("fichiers CSV", "*.csv"),
-                                           ("Tous les fichiers", "*.*") ))
+                                         ("fichiers CSV", "*.csv"),
+                                         ("Tous les fichiers", "*.*")))
         if fichier:
             try:
-                # print(fichier.name)
-                # print(fichier.readlines())
                 extension = fichier.name.rpartition('.')[-1]
                 if extension == 'csv':
-                    reader = reader(fichier, delimiter=";")
+                    document = reader(fichier, delimiter=";")
                     liste = list()
-                    for ligne in reader:
+                    for ligne in document:
                         for symbole in ligne:
                             liste.append(str(symbole))
                 self.grille_import(liste, self.pioche)
@@ -956,7 +954,7 @@ class Grille:
                           filetypes=(("fichiers Sudoku", "*.sdk"),
                                      ("fichiers CSV", "*.csv"),
                                      ("Tous les fichiers", "*.*")))
-        if f is None: # asksaveasfile return `None` if dialog closed with "cancel".
+        if f is None:  # if dialog closed with "cancel"
             return
         f.write(self.grille_export_csv())
         f.close()
@@ -1526,7 +1524,7 @@ def localisation(langue):
                                        'el': "Επανεκκίνηση"}[langue])
     label_patientez.configure(text={'fr': "Patientez SVP",
                                     'en': "Please wait",
-                                    'el':"Παρακαλώ περιμένετε"}[langue])
+                                    'el': "Παρακαλώ περιμένετε"}[langue])
     bouton_commencer.configure(text={'fr': "Commencer",
                                      'en': "Start",
                                      'el': "Αρχή"}[langue])
@@ -1545,7 +1543,6 @@ def file_load():
     # Lancer le chronomètre
     grille_sudoku.depart_timer = datetime.now()
     timer_on()
-
 
 
 def file_save():
@@ -1683,6 +1680,7 @@ def choix_du_niveau():
     bouton_index_cases.configure(state=DISABLED)
     bouton_niveaux.configure(state=DISABLED)
     bouton_commencer.configure(state=NORMAL)
+
 
 def timer_on(on=True):
     """
@@ -1871,7 +1869,7 @@ def updatemenu():
                                         'el': 'Αποθήκευση'}[langue])
     menu_fichiers.entryconfig(4, label={'fr': 'Quitter',
                                         'en': 'Quit',
-                                        'el': 'Τερματισμός'}[langue])    
+                                        'el': 'Τερματισμός'}[langue])
     menu_afficher.entryconfig(0, label={'fr': "Outils développeur",
                                         'en': 'Developer Tools',
                                         'el': "Εργαλεία προγραμματιστή"}[langue])
@@ -1895,7 +1893,6 @@ def updatemenu():
         label_timer.pack_forget()
 
 
-
 # CONSTANTES
 
 COULEUR_CADRE_HAUT = 'lavender'
@@ -1912,7 +1909,7 @@ niveau = 30
 # APPLICATION Tkinter
 
 root = Tk()
-root.title('Sudoku (Raoul Hatterer Lycée de la Méditerranée à La Ciotat)')
+root.title('SUDOKU SudoCool')
 # Aides
 aide_grille = IntVar()
 aide_pioche = IntVar()
@@ -2051,18 +2048,34 @@ bouton_quitter = Button(cadre_bas,
 bouton_quitter.grid(sticky="nsew")
 localisation(langue)
 
+
+def ouvre_lien(event):
+    """
+    Ouvre le lien github dans le navigateur
+    """
+    open_new(event.widget.cget("text"))
+
+
 def apropos():
     """
     Fenêtre à propos: auteur et date
     """
+    global langue
     top = Toplevel(root)
-    top.title("About this application...")
+    titre_fenetre = {'fr': 'À propos de SUDOKU SudoCool',
+                     'en': 'About SUDOKU SudoCool',
+                     'el': 'Σχετικά με SUDOKU SudoCool'}[langue]
+    top.title(titre_fenetre)
     auteur = Label(top, text="Raoul HATTERER")
     date = Label(top, text="2019")
-    auteur.pack(padx=20,pady=10)
-    date.pack(padx=20,pady=10)
-    button = Button(top,text="Dismiss", command=top.destroy)
-    button.pack(padx=20,pady=10)
+    auteur.pack(padx=20, pady=10)
+    date.pack(padx=20, pady=5)
+    lien = Label(top, text=r"https://github.com/raoulhatterer",
+                 fg="blue", cursor="hand2")
+    lien.pack(padx=5)
+    lien.bind("<Button-1>", ouvre_lien)
+    bouton_quitter_top = Button(top, text='OK', command=top.destroy)
+    bouton_quitter_top.pack(padx=20, pady=10)
 
 
 # MENU
@@ -2093,7 +2106,7 @@ menu_langue.add_command(label='Ελληνικά', command=grec)
 menubar.add_cascade(menu=menu_langue)
 # crée un menu pulldown 'menu_langue'
 menu_afficher = Menu(menubar, tearoff=0, postcommand=updatemenu)
-menu_afficher.add_checkbutton(onvalue=True, offvalue=False, variable=afficher_outils)
+menu_afficher.add_checkbutton(onvalue=True, offvalue=False, variable=afficher_onutils)
 menu_afficher.add_checkbutton(onvalue=True, offvalue=False, variable=afficher_chronometre)
 # ajoute 'menu_afficher' à 'menubar'
 menubar.add_cascade(menu=menu_afficher)
