@@ -413,15 +413,6 @@ class Grille:
         """
         Affiche le contenu des cases dans tkinter.
         Sauf si SECRET vaut True.
-
-        exemple:
-        -------
-        >>> root = Tk()
-        >>> mon_cadre = Frame(root)
-        >>> mon_cadre.pack()
-        >>> ma_grille = Grille(mon_cadre)
-        >>> ma_grille[0] = '5'
-        >>> ma_grille.rafraichir_affichage()
         """
         if not(secret):
             # rétablir le texte au cas où l'on avait demandé l'affichage des index
@@ -929,6 +920,10 @@ class Grille:
                 case_congelee['state'] = DISABLED
 
     def file_load(self):
+        """
+        Charge une grille enregistrée sous forme CSV
+        (le format sdk n'est pas encore implémenté)
+        """
         fichier = askopenfile(filetypes=(("fichiers Sudoku", "*.sdk"),
                                          ("fichiers CSV", "*.csv"),
                                          ("Tous les fichiers", "*.*")))
@@ -964,7 +959,6 @@ class Watchdog():
     """
     Signale quand l'exploration de l'arbre va trop profond.
     """
-
     watchdog_limit = 4
 
     def __init__(self):
@@ -1079,15 +1073,6 @@ class Sac(Frame):
     def get_symboles_a_placer(self):
         """
         Retourne une liste avec les symboles à placer sur la grille
-        >>> root = Tk()
-        >>> mon_cadre = Frame(root)
-        >>> mon_cadre.pack()
-        >>> mon_sac = Sac(mon_cadre,'5')
-        >>> mon_sac.get_symboles_a_placer()
-        ['5', '5', '5', '5', '5', '5', '5', '5', '5']
-        >>> mon_sac.cardinal = 3
-        >>> mon_sac.get_symboles_a_placer()
-        ['5', '5', '5']
         """
         return list(self.symbole)*self.cardinal
 
@@ -1122,6 +1107,7 @@ class Sac(Frame):
     def set_cardinal(self, cardinal):
         """
         Permet d'attribuer un cardinal au sac.
+        Cela correspond au nombre de symboles de ce type restant à placer sur la grille.
         """
         # Sauvegarde
         self.cardinal = cardinal
@@ -1241,6 +1227,7 @@ class Pioche:
     NBR_SACS = 9
     SYMBOLES = ['1', '2', '3', '4', '5', '6', '7', '8', '9']
     COULEUR_INITIALE_SAC = '#d9d9d9'
+    COULEUR_DESTINATIONS = '#d9d9d9'
     COULEUR_SELECTION_SAC = 'LightSteelBlue3'
     police_X = "{dyuthi}"
 
@@ -1250,8 +1237,11 @@ class Pioche:
         chaque sac contenant chacun 9 symboles identiques
         """
         self.cadre = cadre
-        Message(self.cadre, name='msg_destinations_envisageables',
-                text='Destinations envisageables', aspect=200).pack_forget()
+        Message(self.cadre,
+                name='msg_destinations_envisageables',
+                text='Destinations envisageables',
+                background=self.COULEUR_DESTINATIONS,
+                aspect=200).pack_forget()
         for index in range(1, self.NBR_SACS+1):
             Sac(self.cadre,
                 index,
@@ -1262,7 +1252,7 @@ class Pioche:
 
     def montrer_destinations_envisageables(self):
         """
-        Montre les destinations envisageables.
+        Révèle les destinations envisageables.
         """
         if self.symbole_actif and self.symbole_actif != 'X' and aide_pioche.get():
             root.nametowidget(
@@ -1377,6 +1367,9 @@ class Pioche:
         return la_pioche_contient
 
     def deselectionner_le_bouton_effacerX(self):
+        """
+        Dé-sélectionne le bouton effacer X
+        """
         self.symbole_actif = None
         root.nametowidget(
             str(self.cadre)+'.x')['background'] = self.COULEUR_INITIALE_SAC
@@ -1484,7 +1477,7 @@ class Pioche:
 
 def localisation(langue):
     """
-    Texte figurant sur les boutons et les labels.
+    Localisation des inscriptions figurant sur les boutons et les labels.
     """
     bouton_effacer_grille.configure(text={'fr': 'Effacer la grille',
                                           'en': 'Clear grid',
@@ -1770,15 +1763,12 @@ def gestion_des_evenements_on_press(event):
     if type(event.widget) == Button and event.widget['text'] == 'X':
         grille_sudoku.basculer_le_bouton_effacerX()
 
-    # Si un sac de la pioche est cliqué
+    # Sélectionne le symbole actif si un sac de la pioche est cliqué
     if type(event.widget.master) == Sac:
         symbole_a_activer = event.widget.master.symbole
         grille_sudoku.activer_le_symbole(symbole_a_activer)
 
     # Si une case de la grille est cliquée
-    if (type(event.widget) == Case) and (event.widget.contenu):
-        symbole_a_activer = event.widget.contenu
-        grille_sudoku.activer_le_symbole(symbole_a_activer)
     if (type(event.widget) == Case) and (event.widget['state'] == ACTIVE):
         if pioche_sudoku.get_symbole_actif() == 'X':
             if event.widget.contenu is None:
@@ -1791,6 +1781,10 @@ def gestion_des_evenements_on_press(event):
             # Victoire détectée
             if not(grille_sudoku.symboles_a_placer):
                 traiter_victoire()
+    # Sélectionne le symbole actif si une case pleine est cliquée
+    if (type(event.widget) == Case) and (event.widget.contenu):
+        symbole_a_activer = event.widget.contenu
+        grille_sudoku.activer_le_symbole(symbole_a_activer)
 
 
 def traiter_victoire():
@@ -1893,6 +1887,34 @@ def updatemenu():
         label_timer.pack_forget()
 
 
+def ouvre_lien(event):
+    """
+    Ouvre le lien github dans le navigateur
+    """
+    open_new(event.widget.cget("text"))
+
+
+def apropos():
+    """
+    Fenêtre à propos: renseigne sur l'auteur et date
+    """
+    global langue
+    top = Toplevel(root)
+    titre_fenetre = {'fr': 'À propos de SUDOKU SudoCool',
+                     'en': 'About SUDOKU SudoCool',
+                     'el': 'Σχετικά με SUDOKU SudoCool'}[langue]
+    top.title(titre_fenetre)
+    auteur = Label(top, text="Raoul HATTERER")
+    date = Label(top, text="2019")
+    auteur.pack(padx=20, pady=10)
+    date.pack(padx=20, pady=5)
+    lien = Label(top, text=r"https://github.com/raoulhatterer",
+                 fg="blue", cursor="hand2")
+    lien.pack(padx=5)
+    lien.bind("<Button-1>", ouvre_lien)
+    bouton_quitter_top = Button(top, text='OK', command=top.destroy)
+    bouton_quitter_top.pack(padx=20, pady=10)
+
 # CONSTANTES
 
 COULEUR_CADRE_HAUT = 'lavender'
@@ -1900,7 +1922,7 @@ COULEUR_CADRE_GAUCHE = 'lavender'
 COULEUR_CADRE_CENTRAL = 'lavender'
 COULEUR_CADRE_DROITE = 'lavender'
 COULEUR_PIOCHE = '#d9d9d9'
-COULEUR_CADRE_BAS = 'lavender'
+COULEUR_CADRE_BAS = '#d9d9d9'
 COULEUR_VICTOIRE = 'green2'
 # Niveau par défaut
 niveau = 30
@@ -2047,35 +2069,6 @@ bouton_quitter = Button(cadre_bas,
 # Disposition du bouton quitter
 bouton_quitter.grid(sticky="nsew")
 localisation(langue)
-
-
-def ouvre_lien(event):
-    """
-    Ouvre le lien github dans le navigateur
-    """
-    open_new(event.widget.cget("text"))
-
-
-def apropos():
-    """
-    Fenêtre à propos: auteur et date
-    """
-    global langue
-    top = Toplevel(root)
-    titre_fenetre = {'fr': 'À propos de SUDOKU SudoCool',
-                     'en': 'About SUDOKU SudoCool',
-                     'el': 'Σχετικά με SUDOKU SudoCool'}[langue]
-    top.title(titre_fenetre)
-    auteur = Label(top, text="Raoul HATTERER")
-    date = Label(top, text="2019")
-    auteur.pack(padx=20, pady=10)
-    date.pack(padx=20, pady=5)
-    lien = Label(top, text=r"https://github.com/raoulhatterer",
-                 fg="blue", cursor="hand2")
-    lien.pack(padx=5)
-    lien.bind("<Button-1>", ouvre_lien)
-    bouton_quitter_top = Button(top, text='OK', command=top.destroy)
-    bouton_quitter_top.pack(padx=20, pady=10)
 
 
 # MENU
