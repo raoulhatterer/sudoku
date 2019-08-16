@@ -637,7 +637,6 @@ class Grille:
         Si SECRET vaut True le contenu des cases demeure caché.
         """
         self.effacer_grille()
-        datetime_depart = datetime.now()
         mon_watchdog = Watchdog()
         pile = list()
         dernier_placement_OK = True
@@ -684,9 +683,6 @@ class Grille:
         self.pioche.deselectionner_le_bouton_effacerX()
         self.symbole_actif = None
         self.rafraichir_affichage(secret)
-        datetime_fin = datetime.now()
-        duree = datetime_fin - datetime_depart
-        print('Tous les symboles on été placés en', duree)
         return True
 
     def solveur(self):
@@ -694,7 +690,10 @@ class Grille:
         Génération d'une grille pleine à partir de l'état actuel de la grille.
         Chaque sac de la pioche est traité en tant qu'ensemble de symboles.
         """
-        global depart_timer
+        timer_on(False)
+        duree.set("0:00:00")        
+        self.depart_timer = datetime.now()
+        timer_on()
         self.congeler()
 
         # Élimination des singletons
@@ -709,11 +708,8 @@ class Grille:
 
         # Parcours des combinaisons
         if len(self.symboles_a_placer) > 58:
+            timer_on(False)
             return False  # Trop de combinaisons à générer
-        timer_on(False)
-        depart_timer = datetime.now()
-        timer_on()
-        datetime_depart = datetime.now()
         self.symboles_a_placer, self.ordre_de_placement =\
             self.pioche.get_symboles_a_placer_et_ordre()
         self.monter_jauge_parcourt_combinaisons()
@@ -762,9 +758,6 @@ class Grille:
         self.pioche.deselectionner_le_bouton_effacerX()
         self.symbole_actif = None
         self.rafraichir_affichage()
-        datetime_fin = datetime.now()
-        duree = datetime_fin - datetime_depart
-        print('Tous les symboles on été placés en', duree)
         traiter_victoire()
         return True
 
@@ -870,6 +863,7 @@ class Grille:
     def grille_export(self):
         """
         Exporte la grille sudoku sous forme de liste.
+        Permet de recommencer une partie.
         """
         grille_en_liste = list()
         for index in range(self.NBR_CASES):
@@ -948,6 +942,7 @@ class Grille:
                         for symbole in ligne:
                             liste.append(str(symbole))
                 self.grille_import(liste, self.pioche)
+                self.sauvegarde_partie = self.grille_export()
             except:
                 showerror("Problème à l'importation du fichier",
                           "%s\nFormat non compatible" % fichier.name)
@@ -1539,10 +1534,22 @@ def localisation(langue):
 
 
 def file_load():
+    """
+    Charge un fichier
+    """
     grille_sudoku.file_load()
+    timer_on(False)
+    duree.set("0:00:00")
+    # Lancer le chronomètre
+    grille_sudoku.depart_timer = datetime.now()
+    timer_on()
+
 
 
 def file_save():
+    """
+    Sauvegarde une grille dans un fichier
+    """
     grille_sudoku.file_save()
 
 
@@ -1681,7 +1688,7 @@ def timer_on(on=True):
     """
     global after_id
     if on:
-        difference = datetime.now()-depart_timer
+        difference = datetime.now()-grille_sudoku.depart_timer
         duree.set(str(difference).split('.', 2)[0])
         after_id = root.after(1000, timer_on)
     elif after_id is not None:
@@ -1717,10 +1724,12 @@ def grec():
 
 
 def recommencer_la_partie():
-    global depart_timer
-    grille_sudoku.grille_import(sauvegarde_partie, pioche_sudoku)
+    """
+    Permet de recommencer la partie précédente.
+    """
+    grille_sudoku.grille_import(grille_sudoku.sauvegarde_partie, pioche_sudoku)
     # Lancer le chronomètre
-    depart_timer = datetime.now()
+    grille_sudoku.depart_timer = datetime.now()
     timer_on()
 
 
@@ -1728,7 +1737,6 @@ def commencer_la_partie():
     """
     Commence la partie
     """
-    global depart_timer, sauvegarde_partie
     bouton_index_cases.configure(state=NORMAL)
     bouton_commencer.configure(state=DISABLED)
     bouton_recommencer.configure(state=NORMAL)
@@ -1736,9 +1744,9 @@ def commencer_la_partie():
     # Préparer la grille pour le niveau choisi par le joueur
     niveau = echelle_niveaux.get()
     grille_sudoku.purger(niveau)
-    sauvegarde_partie = grille_sudoku.grille_export()
+    grille_sudoku.sauvegarde_partie = grille_sudoku.grille_export()
     # Lancer le chronomètre
-    depart_timer = datetime.now()
+    grille_sudoku.depart_timer = datetime.now()
     timer_on()
     # Afficher les boutons de gauche car un abandon est toujours possible
     for child in les_boutons.winfo_children():
