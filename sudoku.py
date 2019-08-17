@@ -1023,6 +1023,7 @@ class Sac(Frame):
     police_cardinal = "{dyuthi} 8"
     COULEUR_INITIALE_SAC = '#d9d9d9'
     COULEUR_SELECTION_SAC = 'LightSteelBlue3'
+    COULEUR_CARDINAL = 'lavender'
 
     def __init__(self, master, symbole, *args, **kwargs):
         """
@@ -1036,10 +1037,12 @@ class Sac(Frame):
         Button(self,
                name="symbole",
                font=self.police_symbole,
+               background=self.COULEUR_INITIALE_SAC,
                text=symbole).pack(side=TOP, fill=X)
         Label(self,
               name="cardinal",
               font=self.police_cardinal,
+              background = self.COULEUR_CARDINAL,
               text='{}'.format(self.cardinal)).pack(side=BOTTOM, fill=X)
 
     def reinitialiser(self):
@@ -1161,14 +1164,14 @@ class Sac(Frame):
 
     def selectionner(self):
         """
-        Active la couleur SELECTION du sac
+        Change la couleur du fond du bouton sac
         """
         root.nametowidget(
             str(self)+".symbole")['background'] = self.COULEUR_SELECTION_SAC
 
     def deselectionner(self):
         """
-        Active la couleur SANS-SELECTION du sac
+        Change la couleur du fond du bouton sac
         """
         root.nametowidget(
             str(self)+".symbole")['background'] = self.COULEUR_INITIALE_SAC
@@ -1227,7 +1230,7 @@ class Pioche:
     NBR_SACS = 9
     SYMBOLES = ['1', '2', '3', '4', '5', '6', '7', '8', '9']
     COULEUR_INITIALE_SAC = '#d9d9d9'
-    COULEUR_DESTINATIONS = '#d9d9d9'
+    COULEUR_DESTINATIONS = 'lavender'
     COULEUR_SELECTION_SAC = 'LightSteelBlue3'
     police_X = "{dyuthi}"
 
@@ -1246,7 +1249,11 @@ class Pioche:
             Sac(self.cadre,
                 index,
                 name='{}'.format(index)).pack(side=LEFT, fill=BOTH, expand=1)
-        Button(self.cadre, name='x', text='X', font=self.police_X).pack(
+        Button(self.cadre,
+               name='x',
+               text='X',
+               background = self.COULEUR_INITIALE_SAC,
+               font=self.police_X).pack(
             side=RIGHT, fill=BOTH, expand=True, anchor="se")
         self.symbole_actif = None
 
@@ -1429,7 +1436,7 @@ class Pioche:
         """
         Par lecture de la pioche, cette fonction retourne deux listes:
         - une avec les symboles à placer sur la grille dans l'ordre croissant
-        des combinaisons à calculer
+        du nombre de combinaisons à calculer
         - une avec l'ordre des symboles_a_placer
         """
         nombres_de_combinaisons = list()
@@ -1449,7 +1456,7 @@ class Pioche:
 
     def reduire_sac(self, symbole):
         """
-        Il faut réduire le nombre de symboles d'un sac de la pioche
+        Permet de réduire le nombre de symboles d'un sac de la pioche
 
         à chaque fois qu'un symbole est placé sur la grille.
         """
@@ -1459,7 +1466,7 @@ class Pioche:
         """
         À chaque fois qu'un symbole est effacé de la grille
 
-        il faut le remettre dans le sac de la pioche approprié.
+        cette fonction permet de le remettre dans le sac de la pioche approprié.
         """
         self[symbole].ajouter_un_element()
 
@@ -1512,6 +1519,9 @@ def localisation(langue):
     bouton_niveaux.configure(text={'fr': "Nouvelle partie",
                                    'en': "New game",
                                    'el': "Νέο παιχνίδι"}[langue])
+    echelle_niveaux.configure(label={'fr': 'Niveau (% restant à placer)',
+                                     'en': 'Level (remaining percentage)',
+                                     'el': "Επίπεδο (% που απομένει)"}[langue])
     bouton_recommencer.configure(text={'fr': "Recommencer",
                                        'en': "Start again",
                                        'el': "Επανεκκίνηση"}[langue])
@@ -1672,6 +1682,7 @@ def choix_du_niveau():
     label_patientez.pack_forget()
     bouton_index_cases.configure(state=DISABLED)
     bouton_niveaux.configure(state=DISABLED)
+    echelle_niveaux.configure(state=NORMAL)
     bouton_commencer.configure(state=NORMAL)
 
 
@@ -1732,6 +1743,7 @@ def commencer_la_partie():
     """
     bouton_index_cases.configure(state=NORMAL)
     bouton_commencer.configure(state=DISABLED)
+    echelle_niveaux.configure(state=DISABLED)
     bouton_recommencer.configure(state=NORMAL)
     bouton_niveaux.configure(state=NORMAL)
     # Préparer la grille pour le niveau choisi par le joueur
@@ -1830,7 +1842,7 @@ def gestion_des_evenements_on_mouse_leave(event):
     Contrôle de passage à autre chose après victoire.
     """
     if grille_sudoku.symboles_a_placer:
-        label_timer.configure(background=COULEUR_PIOCHE)
+        label_timer.configure(background=COULEUR_TIMER)
 
 
 def updatemenu():
@@ -1921,9 +1933,12 @@ COULEUR_CADRE_HAUT = 'lavender'
 COULEUR_CADRE_GAUCHE = 'lavender'
 COULEUR_CADRE_CENTRAL = 'lavender'
 COULEUR_CADRE_DROITE = 'lavender'
-COULEUR_PIOCHE = '#d9d9d9'
-COULEUR_CADRE_BAS = '#d9d9d9'
+COULEUR_SEPARATION = 'lavender'
+COULEUR_PIOCHE = 'lavender'
+COULEUR_TIMER = 'lavender'
+COULEUR_CADRE_BAS = 'lavender'
 COULEUR_VICTOIRE = 'green2'
+COULEUR_BOUTON = '#d9d9d9'
 # Niveau par défaut
 niveau = 30
 
@@ -1932,7 +1947,7 @@ niveau = 30
 
 root = Tk()
 root.title('SUDOKU SudoCool')
-# Aides
+# Aides checkbox grille et pioche
 aide_grille = IntVar()
 aide_pioche = IntVar()
 # Timer
@@ -1941,23 +1956,23 @@ duree.set("0:00:00")
 after_id = None
 
 # Création des conteneurs principaux
-cadre_haut = Frame(root, name='en_tete',
+cadre_haut = Frame(root,
                    background=COULEUR_CADRE_HAUT,
                    width=640, height=20)
-cadre_gauche = Frame(root, name='boutons',
+cadre_gauche = Frame(root,
                      background=COULEUR_CADRE_GAUCHE,
                      height=400)
-cadre_central = Frame(root, name='grille_sudoku',
+cadre_central = Frame(root,
                       background=COULEUR_CADRE_CENTRAL)
-cadre_droite = Frame(root, name='niveau',
-                     background='lavender')
-cadre_separation_verticale = Frame(root, name='separation',
-                                   background='lavender',
+cadre_droite = Frame(root,
+                     background=COULEUR_CADRE_DROITE)
+cadre_separation_verticale = Frame(root,
+                                   background=COULEUR_SEPARATION,
                                    height=20)
-cadre_pioche = Frame(root, name='pioche',
+cadre_pioche = Frame(root,
                      background=COULEUR_PIOCHE,
                      height=120)
-cadre_bas = Frame(root, name='pied_de_page',
+cadre_bas = Frame(root,
                   background=COULEUR_CADRE_BAS,
                   height=60)
 
@@ -1985,14 +2000,19 @@ grille_sudoku = Grille(cadre_central, pioche_sudoku)
 les_boutons = Frame(cadre_gauche, background=COULEUR_CADRE_GAUCHE)
 
 bouton_effacer_grille = Button(les_boutons,
+                               background=COULEUR_BOUTON, 
                                command=effacer_grille)
 bouton_remplissage = Button(les_boutons,
+                            background=COULEUR_BOUTON, 
                             command=remplissage)
 bouton_congeler = Button(les_boutons,
+                         background=COULEUR_BOUTON,
                          command=congeler)
 bouton_exemple = Button(les_boutons,
+                        background=COULEUR_BOUTON,
                         command=exemple_diffile)
 bouton_solveur = Button(les_boutons,
+                        background=COULEUR_BOUTON,
                         foreground='saddle brown',
                         command=solveur)
 label_timer = Label(cadre_gauche, textvariable=duree,
@@ -2020,7 +2040,8 @@ check_pioche = Checkbutton(cadre_aides,
                            variable=aide_pioche, onvalue=1,
                            offvalue=0,
                            background=COULEUR_CADRE_DROITE)
-bouton_index_cases = Button(cadre_jouer)
+bouton_index_cases = Button(cadre_jouer,
+                            background=COULEUR_BOUTON)
 bouton_niveaux = Button(cadre_jouer,
                         font=('Helvetica', 12),
                         background='LightSteelBlue3',
@@ -2029,8 +2050,7 @@ echelle_niveaux = Scale(cadre_jouer, orient='horizontal',
                         from_=30, to=70,
                         background=COULEUR_CADRE_DROITE,
                         resolution=1, tickinterval=5,
-                        length=200,
-                        label='Niveau (% restant à placer)')
+                        length=200)
 label_patientez = Label(cadre_jouer,
                         background=COULEUR_CADRE_DROITE)
 bouton_commencer = Button(cadre_jouer,
@@ -2038,6 +2058,7 @@ bouton_commencer = Button(cadre_jouer,
                           background='LightSteelBlue3',
                           command=commencer_la_partie)
 bouton_recommencer = Button(cadre_jouer,
+                            background=COULEUR_BOUTON,
                             state=DISABLED,
                             command=recommencer_la_partie)
 
@@ -2064,6 +2085,7 @@ cadre_bas.columnconfigure(0, weight=1)
 
 # Création du bouton quitter dans cadre_bas
 bouton_quitter = Button(cadre_bas,
+                        background=COULEUR_BOUTON,
                         command=root.quit)
 
 # Disposition du bouton quitter
@@ -2072,6 +2094,7 @@ localisation(langue)
 
 
 # MENU
+
 # Ne pas afficher les outils développeur au démarrage
 afficher_outils = BooleanVar()
 afficher_outils.set(False)
