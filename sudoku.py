@@ -123,7 +123,7 @@ class Grille:
     méthodes:
     ---------
     - cacher_jauge_parcourt_combinaisons
-    -monter_jauge_parcourt_combinaisons
+    - monter_jauge_parcourt_combinaisons
     - get_couleur_case
     - get_case
     - get_index_cousines
@@ -438,7 +438,7 @@ class Grille:
 
     def afficher_la_victoire(self):
         """
-        Révèle dans tkinter les index des 81 cases à la place du contenu.
+        Affiche les symboles en vert.
         """
         for index in range(self.NBR_CASES):
             ma_case = self[index]
@@ -1790,18 +1790,20 @@ def gestion_des_evenements_on_press(event):
         else:
             grille_sudoku.remplir_case(event.widget.index,
                                        pioche_sudoku.get_symbole_actif())
-            # Victoire détectée
-            if not(grille_sudoku.symboles_a_placer):
-                traiter_victoire()
     # Sélectionne le symbole actif si une case pleine est cliquée
     if (type(event.widget) == Case) and (event.widget.contenu):
         symbole_a_activer = event.widget.contenu
         grille_sudoku.activer_le_symbole(symbole_a_activer)
+    # Victoire détectée
+    if not(grille_sudoku.symboles_a_placer):
+        traiter_victoire()
 
 
 def traiter_victoire():
     """
-    En cas de résolution réussie
+    En cas de résolution réussie:
+    - le timer est arrêté et affiché sur fond vert
+    - les symboles sont affichés en vert 
     """
     timer_on(False)
     label_timer.configure(background=COULEUR_VICTOIRE)
