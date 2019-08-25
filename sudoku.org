@@ -1,5 +1,9 @@
 #+STARTUP: inlineimages
 #+LANGUAGE: fr
+#+LATEX_COMPILER: xelatex
+#+LATEX_HEADER: \usepackage{fontspec}
+#+LaTeX_HEADER: \usepackage{xunicode}
+
 #+LATEX_HEADER: \usepackage[AUTO]{babel}
 #+LaTeX_HEADER: \usepackage[x11names]{xcolor}
 #+LaTeX_HEADER: \hypersetup{linktoc = all, colorlinks = true, urlcolor = DodgerBlue4, citecolor = PaleGreen1, linkcolor = black}
@@ -9,24 +13,98 @@
 #+AUTHOR: Raoul HATTERER & Jean-Luc COSSALTER 
 #+OPTIONS: toc:2
 
+* Consignes
 Production d'un rapport de 20 pages maximum : expliquer l'interface homme-machine, expliquer le code, expliquer la démarche et les difficultés rencontrées, extraction d'activités NSI en séances (hors projets filés) en lien avec les compétences décrites dans le programme NSI de 
 Première.
 
 
 * Interface homme-machine
+** Au démarrage
+  Au démarrage (figure [[fig:au_demarrage]]) la grille de Sudoku apparaît vide au centre de la fenêtre.
+  Sur la gauche, la jauge de remplissage est vide.
+  La pioche, au bas de la fenêtre, indique que neuf symboles de chaque sorte restent à placer sur la grille.
 
- Au démarrage la grille de Sudoku apparaît vide. Sur la droite un bouton de couleur distinctive permet de commencer une nouvelle partie.
+  Sur la droite, un bouton *Nouvelle partie* de couleur distinctive permet d'amorcer une nouvelle partie.
 
-#+CAPTION: Au démarrage
+#+attr_html: :width 75%
+#+attr_latex: :width 400
+#+CAPTION: au démarrage
 #+NAME:   fig:au_demarrage
-#+attr_html: :width 50%
-#+attr_latex: :width 50%
-[[file:images/demarrage.png]]
+[[file:./images/au_demarrage.png]]
+# # C-c C-x C-v toggle preview
+# # C-c C-o to follow link
+
+** Nouvelle partie
+   La grille est tirée de façon aléatoire et secrète.
+   La pioche, au bas de la fenêtre (figure [[fig:choix_du_niveau]]) est vide: elle indique que tous les symboles ont été placés sur la grille.
+   Sur la gauche, la jauge de remplissage est pleine.
+   Sur la droite, un curseur est apparu, il permet de choisir le niveau de difficulté. Un bouton *Commencer* de couleur distinctive permet au joueur de commencer la partie.
+#+attr_html: :width 75%
+#+attr_latex: :width 400
+#+CAPTION: choix du niveau
+#+NAME:   fig:choix_du_niveau
+[[file:./images/choix_du_niveau.png]]
+# # C-c C-x C-v toggle preview
+# # C-c C-o to follow link
+
+** Début de partie 
+
+La grille pleine est vidée aléatoirement jusqu'à atteindre le niveau souhaité par le joueur. 
+La jauge de remplissage et la pioche se retrouvent partiellement remplies.
+La grille est révélée au joueur et les cases dors et déjà remplies sont gelées : le joueur ne peut ni les effacer ni les modifier.
+Sur la gauche, le chronomètre mis en marche décompte le temps qui s'écoule.  
 
 
-# C-c C-x C-v toggle preview
-# C-c C-o to follow link
+#+attr_html: :width 75%
+#+attr_latex: :width 400
+#+CAPTION: début de partie
+#+NAME:   fig:début_de_partie
+[[file:./images/debut_de_partie.png]]
+# # C-c C-x C-v toggle preview
+# # C-c C-o to follow link
 
-#+INCLUDE: "sudoku.py" src python -n
+** Placer un symbole sur la grille
+
+Pour placer un symbole sur la grille, le joueur commence par sélectionner le symbole qu'il souhaite placer soit en le choisissant sur la grille, soit en le choisissant dans la pioche. Le symbole sélectionné apparaît alors d'une couleur distinctive (figure [[fig:selectionner_un_symbole]]).
+
+#+attr_html: :width 75%
+#+attr_latex: :width 400
+#+CAPTION: sélectionner un symbole
+#+NAME:   fig:selectionner_un_symbole
+[[file:./images/selectionner_un_symbole.png]]
+# # C-c C-x C-v toggle preview
+# # C-c C-o to follow link
+
+Le joueur clique alors sur une case vide pour y placer le symbole.
+Si la case est susceptible d'accepter le symbole celui est placé (figure [[fig:placer_un_symbole]]). 
+La pioche et la jauge de remplissage évoluent en conséquence.
+
+#+attr_html: :width 75%
+#+attr_latex: :width 400
+#+CAPTION: placer un symbole
+#+NAME:   fig:placer_un_symbole
+[[file:./images/placer_un_symbole.png]]
+# # C-c C-x C-v toggle preview
+# # C-c C-o to follow link
+
+** Effacer un symbole de la grille
+Pour effacer un symbole, le joueur sélectionne le  bouton d'effacement *X* à droite de la pioche. Ce bouton apparaît alors en rouge (figure [[fig:effacer_un_symbole]]).
+Ce bouton agit en bascule: si le joueur clique dessus une nouvelle fois, on sort du mode effacement. On peut aussi en sortir en sélectionnant un autre symbole.
+
+Quand le mode effacement est actif, à chaque fois que le joueur clique sur une case pleine de la grille, celle-ci est effacée.
+La pioche et la jauge de remplissage évoluent en conséquence.
+
+#+attr_html: :width 75%
+#+attr_latex: :width 400
+#+CAPTION: effacer un symbole
+#+NAME:   fig:effacer_un_symbole
+[[file:./images/effacer_un_symbole.png]]
+# # C-c C-x C-v toggle preview
+# # C-c C-o to follow link
+
+
+
+#+INCLUDE: "sudoku.py" src python -n 5 :lines "-30"
+
 
 
