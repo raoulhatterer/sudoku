@@ -26,7 +26,7 @@ Vous pouvez faire un projet sur un autre sujet du moment qu'il respecte le cahie
 
 Si vous décidez de faire un autre projet, mettez sa description dans cette section du README. 
 
-### Avancement du projet
+### Rapport de projet
 
 
-* [Avancement (org)](https://github.com/L2InfoAMU/diu-eil-project123-lycee_mediterranee/blob/master/sudoku.org)
+* [Rapport de projet (org)](https://github.com/L2InfoAMU/diu-eil-project123-lycee_mediterranee/blob/master/rapport_projet_sudoku.org)

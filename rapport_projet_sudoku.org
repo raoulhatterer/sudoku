@@ -59,6 +59,7 @@ Sur la gauche, le chronomètre mis en marche décompte le temps qui s'écoule.
 #+attr_latex: :width 400
 #+CAPTION: début de partie
 #+NAME:   fig:début_de_partie
+
 [[file:./images/debut_de_partie.png]]
 # # C-c C-x C-v toggle preview
 # # C-c C-o to follow link
