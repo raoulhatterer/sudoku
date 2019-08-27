@@ -152,9 +152,15 @@ class Grille:
     - remplissage
     - placer_pioche_sur_grille
     - placement_est_possible
+    - combinaison_existe
+    - purger
     - grille_export
+    - grille_export_csv
     - grille_import
     - recalculer_les_destinations_envisageables
+    - congeler
+    - file_load
+    - file_save
 
     exemple:
     -------
@@ -1197,7 +1203,7 @@ class Sac(Frame):
 
 class Pioche:
     """
-    Classe représentant 9 sacs contenant chacun des symboles identiques tous
+    Classe utilisant 9 sacs contenant chacun des symboles identiques tous
     différents (1 sac avec que des "1", un autre avec que des "2", etc.)
 
     À l'initialisation de la grille, un certain nombre de ces symboles est
