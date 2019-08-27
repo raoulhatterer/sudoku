@@ -5,7 +5,7 @@
 # Pour debugger:
 # import pdb
 # pdb.set_trace()
-#import pdb, traceback, sys
+# import pdb, traceback, sys
 
 # Chargement des modules
 from tkinter import Tk, ttk, Frame, Button, Label, Message, LabelFrame, Scale,\
@@ -218,7 +218,7 @@ class Grille:
                      # background pour linux et windows
                      background=self.get_couleur_case(
                          index, ' '),
-                     # highlightbackground pour osx qui a un bug avec background des boutons 
+                     # highlightbackground pour mac osx
                      highlightbackground=self.get_couleur_case(
                          index, ' ')).grid(row=j,
                                            column=i,
@@ -1046,13 +1046,13 @@ class Sac(Frame):
         Button(self,
                name="symbole",
                font=self.police_symbole,
-               background=self.COULEUR_INITIALE_SAC, # linux et windows
-               highlightbackground=self.COULEUR_INITIALE_SAC, # mac osx
+               background=self.COULEUR_INITIALE_SAC,  # linux et windows
+               highlightbackground=self.COULEUR_INITIALE_SAC,  # mac osx
                text=symbole).pack(side=TOP, fill=X)
         Label(self,
               name="cardinal",
               font=self.police_cardinal,
-              background=self.COULEUR_CARDINAL, 
+              background=self.COULEUR_CARDINAL,
               text='{}'.format(self.cardinal)).pack(side=BOTTOM, fill=X)
 
     def reinitialiser(self):
@@ -1183,7 +1183,6 @@ class Sac(Frame):
         root.nametowidget(
             str(self)+".symbole")['highlightbackground'] = self.COULEUR_SELECTION_SAC
 
-
     def deselectionner(self):
         """
         Change la couleur du fond du bouton sac
@@ -1271,8 +1270,8 @@ class Pioche:
         Button(self.cadre,
                name='x',
                text='X',
-               background=self.COULEUR_INITIALE_SAC, # linux et windows
-               highlightbackground=self.COULEUR_INITIALE_SAC, # mac osx
+               background=self.COULEUR_INITIALE_SAC,  # linux et windows
+               highlightbackground=self.COULEUR_INITIALE_SAC,  # mac osx
                font=self.police_X).pack(
             side=RIGHT, fill=BOTH, expand=True, anchor="se")
         self.symbole_actif = None
@@ -1404,7 +1403,6 @@ class Pioche:
         # mac osx
         root.nametowidget(
             str(self.cadre)+'.x')['highlightbackground'] = self.COULEUR_INITIALE_SAC
-        
 
     def basculer_le_bouton_effacerX(self):
         """
@@ -1420,7 +1418,6 @@ class Pioche:
             root.nametowidget(str(self.cadre)+'.x')['background'] = 'red'
             # case X en rouge (osx)
             root.nametowidget(str(self.cadre)+'.x')['highlightbackground'] = 'red'
-            
 
     def deselectionner_tout(self):
         """
@@ -1819,7 +1816,9 @@ def gestion_des_evenements_on_press(event):
             grille_sudoku.remplir_case(event.widget.index,
                                        pioche_sudoku.get_symbole_actif())
     # Sélectionne le symbole actif si une case pleine est cliquée
-    if (type(event.widget) == Case) and (event.widget.contenu) and bouton_commencer['state'] == DISABLED:
+    if (type(event.widget) == Case)\
+       and (event.widget.contenu)\
+       and (bouton_commencer['state'] == DISABLED):
         symbole_a_activer = event.widget.contenu
         grille_sudoku.activer_le_symbole(symbole_a_activer)
     # Victoire détectée
@@ -1831,7 +1830,7 @@ def traiter_victoire():
     """
     En cas de résolution réussie:
     - le timer est arrêté et affiché sur fond vert
-    - les symboles sont affichés en vert 
+    - les symboles sont affichés en vert
     """
     timer_on(False)
     label_timer.configure(background=COULEUR_VICTOIRE)
@@ -1881,21 +1880,21 @@ def updatemenu():
     - la mise à jour du menu en tenant compte de la langue sélectionnée
     - d'afficher ou de cacher outils et chronomètre.
     """
-    if system() == 'Darwin': # C'est un mac
+    if system() == 'Darwin':  # C'est un mac
         # Sur mac il y a d'office un menu Python en première position
-        MENU1, MENU2, MENU3 = (2,3,4)        
+        MENU1, MENU2, MENU3 = (2, 3, 4)
     else:
-        MENU1, MENU2, MENU3 = (1,2,3)
+        MENU1, MENU2, MENU3 = (1, 2, 3)
     global langue, afficher_outils, afficher_chronometre
     menubar.entryconfig(MENU1, label={'fr': 'Fichier',
-                                             'en': 'File',
-                                             'el': 'Αρχείο'}[langue])
+                                      'en': 'File',
+                                      'el': 'Αρχείο'}[langue])
     menubar.entryconfig(MENU2, label={'fr': 'Langue',
-                                            'en': 'Language',
-                                            'el': 'Γλώσσα'}[langue])
+                                      'en': 'Language',
+                                      'el': 'Γλώσσα'}[langue])
     menubar.entryconfig(MENU3, label={'fr': 'Afficher',
-                                              'en': 'Display',
-                                              'el': 'Απεικόνιση'}[langue])
+                                      'en': 'Display',
+                                      'el': 'Απεικόνιση'}[langue])
     menu_fichiers.entryconfig(0, label={'fr': 'Effacer la grille',
                                         'en': 'Clear grid',
                                         'el': 'Καθαρίστε το πλέγμα'}[langue])
@@ -1917,7 +1916,6 @@ def updatemenu():
     menu_afficher.entryconfig(2, label={'fr': 'À propos',
                                         'en': 'About',
                                         'el': 'Σχετικά με'}[langue])
-    
 
     # Afficher/cacher les outils
     if afficher_outils.get() and afficher_chronometre.get():
@@ -1962,10 +1960,10 @@ def apropos():
     lien.bind("<Button-1>", ouvre_lien)
     if system() == 'Darwin':
         # effets de bord avec Toplevel sous mac
-        # pis allé : on quitte l'application 
+        # pis allé : on quitte l'application
         bouton_quitter_top = Button(top, text='Quitter', command=top.quit)
     else:
-        bouton_quitter_top = Button(top, text='OK', command=top.destroy)        
+        bouton_quitter_top = Button(top, text='OK', command=top.destroy)
     bouton_quitter_top.pack(padx=40, pady=10)
 
 # CONSTANTES
@@ -2041,24 +2039,24 @@ grille_sudoku = Grille(cadre_central, pioche_sudoku)
 les_boutons = Frame(cadre_gauche, background=COULEUR_CADRE_GAUCHE)
 
 bouton_effacer_grille = Button(les_boutons,
-                               background=COULEUR_BOUTON, # linux et windows
-                               highlightbackground=COULEUR_BOUTON, # mac osx
+                               background=COULEUR_BOUTON,  # linux et windows
+                               highlightbackground=COULEUR_BOUTON,  # mac osx
                                command=effacer_grille)
 bouton_remplissage = Button(les_boutons,
-                            background=COULEUR_BOUTON, # linux et windows
-                            highlightbackground=COULEUR_BOUTON, # mac osx
+                            background=COULEUR_BOUTON,  # linux et windows
+                            highlightbackground=COULEUR_BOUTON,  # mac osx
                             command=remplissage)
 bouton_congeler = Button(les_boutons,
-                         background=COULEUR_BOUTON, # linux et windows
-                         highlightbackground=COULEUR_BOUTON, # mac osx
+                         background=COULEUR_BOUTON,  # linux et windows
+                         highlightbackground=COULEUR_BOUTON,  # mac osx
                          command=congeler)
 bouton_exemple = Button(les_boutons,
-                        background=COULEUR_BOUTON, # linux et windows
-                        highlightbackground=COULEUR_BOUTON, # mac osx
+                        background=COULEUR_BOUTON,  # linux et windows
+                        highlightbackground=COULEUR_BOUTON,  # mac osx
                         command=exemple_diffile)
 bouton_solveur = Button(les_boutons,
-                        background=COULEUR_BOUTON, # linux et windows
-                        highlightbackground=COULEUR_BOUTON, # mac osx
+                        background=COULEUR_BOUTON,  # linux et windows
+                        highlightbackground=COULEUR_BOUTON,  # mac osx
                         foreground='saddle brown',
                         command=solveur)
 label_timer = Label(cadre_gauche, textvariable=duree,
@@ -2090,8 +2088,8 @@ bouton_index_cases = Button(cadre_jouer,
                             background=COULEUR_BOUTON)
 bouton_niveaux = Button(cadre_jouer,
                         font=('Helvetica', 12),
-                        background='LightSteelBlue3', # linux windows
-                        highlightbackground='LightSteelBlue3', # mac osx                       
+                        background='LightSteelBlue3',  # linux windows
+                        highlightbackground='LightSteelBlue3',  # mac osx                       
                         command=choix_du_niveau)
 echelle_niveaux = Scale(cadre_jouer, orient='horizontal',
                         from_=30, to=70,
@@ -2102,12 +2100,12 @@ label_patientez = Label(cadre_jouer,
                         background=COULEUR_CADRE_DROITE)
 bouton_commencer = Button(cadre_jouer,
                           font=('Helvetica', 16),
-                          background='LightSteelBlue3', # linux et windows
-                          highlightbackground='LightSteelBlue3', # mac osx       
+                          background='LightSteelBlue3',  # linux et windows
+                          highlightbackground='LightSteelBlue3',  # mac osx
                           command=commencer_la_partie)
 bouton_recommencer = Button(cadre_jouer,
-                            background=COULEUR_BOUTON, # linux et windows
-                            highlightbackground=COULEUR_BOUTON, # mac osx
+                            background=COULEUR_BOUTON,  # linux et windows
+                            highlightbackground=COULEUR_BOUTON,  # mac osx
                             state=DISABLED,
                             command=recommencer_la_partie)
 
@@ -2134,8 +2132,8 @@ cadre_bas.columnconfigure(0, weight=1)
 
 # Création du bouton quitter dans cadre_bas
 bouton_quitter = Button(cadre_bas,
-                        background=COULEUR_BOUTON, # linux et windows
-                        highlightbackground=COULEUR_BOUTON, # mac osx
+                        background=COULEUR_BOUTON,  # linux et windows
+                        highlightbackground=COULEUR_BOUTON,  # mac osx
                         command=root.quit)
 
 # Disposition du bouton quitter
