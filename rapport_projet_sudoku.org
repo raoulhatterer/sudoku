@@ -171,7 +171,7 @@
 
 ** Aides
    Le joueur peut activer des aides en cochant les cases aides à droite de la grille. 
-   - l'aide =Grille= permet d'afficher les prétendants au survol des cases (figure [[fig:pretendants]]). Au départ toutes les cases admettent les neuf symboles comme prétendants. Puis les cases cousines dans la même ligne, colonne ou bloc 3x3 sont déduites.
+   - l'aide =Grille= permet d'afficher (en haut à droite) les prétendants au survol des cases (figure [[fig:pretendants]]). Au départ, toutes les cases admettent les neuf symboles comme prétendants. Puis, au fur et à mesure du remplissage, les symboles présents dans les cases cousines de la même ligne, colonne ou bloc 3x3 sont déduites.
 
    #+attr_html: :width 75%
    #+attr_latex: :width 400
@@ -181,7 +181,7 @@
    # # C-c C-x C-v toggle preview
    # # C-c C-o to follow link
   
-   - l'aide =Pioche= permet d'indiquer les destinations envisageables pour les symboles de la pioche. Le bouton *Index cases* permet de révéler de façon transitoire les index des cases tant que le bouton de la souris est enfoncé.
+   - l'aide =Pioche= permet d'indiquer (figure [[fig:destinations]] à gauche du *X*) les destinations envisageables pour les symboles de la pioche. Le bouton *Index cases* permet de révéler de façon transitoire les index des cases tant que le bouton de la souris est enfoncé.
 
    #+attr_html: :width 75%
    #+attr_latex: :width 400
@@ -223,3 +223,15 @@
 
 * Démarche
 
+- Ne pas consulter de documentation sur les méthodes de résolution pour essayer d'établir une méthode personnelle.
+- Chaque case vide à des prétendants (symboles que l'ont peut envisager de placer dans la case). La liste des prétendants se réduit au fur et à mesure que la grille se remplit car il faut retirer les symboles placés dans les cases cousines (cases de même ligne, colonne ou bloc). Je me propose donc de gérer les prétendants pour chacune des cases de la grille (d'où le menu d'aide =Grille= qui fait apparaître les prétendants).
+- Les symboles sont prélevés dans une pioche qui contient 9 sacs contenant chacun des symboles identiques. Au départ il y a 81 destinations possibles pour le premier symbole à placer. Le nombre de destinations possibles pour le second symbole à placer n'est pas forcément de 80 car si le second symbole est le même que le premier il ne peut pas être placé dans une case cousine du premier. Je me propose donc de  gérer les destinations pour chaque symbole au cours de la partie (d'où le menu d'aide =Pioche= qui fait apparaître les destinations).
+- Tirage d'une grille: 
+  - aléatoirement je place le premier '1' dans une des 81 cases, puis le deuxième '1' aléatoirement dans une des destinations restantes, etc. Chaque placement est stocké dans une pile. Si l'on arrive à une impasse (case sans contenu ni prétendants) on remonte dans la pile et on choisi aléatoirement une autre destination envisageable parmi les destinations non testées. 
+  - Pour gagner en efficacité, je rajoute un watchdog. Si l'on remonte plus de 4 niveaux dans la pile, le watchdog se déclenche et provoque l'effacement des '1' qui placés en premier avec plein de destinations à leur disposition ont peut être adopté une configuration problématique pour le placement des autres symboles. Les '1' sont renvoyés en fin de liste des symboles à placer. Si le watchdog se déclenche à nouveau, les '2' sont à leur tour renvoyés en fin de liste, etc. Pour éviter de rentrer dans un cercle vicieux qui consisterait à renvoyer les symboles en fin de liste les uns après les autre, la profondeur de déclenchement du watchdog augmente au cours des déclenchements. 
+- Réglage du niveau: on part d'une grille pleine obtenue par tirage. Puis on réalise la suppression aléatoire des symboles de la grille qui sont replacés dans la pioche  jusqu'à parvenir au taux de remplissage souhaité par le joueur. Cette méthode ne garantit pas l'unicité de la solution mais, peu importe, car si le joueur parvient à placer tous les symboles sur la grille la victoire lui est accordée (même si la grille pleine tirée au départ était différente).  
+- Solveur : 
+  - Pas indispensable par pouvoir avoir un jeu fonctionnel (sauf si l'on tient à s'assurer de l'unicité) mais réalisé tout de même.
+  - Première tentative: utiliser le mécanisme du tireur sans watchdog... fonctionne en théorie mais la résolution est beaucoup mais alors beaucoup trop longue car des permutations équivalentes sont testées comme étant des propositions différentes .  
+  - Solution : s'inspirer du tireur mais utiliser des ensembles des symboles plutôt que de placer un symbole après l'autre.
+        
