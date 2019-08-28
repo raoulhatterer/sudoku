@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="fr" xml:lang="fr">
 <head>
-<!-- 2019-08-28 mer. 19:37 -->
+<!-- 2019-08-28 mer. 20:43 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Diplôme Inter-Universitaire</title>
@@ -250,55 +250,63 @@ for the JavaScript code in this tag.
 <h2>Table des matières</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#org03902fd">1. Consignes</a></li>
-<li><a href="#org71eb0d8">2. Interface homme-machine</a>
+<li><a href="#org2003603">1. Introduction</a></li>
+<li><a href="#org23ec902">2. Première version</a>
 <ul>
-<li><a href="#org1b503cf">2.1. Au démarrage</a></li>
-<li><a href="#org7997087">2.2. Nouvelle partie</a></li>
-<li><a href="#org68b9b3f">2.3. Début de partie</a></li>
-<li><a href="#org62f8449">2.4. Placer un symbole sur la grille</a></li>
-<li><a href="#orgdef70dc">2.5. Effacer un symbole de la grille</a></li>
-<li><a href="#org5bd784e">2.6. Menus</a></li>
-<li><a href="#org7fa9afd">2.7. Aides</a></li>
+<li><a href="#org781b8f6">2.1. L'interface homme-machine</a>
+<ul>
+<li><a href="#orga0fc079">2.1.1. Au démarrage</a></li>
+<li><a href="#orgf55adf9">2.1.2. Nouvelle partie</a></li>
+<li><a href="#orgbef3a6a">2.1.3. Début de partie</a></li>
+<li><a href="#orgb8b0d3d">2.1.4. Placer un symbole sur la grille</a></li>
+<li><a href="#orgb38b3cd">2.1.5. Effacer un symbole de la grille</a></li>
+<li><a href="#org4a87fec">2.1.6. Menus</a></li>
+<li><a href="#orgd175782">2.1.7. Aides</a></li>
 </ul>
 </li>
-<li><a href="#orgcfe2f6a">3. Le code</a>
+<li><a href="#org3ffdf0c">2.2. Le code</a>
 <ul>
-<li><a href="#org9a17572">3.1. Documentation</a></li>
-<li><a href="#org457bac3">3.2. Multiplateforme</a></li>
+<li><a href="#orgd8a46a9">2.2.1. Documentation</a></li>
+<li><a href="#org0469e83">2.2.2. Multiplateforme</a></li>
 </ul>
 </li>
-<li><a href="#org6cad109">4. Démarche</a>
+<li><a href="#org5e8faed">2.3. La démarche</a>
 <ul>
-<li><a href="#orge07ba49">4.1. Réflexion initiale</a></li>
-<li><a href="#org639bb11">4.2. Tirage d'une grille</a></li>
-<li><a href="#orgdf32896">4.3. Solveur</a></li>
+<li><a href="#orgb1bff28">2.3.1. Réflexion initiale</a></li>
+<li><a href="#orgaf5442b">2.3.2. Tirage d'une grille</a></li>
+<li><a href="#org48415d1">2.3.3. Solveur</a></li>
 </ul>
 </li>
+</ul>
+</li>
+<li><a href="#org978727d">3. Deuxième version</a></li>
+<li><a href="#orga8509e1">4. Troisième version</a></li>
 </ul>
 </div>
 </div>
 
-<div id="outline-container-org03902fd" class="outline-2">
-<h2 id="org03902fd"><span class="section-number-2">1</span> Consignes</h2>
+<div id="outline-container-org2003603" class="outline-2">
+<h2 id="org2003603"><span class="section-number-2">1</span> Introduction</h2>
 <div class="outline-text-2" id="text-1">
 <p>
-Production d'un rapport de 20 pages maximum : expliquer l'interface homme-machine, expliquer le code, expliquer la démarche et les difficultés rencontrées, extraction d'activités NSI en séances (hors projets filés) en lien avec les compétences décrites dans le programme NSI de 
-Première.
+Nous avons réalisé trois versions du jeu de Sudoku. La première utilise une pile et remplit la grille au fur et à mesure en s'assurant que les symboles déjà placés autorisent le placement. La seconde utilise les méthodes de résolution classiques comme singleton nu, singleton caché, élimination indirecte, XWING, SWORD-fish, etc. Enfin, la troisième version est une version web qui permet de jouer et de vérifier la grille en utilisant Javascript.    
 </p>
 </div>
 </div>
 
-
-<div id="outline-container-org71eb0d8" class="outline-2">
-<h2 id="org71eb0d8"><span class="section-number-2">2</span> Interface homme-machine</h2>
+<div id="outline-container-org23ec902" class="outline-2">
+<h2 id="org23ec902"><span class="section-number-2">2</span> Première version</h2>
 <div class="outline-text-2" id="text-2">
 </div>
-<div id="outline-container-org1b503cf" class="outline-3">
-<h3 id="org1b503cf"><span class="section-number-3">2.1</span> Au démarrage</h3>
+<div id="outline-container-org781b8f6" class="outline-3">
+<h3 id="org781b8f6"><span class="section-number-3">2.1</span> L'interface homme-machine</h3>
 <div class="outline-text-3" id="text-2-1">
+</div>
+<div id="outline-container-orga0fc079" class="outline-4">
+<h4 id="orga0fc079"><span class="section-number-4">2.1.1</span> Au démarrage</h4>
+<div class="outline-text-4" id="text-2-1-1">
 <p>
-Au démarrage (figure <a href="#org956f01d">1</a>) la grille de Sudoku apparaît vide au centre de la fenêtre.
+Au démarrage (figure <a href="#org58dec38">1</a>) la grille de Sudoku apparaît vide au centre de la fenêtre.
 Sur la gauche, la jauge de remplissage est vide.
 La pioche, au bas de la fenêtre, indique que neuf symboles de chaque sorte restent à placer sur la grille.
 </p>
@@ -308,7 +316,7 @@ Sur la droite, un bouton <b>Nouvelle partie</b> de couleur distinctive permet d'
 </p>
 
 
-<div id="org956f01d" class="figure">
+<div id="org58dec38" class="figure">
 <p><img src="./images/au_demarrage.png" alt="au_demarrage.png" width="60%" />
 </p>
 <p><span class="figure-number">Figure&nbsp;1&nbsp;: </span>au démarrage</p>
@@ -316,17 +324,17 @@ Sur la droite, un bouton <b>Nouvelle partie</b> de couleur distinctive permet d'
 </div>
 </div>
 
-<div id="outline-container-org7997087" class="outline-3">
-<h3 id="org7997087"><span class="section-number-3">2.2</span> Nouvelle partie</h3>
-<div class="outline-text-3" id="text-2-2">
+<div id="outline-container-orgf55adf9" class="outline-4">
+<h4 id="orgf55adf9"><span class="section-number-4">2.1.2</span> Nouvelle partie</h4>
+<div class="outline-text-4" id="text-2-1-2">
 <p>
 La grille est tirée de façon aléatoire et secrète.
-La pioche, au bas de la fenêtre (figure <a href="#org206360a">2</a>) est vide: elle indique que tous les symboles ont été placés sur la grille.
+La pioche, au bas de la fenêtre (figure <a href="#orgcd56cfe">2</a>) est vide: elle indique que tous les symboles ont été placés sur la grille.
 Sur la gauche, la jauge de remplissage est pleine.
 Sur la droite, un curseur est apparu, il permet de choisir le niveau de difficulté. Un bouton <b>Commencer</b> de couleur distinctive permet au joueur de commencer la partie.
 </p>
 
-<div id="org206360a" class="figure">
+<div id="orgcd56cfe" class="figure">
 <p><img src="./images/choix_du_niveau.png" alt="choix_du_niveau.png" width="60%" />
 </p>
 <p><span class="figure-number">Figure&nbsp;2&nbsp;: </span>choix du niveau</p>
@@ -334,9 +342,9 @@ Sur la droite, un curseur est apparu, il permet de choisir le niveau de difficul
 </div>
 </div>
 
-<div id="outline-container-org68b9b3f" class="outline-3">
-<h3 id="org68b9b3f"><span class="section-number-3">2.3</span> Début de partie</h3>
-<div class="outline-text-3" id="text-2-3">
+<div id="outline-container-orgbef3a6a" class="outline-4">
+<h4 id="orgbef3a6a"><span class="section-number-4">2.1.3</span> Début de partie</h4>
+<div class="outline-text-4" id="text-2-1-3">
 <p>
 La grille pleine est vidée aléatoirement jusqu'à atteindre le niveau souhaité par le joueur. 
 La jauge de remplissage et la pioche se retrouvent partiellement remplies.
@@ -346,7 +354,7 @@ Sur la gauche, le chronomètre est mis en marche et décompte le temps qui s'éc
 
 
 
-<div id="orgaf18e05" class="figure">
+<div id="org55ed1a1" class="figure">
 <p><img src="./images/debut_de_partie.png" alt="debut_de_partie.png" width="60%" />
 </p>
 <p><span class="figure-number">Figure&nbsp;3&nbsp;: </span>début de partie</p>
@@ -354,15 +362,15 @@ Sur la gauche, le chronomètre est mis en marche et décompte le temps qui s'éc
 </div>
 </div>
 
-<div id="outline-container-org62f8449" class="outline-3">
-<h3 id="org62f8449"><span class="section-number-3">2.4</span> Placer un symbole sur la grille</h3>
-<div class="outline-text-3" id="text-2-4">
+<div id="outline-container-orgb8b0d3d" class="outline-4">
+<h4 id="orgb8b0d3d"><span class="section-number-4">2.1.4</span> Placer un symbole sur la grille</h4>
+<div class="outline-text-4" id="text-2-1-4">
 <p>
-Pour placer un symbole sur la grille, le joueur commence par sélectionner le symbole qu'il souhaite placer soit en le choisissant sur la grille, soit en le choisissant dans la pioche. Le symbole sélectionné apparaît alors d'une couleur distinctive (figure <a href="#orgfb51767">4</a>).
+Pour placer un symbole sur la grille, le joueur commence par sélectionner le symbole qu'il souhaite placer soit en le choisissant sur la grille, soit en le choisissant dans la pioche. Le symbole sélectionné apparaît alors d'une couleur distinctive (figure <a href="#orgae6e75e">4</a>).
 </p>
 
 
-<div id="orgfb51767" class="figure">
+<div id="orgae6e75e" class="figure">
 <p><img src="./images/selectionner_un_symbole.png" alt="selectionner_un_symbole.png" width="60%" />
 </p>
 <p><span class="figure-number">Figure&nbsp;4&nbsp;: </span>sélectionner un symbole</p>
@@ -370,12 +378,12 @@ Pour placer un symbole sur la grille, le joueur commence par sélectionner le sy
 
 <p>
 Le joueur clique alors sur une case vide pour y placer le symbole.
-Si la case est susceptible d'accepter le symbole celui est placé (figure <a href="#org04f016d">5</a>). 
+Si la case est susceptible d'accepter le symbole celui est placé (figure <a href="#org87a4f58">5</a>). 
 La pioche et la jauge de remplissage évoluent en conséquence.
 </p>
 
 
-<div id="org04f016d" class="figure">
+<div id="org87a4f58" class="figure">
 <p><img src="./images/placer_un_symbole.png" alt="placer_un_symbole.png" width="60%" />
 </p>
 <p><span class="figure-number">Figure&nbsp;5&nbsp;: </span>placer un symbole</p>
@@ -383,11 +391,11 @@ La pioche et la jauge de remplissage évoluent en conséquence.
 </div>
 </div>
 
-<div id="outline-container-orgdef70dc" class="outline-3">
-<h3 id="orgdef70dc"><span class="section-number-3">2.5</span> Effacer un symbole de la grille</h3>
-<div class="outline-text-3" id="text-2-5">
+<div id="outline-container-orgb38b3cd" class="outline-4">
+<h4 id="orgb38b3cd"><span class="section-number-4">2.1.5</span> Effacer un symbole de la grille</h4>
+<div class="outline-text-4" id="text-2-1-5">
 <p>
-Pour effacer un symbole, le joueur sélectionne le  bouton d'effacement <b>X</b> à droite de la pioche. Ce bouton apparaît alors en rouge (figure <a href="#orgd206181">6</a>).
+Pour effacer un symbole, le joueur sélectionne le  bouton d'effacement <b>X</b> à droite de la pioche. Ce bouton apparaît alors en rouge (figure <a href="#org038e8cf">6</a>).
 Ce bouton agit en bascule: si le joueur clique dessus une nouvelle fois, on sort du mode effacement. On peut aussi en sortir en sélectionnant un autre symbole.
 </p>
 
@@ -397,7 +405,7 @@ La pioche et la jauge de remplissage évoluent en conséquence.
 </p>
 
 
-<div id="orgd206181" class="figure">
+<div id="org038e8cf" class="figure">
 <p><img src="./images/effacer_un_symbole.png" alt="effacer_un_symbole.png" width="60%" />
 </p>
 <p><span class="figure-number">Figure&nbsp;6&nbsp;: </span>effacer un symbole</p>
@@ -405,52 +413,52 @@ La pioche et la jauge de remplissage évoluent en conséquence.
 </div>
 </div>
 
-<div id="outline-container-org5bd784e" class="outline-3">
-<h3 id="org5bd784e"><span class="section-number-3">2.6</span> Menus</h3>
-<div class="outline-text-3" id="text-2-6">
+<div id="outline-container-org4a87fec" class="outline-4">
+<h4 id="org4a87fec"><span class="section-number-4">2.1.6</span> Menus</h4>
+<div class="outline-text-4" id="text-2-1-6">
 <p>
 En haut de la fenêtre se trouve la barre de menu qui comporte:
 </p>
 <ul class="org-ul">
-<li>le menu fichier (figure <a href="#orgde89d03">7</a>) qui permet notamment d'ouvrir un fichier (figure <a href="#orgafe740f">8</a>). Le format <b>sdk</b> n'est pas encore implémenté, il faut donc utiliser le format <b>csv</b>.</li>
+<li>le menu fichier (figure <a href="#org493f3b5">7</a>) qui permet notamment d'ouvrir un fichier (figure <a href="#org407b600">8</a>). Le format <b>sdk</b> n'est pas encore implémenté, il faut donc utiliser le format <b>csv</b>.</li>
 </ul>
 
-<div id="orgde89d03" class="figure">
+<div id="org493f3b5" class="figure">
 <p><img src="./images/menu_fichier.png" alt="menu_fichier.png" width="60%" />
 </p>
 <p><span class="figure-number">Figure&nbsp;7&nbsp;: </span>menu fichier</p>
 </div>
 
 
-<div id="orgafe740f" class="figure">
+<div id="org407b600" class="figure">
 <p><img src="./images/ouvrir.png" alt="ouvrir.png" width="60%" />
 </p>
 <p><span class="figure-number">Figure&nbsp;8&nbsp;: </span>ouvrir un fichier</p>
 </div>
 
 <ul class="org-ul">
-<li>le menu langue (figure <a href="#orgdb5e23d">9</a>) permet de choisir la langue de l'interface parmi français, anglais (figure <a href="#org060c6a9">10</a>) et grec.</li>
+<li>le menu langue (figure <a href="#org42f5488">9</a>) permet de choisir la langue de l'interface parmi français, anglais (figure <a href="#orgba7f55d">10</a>) et grec.</li>
 </ul>
 
 
-<div id="orgdb5e23d" class="figure">
+<div id="org42f5488" class="figure">
 <p><img src="./images/choix_langue.png" alt="choix_langue.png" width="60%" />
 </p>
 <p><span class="figure-number">Figure&nbsp;9&nbsp;: </span>choix de la langue</p>
 </div>
 
 
-<div id="org060c6a9" class="figure">
+<div id="orgba7f55d" class="figure">
 <p><img src="./images/anglais.png" alt="anglais.png" width="60%" />
 </p>
 <p><span class="figure-number">Figure&nbsp;10&nbsp;: </span>interface en anglais</p>
 </div>
 
 <ul class="org-ul">
-<li>le menu afficher (figure <a href="#org66890f9">11</a>) qui permet d'afficher les <b>outils développeur</b> (figure <a href="#org21b28db">12</a>), le  <b>chronomètre</b> et une fenêtre <b>À propos</b>.</li>
+<li>le menu afficher (figure <a href="#org9ceeba6">11</a>) qui permet d'afficher les <b>outils développeur</b> (figure <a href="#org931c52b">12</a>), le  <b>chronomètre</b> et une fenêtre <b>À propos</b>.</li>
 </ul>
 
-<div id="org66890f9" class="figure">
+<div id="org9ceeba6" class="figure">
 <p><img src="./images/menu_afficher.png" alt="menu_afficher.png" width="60%" />
 </p>
 <p><span class="figure-number">Figure&nbsp;11&nbsp;: </span>menu afficher</p>
@@ -458,7 +466,7 @@ En haut de la fenêtre se trouve la barre de menu qui comporte:
 
 
 
-<div id="org21b28db" class="figure">
+<div id="org931c52b" class="figure">
 <p><img src="./images/outils.png" alt="outils.png" width="60%" />
 </p>
 <p><span class="figure-number">Figure&nbsp;12&nbsp;: </span>les outils sont affichés au dessus du chronomètre</p>
@@ -469,7 +477,7 @@ Si le joueur renonce à remplir la grille, il peut recourir au solveur. S'il a d
 </p>
 
 
-<div id="orgaf1ac20" class="figure">
+<div id="orgf0677ac" class="figure">
 <p><img src="./images/victoire.png" alt="victoire.png" width="60%" />
 </p>
 <p><span class="figure-number">Figure&nbsp;13&nbsp;: </span>victoire</p>
@@ -477,29 +485,29 @@ Si le joueur renonce à remplir la grille, il peut recourir au solveur. S'il a d
 </div>
 </div>
 
-<div id="outline-container-org7fa9afd" class="outline-3">
-<h3 id="org7fa9afd"><span class="section-number-3">2.7</span> Aides</h3>
-<div class="outline-text-3" id="text-2-7">
+<div id="outline-container-orgd175782" class="outline-4">
+<h4 id="orgd175782"><span class="section-number-4">2.1.7</span> Aides</h4>
+<div class="outline-text-4" id="text-2-1-7">
 <p>
 Le joueur peut activer des aides en cochant les cases aides qui sont situées en haut, à droite de la grille. 
 </p>
 <ul class="org-ul">
-<li>l'aide <code>Grille</code> permet d'afficher (en haut à droite) les prétendants au survol des cases (figure <a href="#org2fa6ba7">14</a>). Au départ, toutes les cases admettent les neuf symboles comme prétendants. Puis, au fur et à mesure du remplissage, les symboles présents dans les cases cousines de la même ligne, colonne ou bloc 3x3 sont déduites de la liste des prétendants.</li>
+<li>l'aide <code>Grille</code> permet d'afficher (en haut à droite) les prétendants au survol des cases (figure <a href="#orgdd56a47">14</a>). Au départ, toutes les cases admettent les neuf symboles comme prétendants. Puis, au fur et à mesure du remplissage, les symboles présents dans les cases cousines de la même ligne, colonne ou bloc 3x3 sont déduites de la liste des prétendants.</li>
 </ul>
 
 
-<div id="org2fa6ba7" class="figure">
+<div id="orgdd56a47" class="figure">
 <p><img src="./images/pretendants.png" alt="pretendants.png" width="60%" />
 </p>
 <p><span class="figure-number">Figure&nbsp;14&nbsp;: </span>prétendants</p>
 </div>
 
 <ul class="org-ul">
-<li>l'aide <code>Pioche</code> permet d'indiquer (figure <a href="#orga611016">15</a> à gauche du <b>X</b>) les destinations envisageables pour les symboles de la pioche si l'on survole le cardinal de la pioche quand un symbole est sélectionné. Le bouton <b>Index cases</b> permet de révéler de façon transitoire les index des cases tant que le bouton de la souris est maintenu enfoncé.</li>
+<li>l'aide <code>Pioche</code> permet d'indiquer (figure <a href="#orgf3f588c">15</a> à gauche du <b>X</b>) les destinations envisageables pour les symboles de la pioche si l'on survole le cardinal de la pioche quand un symbole est sélectionné. Le bouton <b>Index cases</b> permet de révéler de façon transitoire les index des cases tant que le bouton de la souris est maintenu enfoncé.</li>
 </ul>
 
 
-<div id="orga611016" class="figure">
+<div id="orgf3f588c" class="figure">
 <p><img src="./images/destinations.png" alt="destinations.png" width="60%" />
 </p>
 <p><span class="figure-number">Figure&nbsp;15&nbsp;: </span>destinations</p>
@@ -508,20 +516,20 @@ Le joueur peut activer des aides en cochant les cases aides qui sont situées en
 </div>
 </div>
 
-<div id="outline-container-orgcfe2f6a" class="outline-2">
-<h2 id="orgcfe2f6a"><span class="section-number-2">3</span> Le code</h2>
-<div class="outline-text-2" id="text-3">
+<div id="outline-container-org3ffdf0c" class="outline-3">
+<h3 id="org3ffdf0c"><span class="section-number-3">2.2</span> Le code</h3>
+<div class="outline-text-3" id="text-2-2">
 </div>
-<div id="outline-container-org9a17572" class="outline-3">
-<h3 id="org9a17572"><span class="section-number-3">3.1</span> Documentation</h3>
-<div class="outline-text-3" id="text-3-1">
+<div id="outline-container-orgd8a46a9" class="outline-4">
+<h4 id="orgd8a46a9"><span class="section-number-4">2.2.1</span> Documentation</h4>
+<div class="outline-text-4" id="text-2-2-1">
 <p>
 Le code est documenté par <i>docstring</i> python. Cela procure une documentation accessible depuis la console. 
-Par exemple, la classe <code>Case</code> (extrait de programme <a href="#org6765e90">1</a>) à une documentation intégrée accessible en tapant <code>help(Case)</code> dans la console python.
+Par exemple, la classe <code>Case</code> (extrait de programme <a href="#org3738fde">1</a>) à une documentation intégrée accessible en tapant <code>help(Case)</code> dans la console python.
 </p>
 
 <div class="org-src-container">
-<label class="org-src-name"><span class="listing-number">Programme&nbsp;1&nbsp;: </span>la classe <code>Case</code> comporte énormément de documentation</label><pre class="src src-python" id="org6765e90"><span class="linenr">30: </span><span style="color: #a020f0;">class</span> <span style="color: #228b22;">Case</span>(Button):
+<label class="org-src-name"><span class="listing-number">Programme&nbsp;1&nbsp;: </span>la classe <code>Case</code> comporte énormément de documentation</label><pre class="src src-python" id="org3738fde"><span class="linenr">30: </span><span style="color: #a020f0;">class</span> <span style="color: #228b22;">Case</span>(Button):
 <span class="linenr">31: </span><span style="background-color: #f2f2f2;"> </span>   <span style="color: #8b2252;">"""</span>
 <span class="linenr">32: </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   Classe repr&#233;sentant une case de la grille de Sudoku.</span>
 <span class="linenr">33: </span>
@@ -562,14 +570,14 @@ Il en va de même pour toutes les classes utilisées dans le programme:
 </p>
 <ul class="org-ul">
 <li>la classe <code>Case</code></li>
-<li>la classe <code>Grille</code> qui utilise la classe <code>Case</code> (extrait de programme <a href="#orgcd2fdf7">2</a>) tout en disposant d'attributs et de méthodes propres (extrait de programme <a href="#org8e2f3d9">3</a>).</li>
+<li>la classe <code>Grille</code> qui utilise la classe <code>Case</code> (extrait de programme <a href="#org82acbef">2</a>) tout en disposant d'attributs et de méthodes propres (extrait de programme <a href="#orgb30e783">3</a>).</li>
 <li>la classe <code>Watchdog</code> utilisée lors du tirage</li>
 <li>la classe <code>Sac</code>. Un sac contient des symboles identiques.</li>
 <li>la classe <code>Pioche</code>. Classe utilisant 9 sacs contenant chacun des symboles identiques tous différents (1 sac avec que des "1", un autre avec que des "2", etc.)</li>
 </ul>
 
 <div class="org-src-container">
-<label class="org-src-name"><span class="listing-number">Programme&nbsp;2&nbsp;: </span>la classe Grille fait appel à la classe Case</label><pre class="src src-python" id="orgcd2fdf7"><span class="linenr">208: </span><span style="color: #b22222;"># </span><span style="color: #b22222;">Disposition du conteneur cadre qui contient la grille de sudoku</span>
+<label class="org-src-name"><span class="listing-number">Programme&nbsp;2&nbsp;: </span>la classe Grille fait appel à la classe Case</label><pre class="src src-python" id="org82acbef"><span class="linenr">208: </span><span style="color: #b22222;"># </span><span style="color: #b22222;">Disposition du conteneur cadre qui contient la grille de sudoku</span>
 <span class="linenr">209: </span><span style="color: #a020f0;">for</span> row <span style="color: #a020f0;">in</span> <span style="color: #483d8b;">range</span>(<span style="color: #a020f0;">self</span>.LARGEUR_GRILLE):
 <span class="linenr">210: </span><span style="background-color: #f2f2f2;"> </span>   cadre.rowconfigure(row, weight=1)
 <span class="linenr">211: </span><span style="color: #a020f0;">for</span> column <span style="color: #a020f0;">in</span> <span style="color: #483d8b;">range</span>(<span style="color: #a020f0;">self</span>.LARGEUR_GRILLE):
@@ -598,7 +606,7 @@ Il en va de même pour toutes les classes utilisées dans le programme:
 </div>
 
 <div class="org-src-container">
-<label class="org-src-name"><span class="listing-number">Programme&nbsp;3&nbsp;: </span>attributs et méthodes de la classe Grille</label><pre class="src src-python" id="org8e2f3d9"><span class="linenr">123: </span>m&#233;thodes:
+<label class="org-src-name"><span class="listing-number">Programme&nbsp;3&nbsp;: </span>attributs et méthodes de la classe Grille</label><pre class="src src-python" id="orgb30e783"><span class="linenr">123: </span>m&#233;thodes:
 <span class="linenr">124: </span>---------
 <span class="linenr">125: </span>- cacher_jauge_parcours_combinaisons
 <span class="linenr">126: </span>- monter_jauge_parcours_combinaisons
@@ -648,9 +656,9 @@ Il en va de même pour toutes les fonctions utilisées dans le programme: elles 
 </div>
 </div>
 
-<div id="outline-container-org457bac3" class="outline-3">
-<h3 id="org457bac3"><span class="section-number-3">3.2</span> Multiplateforme</h3>
-<div class="outline-text-3" id="text-3-2">
+<div id="outline-container-org0469e83" class="outline-4">
+<h4 id="org0469e83"><span class="section-number-4">2.2.2</span> Multiplateforme</h4>
+<div class="outline-text-4" id="text-2-2-2">
 <p>
 Python et tkinter sont théoriquement multiplateformes mais l'apparence est différente suivant la plateforme utilisée.
 Globalement tkinter fonctionne mieux sous Linux que sous Windows (on perd le changement d'aspect du bouton au survol de la souris) ou sous mac OSX (idem, de plus le <code>background</code> des boutons doit être obtenu de façon détournée et les fenêtre Toplevel sont mal gérées).
@@ -659,13 +667,13 @@ Globalement tkinter fonctionne mieux sous Linux que sous Windows (on perd le cha
 </div>
 </div>
 
-<div id="outline-container-org6cad109" class="outline-2">
-<h2 id="org6cad109"><span class="section-number-2">4</span> Démarche</h2>
-<div class="outline-text-2" id="text-4">
+<div id="outline-container-org5e8faed" class="outline-3">
+<h3 id="org5e8faed"><span class="section-number-3">2.3</span> La démarche</h3>
+<div class="outline-text-3" id="text-2-3">
 </div>
-<div id="outline-container-orge07ba49" class="outline-3">
-<h3 id="orge07ba49"><span class="section-number-3">4.1</span> Réflexion initiale</h3>
-<div class="outline-text-3" id="text-4-1">
+<div id="outline-container-orgb1bff28" class="outline-4">
+<h4 id="orgb1bff28"><span class="section-number-4">2.3.1</span> Réflexion initiale</h4>
+<div class="outline-text-4" id="text-2-3-1">
 <ul class="org-ul">
 <li>Ne pas consulter de documentation sur les méthodes de résolution pour essayer d'établir une méthode personnelle.</li>
 <li>Chaque case vide à des prétendants (symboles que l'ont peut envisager de placer dans la case). La liste des prétendants se réduit au fur et à mesure que la grille se remplit car il faut retirer les symboles placés dans les cases cousines (cases de même ligne, colonne ou bloc). Je me propose donc de gérer les prétendants pour chacune des cases de la grille (d'où le menu d'aide <code>Grille</code> qui fait apparaître les prétendants).</li>
@@ -673,9 +681,9 @@ Globalement tkinter fonctionne mieux sous Linux que sous Windows (on perd le cha
 </ul>
 </div>
 </div>
-<div id="outline-container-org639bb11" class="outline-3">
-<h3 id="org639bb11"><span class="section-number-3">4.2</span> Tirage d'une grille</h3>
-<div class="outline-text-3" id="text-4-2">
+<div id="outline-container-orgaf5442b" class="outline-4">
+<h4 id="orgaf5442b"><span class="section-number-4">2.3.2</span> Tirage d'une grille</h4>
+<div class="outline-text-4" id="text-2-3-2">
 <ul class="org-ul">
 <li>aléatoirement, je place le premier '1' dans une des 81 cases, puis le deuxième '1' aléatoirement dans une des destinations restantes, etc. Chaque placement est stocké dans une pile. Si l'on arrive à une impasse (case sans contenu ni prétendants) on remonte dans la pile et on choisi aléatoirement une autre destination envisageable parmi les destinations non testées.</li>
 <li>Pour gagner en efficacité, je rajoute un watchdog. Si l'on remonte plus de 4 niveaux dans la pile, le watchdog se déclenche et provoque l'effacement des '1' car placés en premier avec plein de destinations à leur disposition, ils ont peut être adopté une configuration problématique pour le placement des autres symboles. Les '1' sont renvoyés en fin de liste des symboles à placer. Si le watchdog se déclenche à nouveau, les '2' sont à leur tour renvoyés en fin de liste, etc. Pour éviter de rentrer dans un cercle vicieux qui consisterait à renvoyer les symboles en fin de liste les uns après les autre, la profondeur de déclenchement du watchdog augmente au cours des déclenchements.</li>
@@ -683,21 +691,21 @@ Globalement tkinter fonctionne mieux sous Linux que sous Windows (on perd le cha
 </ul>
 </div>
 </div>
-<div id="outline-container-orgdf32896" class="outline-3">
-<h3 id="orgdf32896"><span class="section-number-3">4.3</span> Solveur</h3>
-<div class="outline-text-3" id="text-4-3">
+<div id="outline-container-org48415d1" class="outline-4">
+<h4 id="org48415d1"><span class="section-number-4">2.3.3</span> Solveur</h4>
+<div class="outline-text-4" id="text-2-3-3">
 <ul class="org-ul">
 <li>Pas indispensable par pouvoir avoir un jeu fonctionnel (sauf si l'on tient à s'assurer de l'unicité) mais réalisé tout de même.</li>
 <li>Première tentative: utiliser le mécanisme du tireur sans watchdog&#x2026; fonctionne en théorie mais la résolution est beaucoup mais alors beaucoup trop longue car des permutations équivalentes sont testées comme étant des propositions différentes .</li>
 <li>Solution : s'inspirer du tireur mais utiliser des ensembles de symboles plutôt que de placer un symbole après l'autre.</li>
-<li>Par exemple, sur la figure <a href="#orga611016">15</a> à gauche du <b>X</b> on peut voir que les cinq symboles '8' de la pioche peuvent être placés sur onze cases dont les index sont connus. Grâce à la fonction <code>nCr(n, r)</code> qui retourne le nombre de combinaisons de n objets pris r à r, on calcule le nombre de combinaisons de 5 symboles '8' parmi 11 destinations. Il y en a 462.</li>
+<li>Par exemple, sur la figure <a href="#orgf3f588c">15</a> à gauche du <b>X</b> on peut voir que les cinq symboles '8' de la pioche peuvent être placés sur onze cases dont les index sont connus. Grâce à la fonction <code>nCr(n, r)</code> qui retourne le nombre de combinaisons de n objets pris r à r, on calcule le nombre de combinaisons de 5 symboles '8' parmi 11 destinations. Il y en a 462.</li>
 <li>On fait de même pour les autres symboles de la pioche. Cela nous permet de déterminer dans quel ordre on va placer les symboles. En commençant par placer ceux qui ont le plus petit nombre de combinaisons cela va diminuer le nombre de destinations possibles pour les autres et donc limiter le nombre de combinaisons possibles pour eux.</li>
-<li>On détermine les combinaisons grâce à la fonction <code>combinations</code> du module <code>itertools</code> (programme <a href="#org2d43a67">4</a>) puis on purge la liste en conservant celles qui sont possibles (programme <a href="#orgf26a543">5</a>). La purge est drastique: pour un nombre de combinaisons allant typiquement de quelques centaines à quelques milliers on se retrouve avec un nombre de combinaisons valables se comptant sur les doigts d'une seule main.</li>
+<li>On détermine les combinaisons grâce à la fonction <code>combinations</code> du module <code>itertools</code> (programme <a href="#org538bec6">4</a>) puis on purge la liste en conservant celles qui sont possibles (programme <a href="#orgb1fd1f0">5</a>). La purge est drastique: pour un nombre de combinaisons allant typiquement de quelques centaines à quelques milliers on se retrouve avec un nombre de combinaisons valables se comptant sur les doigts d'une seule main.</li>
 </ul>
 
 
 <div class="org-src-container">
-<label class="org-src-name"><span class="listing-number">Programme&nbsp;4&nbsp;: </span>détermination des combinaisons (classe Sac)</label><pre class="src src-python" id="org2d43a67"><span class="linenr">1173: </span><span style="color: #a020f0;">def</span> <span style="color: #0000ff;">get_combinaisons</span>(<span style="color: #a020f0;">self</span>):
+<label class="org-src-name"><span class="listing-number">Programme&nbsp;4&nbsp;: </span>détermination des combinaisons (classe Sac)</label><pre class="src src-python" id="org538bec6"><span class="linenr">1173: </span><span style="color: #a020f0;">def</span> <span style="color: #0000ff;">get_combinaisons</span>(<span style="color: #a020f0;">self</span>):
 <span class="linenr">1174: </span><span style="background-color: #f2f2f2;"> </span>   <span style="color: #8b2252;">"""</span>
 <span class="linenr">1175: </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   G&#233;n&#232;re puis retourne l'ensemble des combinaisons de destinations</span>
 <span class="linenr">1176: </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   envisageables</span>
@@ -708,7 +716,7 @@ Globalement tkinter fonctionne mieux sous Linux que sous Windows (on perd le cha
 </div>
 
 <div class="org-src-container">
-<label class="org-src-name"><span class="listing-number">Programme&nbsp;5&nbsp;: </span>détermination des combinaisons (classe Grille)</label><pre class="src src-python" id="orgf26a543"><span class="linenr">815: </span><span style="color: #a020f0;">def</span> <span style="color: #0000ff;">determine_combinaisons</span>(<span style="color: #a020f0;">self</span>, symbole):
+<label class="org-src-name"><span class="listing-number">Programme&nbsp;5&nbsp;: </span>détermination des combinaisons (classe Grille)</label><pre class="src src-python" id="orgb1fd1f0"><span class="linenr">815: </span><span style="color: #a020f0;">def</span> <span style="color: #0000ff;">determine_combinaisons</span>(<span style="color: #a020f0;">self</span>, symbole):
 <span class="linenr">816: </span><span style="background-color: #f2f2f2;"> </span>   <span style="color: #8b2252;">"""</span>
 <span class="linenr">817: </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   G&#233;n&#232;re l'ensemble des combinaisons de destinations envisageables.</span>
 <span class="linenr">818: </span>
@@ -747,7 +755,12 @@ Globalement tkinter fonctionne mieux sous Linux que sous Windows (on perd le cha
 
 
 <ul class="org-ul">
-<li>Aléatoirement, on place le premier ensemble de symboles dans une des destinations valables et en parallèlement on sauvegarde cela dans une pile. On passe ensuite à l'ensemble suivant et on fait de même, etc. Quand on arrive à une impasse (car l'ensemble suivant se retrouve sans destinations valables) on remonte dans la pile et on choisit aléatoirement un autre ensemble parmi l'ensemble des destinations valables.</li>
+<li>Aléatoirement, on place le premier ensemble de symboles dans une des destinations valables et</li>
+</ul>
+<p>
+parallèlement on sauvegarde cela dans une pile. On passe ensuite à l'ensemble suivant et on fait de même, etc. Quand on arrive à une impasse (car l'ensemble suivant se retrouve sans destinations valables) on remonte dans la pile et on choisit aléatoirement un autre ensemble parmi l'ensemble des destinations valables.
+</p>
+<ul class="org-ul">
 <li>Ce mécanisme fonctionne parfaitement bien et fini toujours par trouver une solution si celle-ci existe.</li>
 <li>Commentaires :
 <ul class="org-ul">
@@ -760,7 +773,7 @@ Globalement tkinter fonctionne mieux sous Linux que sous Windows (on perd le cha
 </ul>
 
 
-<div id="org05070ff" class="figure">
+<div id="org58d2f9f" class="figure">
 <p><img src="./images/jauge_de_parcours.png" alt="jauge_de_parcours.png" width="60%" />
 </p>
 <p><span class="figure-number">Figure&nbsp;16&nbsp;: </span>jauge de parcours sous la grille</p>
@@ -769,9 +782,16 @@ Globalement tkinter fonctionne mieux sous Linux que sous Windows (on perd le cha
 </div>
 </div>
 </div>
+<div id="outline-container-org978727d" class="outline-2">
+<h2 id="org978727d"><span class="section-number-2">3</span> Deuxième version</h2>
+</div>
+<div id="outline-container-orga8509e1" class="outline-2">
+<h2 id="orga8509e1"><span class="section-number-2">4</span> Troisième version</h2>
+</div>
+</div>
 <div id="postamble" class="status">
 <p class="author">Auteur: Raoul HATTERER &amp; Jean-Luc COSSALTER</p>
-<p class="date">Created: 2019-08-28 mer. 19:37</p>
+<p class="date">Created: 2019-08-28 mer. 20:43</p>
 <p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
 </div>
 </body>
