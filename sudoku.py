@@ -122,8 +122,8 @@ class Grille:
 
     méthodes:
     ---------
-    - cacher_jauge_parcourt_combinaisons
-    - monter_jauge_parcourt_combinaisons
+    - cacher_jauge_parcours_combinaisons
+    - monter_jauge_parcours_combinaisons
     - get_couleur_case
     - get_case
     - get_index_cousines
@@ -231,26 +231,26 @@ class Grille:
                                            sticky="nsew")
                 index += 1
         ttk.Progressbar(cadre,
-                        name="jauge_parcourt_combinaisons",
+                        name="jauge_parcours_combinaisons",
                         orient="horizontal",
                         maximum=3,
                         mode="determinate").grid_forget()
 
-    def cacher_jauge_parcourt_combinaisons(self):
+    def cacher_jauge_parcours_combinaisons(self):
         """
-        Cache  la jauge de parcourt des combinaisons lorsque le solveur est
+        Cache  la jauge de parcours des combinaisons lorsque le solveur est
         inactif.
         """
         root.nametowidget(
-            str(self.cadre)+".jauge_parcourt_combinaisons").grid_forget()
+            str(self.cadre)+".jauge_parcours_combinaisons").grid_forget()
 
-    def monter_jauge_parcourt_combinaisons(self):
+    def monter_jauge_parcours_combinaisons(self):
         """
-        Montre la jauge de parcourt des combinaisons lorsque le solveur est
+        Montre la jauge de parcours des combinaisons lorsque le solveur est
         actif.
         """
         root.nametowidget(
-            str(self.cadre)+".jauge_parcourt_combinaisons").grid(
+            str(self.cadre)+".jauge_parcours_combinaisons").grid(
                 row=self.LARGEUR_GRILLE+1,
                 columnspan=self.LARGEUR_GRILLE+1,
                 pady=5,
@@ -720,7 +720,7 @@ class Grille:
             return False  # Trop de combinaisons à générer
         self.symboles_a_placer, self.ordre_de_placement =\
             self.pioche.get_symboles_a_placer_et_ordre()
-        self.monter_jauge_parcourt_combinaisons()
+        self.monter_jauge_parcours_combinaisons()
         pile = list()
         maximum_jauge = [1, 1, 1]
         actuel_jauge = [1, 1, 1]
@@ -747,7 +747,7 @@ class Grille:
                 determiner_combinaisons = True
             elif not(pile):
                 print("Cette grille n'admet pas de solution!")
-                self.cacher_jauge_parcourt_combinaisons()
+                self.cacher_jauge_parcours_combinaisons()
                 return False
             else:
                 # impasse détectée
@@ -761,7 +761,7 @@ class Grille:
                 combinaisons.remove(combinaison_problematique)
                 self.combinaisons = combinaisons
                 determiner_combinaisons = False
-        self.cacher_jauge_parcourt_combinaisons()
+        self.cacher_jauge_parcours_combinaisons()
         self.pioche.deselectionner_tout()
         self.pioche.deselectionner_le_bouton_effacerX()
         self.symbole_actif = None
@@ -784,7 +784,7 @@ class Grille:
             actuel_jauge[2] = len(self.combinaisons)
         else:
             return
-        self.update_jauge_de_parcourt(maximum_jauge, actuel_jauge)
+        self.update_jauge_de_parcours(maximum_jauge, actuel_jauge)
 
     def reglage_maximum_jauge(self, symbole_a_placer, maximum_jauge, actuel_jauge):
         """
@@ -797,20 +797,20 @@ class Grille:
         elif symbole_a_placer == self.ordre_de_placement[2]:
             maximum_jauge[2] = len(self.combinaisons)
 
-    def update_jauge_de_parcourt(self, maximum_jauge, actuel_jauge):
+    def update_jauge_de_parcours(self, maximum_jauge, actuel_jauge):
         """
-        La jauge de parcourt indique la portion parcourue dans l'arbre des
+        La jauge de parcours indique la portion parcourue dans l'arbre des
         combinaisons possibles.
         """
-        parcourt = 0.1
+        parcours = 0.1
         if maximum_jauge[0]:
-            parcourt += 3*(maximum_jauge[0]-actuel_jauge[0])/maximum_jauge[0]
+            parcours += 3*(maximum_jauge[0]-actuel_jauge[0])/maximum_jauge[0]
         if maximum_jauge[1]:
-            parcourt += (maximum_jauge[1]-actuel_jauge[1])/maximum_jauge[1]
+            parcours += (maximum_jauge[1]-actuel_jauge[1])/maximum_jauge[1]
         if maximum_jauge[2]:
-            parcourt += 0.1*(maximum_jauge[2]-actuel_jauge[2])/maximum_jauge[2]
+            parcours += 0.1*(maximum_jauge[2]-actuel_jauge[2])/maximum_jauge[2]
         root.nametowidget(
-            str(self.cadre)+".jauge_parcourt_combinaisons")["value"] = parcourt
+            str(self.cadre)+".jauge_parcours_combinaisons")["value"] = parcours
 
     def determine_combinaisons(self, symbole):
         """

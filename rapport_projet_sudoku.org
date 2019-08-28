@@ -1,13 +1,12 @@
 #+STARTUP: inlineimages
 #+LANGUAGE: fr
-#+LATEX_COMPILER: xelatex
+#+LATEX_COMPILER: xelatex 
 #+LATEX_HEADER: \usepackage{fontspec}
 #+LaTeX_HEADER: \usepackage{xunicode}
-
 #+LATEX_HEADER: \usepackage[AUTO]{babel}
 #+LaTeX_HEADER: \usepackage[x11names]{xcolor}
 #+LaTeX_HEADER: \hypersetup{linktoc = all, colorlinks = true, urlcolor = DodgerBlue4, citecolor = PaleGreen1, linkcolor = black}
-#+LATEX_HEADER: \usepackage[left=1cm,right=1cm,top=2cm,bottom=2cm]{geometry}
+#+LATEX_HEADER: \usepackage[left=2cm,right=2cm,top=2cm,bottom=2cm]{geometry}
 #+TITLE: Diplôme Inter-Universitaire
 #+SUBTITLE: Projet Sudoku
 #+AUTHOR: Raoul HATTERER & Jean-Luc COSSALTER 
@@ -26,8 +25,8 @@
 
    Sur la droite, un bouton *Nouvelle partie* de couleur distinctive permet d'amorcer une nouvelle partie.
 
-   #+attr_html: :width 75%
-   #+attr_latex: :width 400
+   #+attr_html: :width 60%
+   #+attr_latex: :width 300pt
    #+CAPTION: au démarrage
    #+NAME:   fig:au_demarrage
    [[file:./images/au_demarrage.png]]
@@ -39,8 +38,8 @@
    La pioche, au bas de la fenêtre (figure [[fig:choix_du_niveau]]) est vide: elle indique que tous les symboles ont été placés sur la grille.
    Sur la gauche, la jauge de remplissage est pleine.
    Sur la droite, un curseur est apparu, il permet de choisir le niveau de difficulté. Un bouton *Commencer* de couleur distinctive permet au joueur de commencer la partie.
-   #+attr_html: :width 75%
-   #+attr_latex: :width 400
+   #+attr_html: :width 60%
+   #+attr_latex: :width 300pt
    #+CAPTION: choix du niveau
    #+NAME:   fig:choix_du_niveau
    [[file:./images/choix_du_niveau.png]]
@@ -55,11 +54,10 @@
    Sur la gauche, le chronomètre est mis en marche et décompte le temps qui s'écoule.  
 
 
-   #+attr_html: :width 75%
-   #+attr_latex: :width 400
+   #+attr_html: :width 60%
+   #+attr_latex: :width 300pt
    #+CAPTION: début de partie
    #+NAME:   fig:début_de_partie
-
    [[file:./images/debut_de_partie.png]]
    # # C-c C-x C-v toggle preview
    # # C-c C-o to follow link
@@ -68,8 +66,8 @@
 
    Pour placer un symbole sur la grille, le joueur commence par sélectionner le symbole qu'il souhaite placer soit en le choisissant sur la grille, soit en le choisissant dans la pioche. Le symbole sélectionné apparaît alors d'une couleur distinctive (figure [[fig:selectionner_un_symbole]]).
 
-   #+attr_html: :width 75%
-   #+attr_latex: :width 400
+   #+attr_html: :width 60%
+   #+attr_latex: :width 300pt
    #+CAPTION: sélectionner un symbole
    #+NAME:   fig:selectionner_un_symbole
    [[file:./images/selectionner_un_symbole.png]]
@@ -80,8 +78,8 @@
    Si la case est susceptible d'accepter le symbole celui est placé (figure [[fig:placer_un_symbole]]). 
    La pioche et la jauge de remplissage évoluent en conséquence.
 
-   #+attr_html: :width 75%
-   #+attr_latex: :width 400
+   #+attr_html: :width 60%
+   #+attr_latex: :width 300pt
    #+CAPTION: placer un symbole
    #+NAME:   fig:placer_un_symbole
    [[file:./images/placer_un_symbole.png]]
@@ -95,8 +93,8 @@
    Quand le mode effacement est actif, à chaque fois que le joueur clique sur une case pleine de la grille, celle-ci est effacée.
    La pioche et la jauge de remplissage évoluent en conséquence.
 
-   #+attr_html: :width 75%
-   #+attr_latex: :width 400
+   #+attr_html: :width 60%
+   #+attr_latex: :width 300pt
    #+CAPTION: effacer un symbole
    #+NAME:   fig:effacer_un_symbole
    [[file:./images/effacer_un_symbole.png]]
@@ -107,16 +105,16 @@
 
    En haut de la fenêtre se trouve la barre de menu qui comporte:
    - le menu fichier (figure [[fig:menu_fichier]]) qui permet notamment d'ouvrir un fichier (figure [[fig:ouvrir]]). Le format *sdk* n'est pas encore implémenté, il faut donc utiliser le format *csv*.
-   #+attr_html: :width 75%
-   #+attr_latex: :width 400
+   #+attr_html: :width 60%
+   #+attr_latex: :width 300pt
    #+CAPTION: menu fichier
    #+NAME:   fig:menu_fichier
    [[file:./images/menu_fichier.png]]
    # # C-c C-x C-v toggle preview
    # # C-c C-o to follow link
 
-   #+attr_html: :width 75%
-   #+attr_latex: :width 400
+   #+attr_html: :width 60%
+   #+attr_latex: :width 300pt
    #+CAPTION: ouvrir un fichier
    #+NAME:   fig:ouvrir
    [[file:./images/ouvrir.png]]
@@ -125,16 +123,16 @@
 
    - le menu langue (figure [[fig:langue]]) permet de choisir la langue de l'interface parmi français, anglais (figure [[fig:anglais]]) et grec.
 
-   #+attr_html: :width 75%
-   #+attr_latex: :width 400
+   #+attr_html: :width 60%
+   #+attr_latex: :width 300pt
    #+CAPTION: choix de la langue
    #+NAME:   fig:langue
    [[file:./images/choix_langue.png]]
    # # C-c C-x C-v toggle preview
    # # C-c C-o to follow link
 
-   #+attr_html: :width 75%
-   #+attr_latex: :width 400
+   #+attr_html: :width 60%
+   #+attr_latex: :width 300pt
    #+CAPTION: interface en anglais
    #+NAME:   fig:anglais
    [[file:./images/anglais.png]]
@@ -142,8 +140,8 @@
    # # C-c C-o to follow link
 
    - le menu afficher (figure [[fig:afficher]]) qui permet d'afficher les *outils développeur* (figure [[fig:outils]]), le  *chronomètre* et une fenêtre *À propos*.
-   #+attr_html: :width 75%
-   #+attr_latex: :width 400
+   #+attr_html: :width 60%
+   #+attr_latex: :width 300pt
    #+CAPTION: menu afficher
    #+NAME:   fig:afficher
    [[file:./images/menu_afficher.png]]
@@ -151,8 +149,8 @@
    # # C-c C-o to follow link
 
 
-   #+attr_html: :width 75%
-   #+attr_latex: :width 400
+   #+attr_html: :width 60%
+   #+attr_latex: :width 300pt
    #+CAPTION: les outils sont affichés au dessus du chronomètre
    #+NAME:   fig:outils
    [[file:./images/outils.png]]
@@ -161,8 +159,8 @@
 
    Si le joueur renonce à remplir la grille, il peut recourir au solveur. S'il a déjà placé des symboles sur la grille, il doit cliquer sur *Recommencer* puis sur *Solveur*. 
 
-   #+attr_html: :width 75%
-   #+attr_latex: :width 400
+   #+attr_html: :width 60%
+   #+attr_latex: :width 300pt
    #+CAPTION: victoire
    #+NAME:   fig:victoire
    [[file:./images/victoire.png]]
@@ -173,18 +171,18 @@
    Le joueur peut activer des aides en cochant les cases aides qui sont situées en haut, à droite de la grille. 
    - l'aide =Grille= permet d'afficher (en haut à droite) les prétendants au survol des cases (figure [[fig:pretendants]]). Au départ, toutes les cases admettent les neuf symboles comme prétendants. Puis, au fur et à mesure du remplissage, les symboles présents dans les cases cousines de la même ligne, colonne ou bloc 3x3 sont déduites de la liste des prétendants.
 
-   #+attr_html: :width 75%
-   #+attr_latex: :width 400
+   #+attr_html: :width 60%
+   #+attr_latex: :width 300pt
    #+CAPTION: prétendants
    #+NAME:   fig:pretendants
    [[file:./images/pretendants.png]]
    # # C-c C-x C-v toggle preview
    # # C-c C-o to follow link
   
-   - l'aide =Pioche= permet d'indiquer (figure [[fig:destinations]] à gauche du *X*) les destinations envisageables pour les symboles de la pioche. Le bouton *Index cases* permet de révéler de façon transitoire les index des cases tant que le bouton de la souris est maintenu enfoncé.
+   - l'aide =Pioche= permet d'indiquer (figure [[fig:destinations]] à gauche du *X*) les destinations envisageables pour les symboles de la pioche si l'on survole le cardinal de la pioche quand un symbole est sélectionné. Le bouton *Index cases* permet de révéler de façon transitoire les index des cases tant que le bouton de la souris est maintenu enfoncé.
 
-   #+attr_html: :width 75%
-   #+attr_latex: :width 400
+   #+attr_html: :width 60%
+   #+attr_latex: :width 300pt
    #+CAPTION: destinations
    #+NAME:   fig:destinations
    [[file:./images/destinations.png]]
@@ -199,7 +197,7 @@
 
    #+CAPTION: la classe ~Case~ comporte énormément de documentation 
    #+NAME:   prog:code_class_Case
-   #+INCLUDE: "sudoku.py" src python -n 30 :lines "30-100"
+   #+INCLUDE: "sudoku.py" src python -n 30 :lines "30-63"
 
    Il en va de même pour toutes les classes utilisées dans le programme:
    - la classe ~Case~ 
@@ -211,6 +209,7 @@
    #+CAPTION: la classe Grille fait appel à la classe Case
    #+NAME:   prog:code_class_Grille
    #+INCLUDE: "sudoku.py" src python -n 208 :lines "208-233"
+
    #+CAPTION: attributs et méthodes de la classe Grille
    #+NAME:   prog:code_class_Grille_methodes
    #+INCLUDE: "sudoku.py" src python -n 123 :lines "123-164"
@@ -227,15 +226,40 @@
    - Chaque case vide à des prétendants (symboles que l'ont peut envisager de placer dans la case). La liste des prétendants se réduit au fur et à mesure que la grille se remplit car il faut retirer les symboles placés dans les cases cousines (cases de même ligne, colonne ou bloc). Je me propose donc de gérer les prétendants pour chacune des cases de la grille (d'où le menu d'aide =Grille= qui fait apparaître les prétendants).
    - Les symboles sont prélevés dans une pioche qui comporte 9 sacs contenant chacun des symboles identiques. Au départ, il y a 81 destinations possibles pour le premier symbole à placer. Le nombre de destinations possibles pour le second symbole à placer n'est pas forcément de 80 car, si le second symbole est le même que le premier, il ne peut pas être placé dans une case cousine du premier. Je me propose donc de  gérer les destinations pour chacun des neuf symboles au cours de la partie (d'où le menu d'aide =Pioche= qui fait apparaître les destinations).
 ** Tirage d'une grille
-   - aléatoirement je place le premier '1' dans une des 81 cases, puis le deuxième '1' aléatoirement dans une des destinations restantes, etc. Chaque placement est stocké dans une pile. Si l'on arrive à une impasse (case sans contenu ni prétendants) on remonte dans la pile et on choisi aléatoirement une autre destination envisageable parmi les destinations non testées. 
+   - aléatoirement, je place le premier '1' dans une des 81 cases, puis le deuxième '1' aléatoirement dans une des destinations restantes, etc. Chaque placement est stocké dans une pile. Si l'on arrive à une impasse (case sans contenu ni prétendants) on remonte dans la pile et on choisi aléatoirement une autre destination envisageable parmi les destinations non testées. 
    - Pour gagner en efficacité, je rajoute un watchdog. Si l'on remonte plus de 4 niveaux dans la pile, le watchdog se déclenche et provoque l'effacement des '1' car placés en premier avec plein de destinations à leur disposition, ils ont peut être adopté une configuration problématique pour le placement des autres symboles. Les '1' sont renvoyés en fin de liste des symboles à placer. Si le watchdog se déclenche à nouveau, les '2' sont à leur tour renvoyés en fin de liste, etc. Pour éviter de rentrer dans un cercle vicieux qui consisterait à renvoyer les symboles en fin de liste les uns après les autre, la profondeur de déclenchement du watchdog augmente au cours des déclenchements. 
    - Réglage du niveau: on part d'une grille pleine obtenue par tirage. Puis on réalise la suppression aléatoire des symboles de la grille qui sont replacés dans la pioche  jusqu'à parvenir au taux de remplissage souhaité par le joueur. Cette méthode ne garantit pas l'unicité de la solution mais, peu importe, car si le joueur parvient à placer tous les symboles sur la grille la victoire lui est accordée (même si la grille pleine tirée au départ était différente).  
 ** Solveur 
    - Pas indispensable par pouvoir avoir un jeu fonctionnel (sauf si l'on tient à s'assurer de l'unicité) mais réalisé tout de même.
    - Première tentative: utiliser le mécanisme du tireur sans watchdog... fonctionne en théorie mais la résolution est beaucoup mais alors beaucoup trop longue car des permutations équivalentes sont testées comme étant des propositions différentes .  
    - Solution : s'inspirer du tireur mais utiliser des ensembles de symboles plutôt que de placer un symbole après l'autre. 
-   - Exemple: 
-     - sur la figure [[fig:destinations]] à gauche du *X* on peut voir que les cinq symboles '8' de la pioche peuvent être placés sur onze cases dont les index sont connus. Grâce à la fonction ~nCr(n, r)~ qui retourne le nombre de combinaisons de n objets pris r à r, on calcule le nombre de combinaisons de 5 symboles '8' parmi 11 destinations. Il y en a 462.   
-     - on fait de même pour les autres symboles de la pioche. Cela nous permet de déterminer dans quel ordre on va placer les symboles. En commençant par placer ceux qui ont le plus petit nombre de combinaisons cela va diminuer le nombre de destinations possibles pour les autres et donc limiter le nombre de combinaisons possibles pour eux.
-     - on détermine les combinaisons grâce à la fonction ~combinations~ du module ~itertools~ puis on purge la liste en conservant celles qui sont possibles: 
+   - Par exemple, sur la figure [[fig:destinations]] à gauche du *X* on peut voir que les cinq symboles '8' de la pioche peuvent être placés sur onze cases dont les index sont connus. Grâce à la fonction ~nCr(n, r)~ qui retourne le nombre de combinaisons de n objets pris r à r, on calcule le nombre de combinaisons de 5 symboles '8' parmi 11 destinations. Il y en a 462.   
+   - On fait de même pour les autres symboles de la pioche. Cela nous permet de déterminer dans quel ordre on va placer les symboles. En commençant par placer ceux qui ont le plus petit nombre de combinaisons cela va diminuer le nombre de destinations possibles pour les autres et donc limiter le nombre de combinaisons possibles pour eux.
+   - On détermine les combinaisons grâce à la fonction ~combinations~ du module ~itertools~ (programme [[prog:determine_combinaisons_Sac]]) puis on purge la liste en conservant celles qui sont possibles (programme [[prog:determine_combinaisons_Grille]]). La purge est drastique: pour un nombre de combinaisons allant typiquement de quelques centaines à quelques milliers on se retrouve avec un nombre de combinaisons valables se comptant sur les doigts d'une seule main.
 
+
+   #+CAPTION: détermination des combinaisons (classe Sac) 
+   #+NAME:   prog:determine_combinaisons_Sac
+   #+INCLUDE: "sudoku.py" src python -n 1173 :lines "1173-1180"
+
+   #+CAPTION: détermination des combinaisons (classe Grille) 
+   #+NAME:   prog:determine_combinaisons_Grille
+   #+INCLUDE: "sudoku.py" src python -n 815 :lines "815-849"
+     
+     
+   - Aléatoirement, on place le premier ensemble de symboles dans une des destinations valables et en parallèlement on sauvegarde cela dans une pile. On passe ensuite à l'ensemble suivant et on fait de même, etc. Quand on arrive à une impasse (car l'ensemble suivant se retrouve sans destinations valables) on remonte dans la pile et on choisit aléatoirement un autre ensemble parmi l'ensemble des destinations valables.
+   - Ce mécanisme fonctionne parfaitement bien et fini toujours par trouver une solution si celle-ci existe.
+   - Commentaires :
+     - Si plusieurs solutions existe la première solution rencontrée est retenue.
+     - Si le solveur est relancé pour résoudre la même grille, il déterminera la solution dans un temps différent à chaque tentative car le parcours des destinations valables se fait de façon aléatoire.
+     - Pour la même raison, si plusieurs solutions existent, le solveur ne tombera pas forcement sur la même à chaque fois.
+   - Pour gagner en efficacité, le solveur par pile est précédé d'un traitement des singletons. Tant que la grille possède des cases admettant un seul prétendant, elles sont remplies puis on passe au traitement par pile.
+   - Lorsque le traitement par pile est mis en oeuvre, une jauge de parcours des combinaisons est affichée sous la grille.
+
+   #+attr_html: :width 60%
+   #+attr_latex: :width 300pt
+   #+CAPTION: jauge de parcours sous la grille
+   #+NAME:   fig:jauge_de_parcours
+   [[file:./images/jauge_de_parcours.png]]
+   # # C-c C-x C-v toggle preview
+   # # C-c C-o to follow link
