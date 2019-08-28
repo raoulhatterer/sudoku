@@ -195,7 +195,7 @@
 
 ** Documentation
    Le code est documenté par /docstring/ python.  
-   Par exemple, la classe ~Case~ à une documentation intégrée accessible  en tapant src_python[:exports code]{help(Case)} dans la console python.
+   Par exemple, la classe ~Case~ à une documentation intégrée accessible  en tapant ~help(Case)~ dans la console python.
 
    #+CAPTION: classe Case
    #+NAME:   prog:code_class_Case
