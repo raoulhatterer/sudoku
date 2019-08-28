@@ -1,0 +1,778 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="fr" xml:lang="fr">
+<head>
+<!-- 2019-08-28 mer. 19:37 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Diplôme Inter-Universitaire</title>
+<meta name="generator" content="Org mode" />
+<meta name="author" content="Raoul HATTERER &amp; Jean-Luc COSSALTER" />
+<style type="text/css">
+ <!--/*--><![CDATA[/*><!--*/
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #ccc;
+    box-shadow: 3px 3px 3px #eee;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: visible;
+    padding-top: 1.2em;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    background-color: white;
+    top: -10px;
+    right: 10px;
+    padding: 3px;
+    border: 1px solid black;
+  }
+  pre.src:hover:before { display: inline;}
+  /* Languages per Org manual */
+  pre.src-asymptote:before { content: 'Asymptote'; }
+  pre.src-awk:before { content: 'Awk'; }
+  pre.src-C:before { content: 'C'; }
+  /* pre.src-C++ doesn't work in CSS */
+  pre.src-clojure:before { content: 'Clojure'; }
+  pre.src-css:before { content: 'CSS'; }
+  pre.src-D:before { content: 'D'; }
+  pre.src-ditaa:before { content: 'ditaa'; }
+  pre.src-dot:before { content: 'Graphviz'; }
+  pre.src-calc:before { content: 'Emacs Calc'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-fortran:before { content: 'Fortran'; }
+  pre.src-gnuplot:before { content: 'gnuplot'; }
+  pre.src-haskell:before { content: 'Haskell'; }
+  pre.src-hledger:before { content: 'hledger'; }
+  pre.src-java:before { content: 'Java'; }
+  pre.src-js:before { content: 'Javascript'; }
+  pre.src-latex:before { content: 'LaTeX'; }
+  pre.src-ledger:before { content: 'Ledger'; }
+  pre.src-lisp:before { content: 'Lisp'; }
+  pre.src-lilypond:before { content: 'Lilypond'; }
+  pre.src-lua:before { content: 'Lua'; }
+  pre.src-matlab:before { content: 'MATLAB'; }
+  pre.src-mscgen:before { content: 'Mscgen'; }
+  pre.src-ocaml:before { content: 'Objective Caml'; }
+  pre.src-octave:before { content: 'Octave'; }
+  pre.src-org:before { content: 'Org mode'; }
+  pre.src-oz:before { content: 'OZ'; }
+  pre.src-plantuml:before { content: 'Plantuml'; }
+  pre.src-processing:before { content: 'Processing.js'; }
+  pre.src-python:before { content: 'Python'; }
+  pre.src-R:before { content: 'R'; }
+  pre.src-ruby:before { content: 'Ruby'; }
+  pre.src-sass:before { content: 'Sass'; }
+  pre.src-scheme:before { content: 'Scheme'; }
+  pre.src-screen:before { content: 'Gnu Screen'; }
+  pre.src-sed:before { content: 'Sed'; }
+  pre.src-sh:before { content: 'shell'; }
+  pre.src-sql:before { content: 'SQL'; }
+  pre.src-sqlite:before { content: 'SQLite'; }
+  /* additional languages in org.el's org-babel-load-languages alist */
+  pre.src-forth:before { content: 'Forth'; }
+  pre.src-io:before { content: 'IO'; }
+  pre.src-J:before { content: 'J'; }
+  pre.src-makefile:before { content: 'Makefile'; }
+  pre.src-maxima:before { content: 'Maxima'; }
+  pre.src-perl:before { content: 'Perl'; }
+  pre.src-picolisp:before { content: 'Pico Lisp'; }
+  pre.src-scala:before { content: 'Scala'; }
+  pre.src-shell:before { content: 'Shell Script'; }
+  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+  /* additional language identifiers per "defun org-babel-execute"
+       in ob-*.el */
+  pre.src-cpp:before  { content: 'C++'; }
+  pre.src-abc:before  { content: 'ABC'; }
+  pre.src-coq:before  { content: 'Coq'; }
+  pre.src-groovy:before  { content: 'Groovy'; }
+  /* additional language identifiers from org-babel-shell-names in
+     ob-shell.el: ob-shell is the only babel language using a lambda to put
+     the execution function name together. */
+  pre.src-bash:before  { content: 'bash'; }
+  pre.src-csh:before  { content: 'csh'; }
+  pre.src-ash:before  { content: 'ash'; }
+  pre.src-dash:before  { content: 'dash'; }
+  pre.src-ksh:before  { content: 'ksh'; }
+  pre.src-mksh:before  { content: 'mksh'; }
+  pre.src-posh:before  { content: 'posh'; }
+  /* Additional Emacs modes also supported by the LaTeX listings package */
+  pre.src-ada:before { content: 'Ada'; }
+  pre.src-asm:before { content: 'Assembler'; }
+  pre.src-caml:before { content: 'Caml'; }
+  pre.src-delphi:before { content: 'Delphi'; }
+  pre.src-html:before { content: 'HTML'; }
+  pre.src-idl:before { content: 'IDL'; }
+  pre.src-mercury:before { content: 'Mercury'; }
+  pre.src-metapost:before { content: 'MetaPost'; }
+  pre.src-modula-2:before { content: 'Modula-2'; }
+  pre.src-pascal:before { content: 'Pascal'; }
+  pre.src-ps:before { content: 'PostScript'; }
+  pre.src-prolog:before { content: 'Prolog'; }
+  pre.src-simula:before { content: 'Simula'; }
+  pre.src-tcl:before { content: 'tcl'; }
+  pre.src-tex:before { content: 'TeX'; }
+  pre.src-plain-tex:before { content: 'Plain TeX'; }
+  pre.src-verilog:before { content: 'Verilog'; }
+  pre.src-vhdl:before { content: 'VHDL'; }
+  pre.src-xml:before { content: 'XML'; }
+  pre.src-nxml:before { content: 'XML'; }
+  /* add a generic configuration mode; LaTeX export needs an additional
+     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
+  pre.src-conf:before { content: 'Configuration File'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .equation-container {
+    display: table;
+    text-align: center;
+    width: 100%;
+  }
+  .equation {
+    vertical-align: middle;
+  }
+  .equation-label {
+    display: table-cell;
+    text-align: right;
+    vertical-align: middle;
+  }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .org-svg { width: 90%; }
+  /*]]>*/-->
+</style>
+<script type="text/javascript">
+/*
+@licstart  The following is the entire license notice for the
+JavaScript code in this tag.
+
+Copyright (C) 2012-2019 Free Software Foundation, Inc.
+
+The JavaScript code in this tag is free software: you can
+redistribute it and/or modify it under the terms of the GNU
+General Public License (GNU GPL) as published by the Free Software
+Foundation, either version 3 of the License, or (at your option)
+any later version.  The code is distributed WITHOUT ANY WARRANTY;
+without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE.  See the GNU GPL for more details.
+
+As additional permission under GNU GPL version 3 section 7, you
+may distribute non-source (e.g., minimized or compacted) forms of
+that code without the copy of the GNU GPL normally required by
+section 4, provided you include this license notice and a URL
+through which recipients can access the Corresponding Source.
+
+
+@licend  The above is the entire license notice
+for the JavaScript code in this tag.
+*/
+<!--/*--><![CDATA[/*><!--*/
+ function CodeHighlightOn(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(null != target) {
+     elem.cacheClassElem = elem.className;
+     elem.cacheClassTarget = target.className;
+     target.className = "code-highlighted";
+     elem.className   = "code-highlighted";
+   }
+ }
+ function CodeHighlightOff(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(elem.cacheClassElem)
+     elem.className = elem.cacheClassElem;
+   if(elem.cacheClassTarget)
+     target.className = elem.cacheClassTarget;
+ }
+/*]]>*///-->
+</script>
+</head>
+<body>
+<div id="content">
+<h1 class="title">Diplôme Inter-Universitaire
+<br />
+<span class="subtitle">Projet Sudoku</span>
+</h1>
+<div id="table-of-contents">
+<h2>Table des matières</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#org03902fd">1. Consignes</a></li>
+<li><a href="#org71eb0d8">2. Interface homme-machine</a>
+<ul>
+<li><a href="#org1b503cf">2.1. Au démarrage</a></li>
+<li><a href="#org7997087">2.2. Nouvelle partie</a></li>
+<li><a href="#org68b9b3f">2.3. Début de partie</a></li>
+<li><a href="#org62f8449">2.4. Placer un symbole sur la grille</a></li>
+<li><a href="#orgdef70dc">2.5. Effacer un symbole de la grille</a></li>
+<li><a href="#org5bd784e">2.6. Menus</a></li>
+<li><a href="#org7fa9afd">2.7. Aides</a></li>
+</ul>
+</li>
+<li><a href="#orgcfe2f6a">3. Le code</a>
+<ul>
+<li><a href="#org9a17572">3.1. Documentation</a></li>
+<li><a href="#org457bac3">3.2. Multiplateforme</a></li>
+</ul>
+</li>
+<li><a href="#org6cad109">4. Démarche</a>
+<ul>
+<li><a href="#orge07ba49">4.1. Réflexion initiale</a></li>
+<li><a href="#org639bb11">4.2. Tirage d'une grille</a></li>
+<li><a href="#orgdf32896">4.3. Solveur</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-org03902fd" class="outline-2">
+<h2 id="org03902fd"><span class="section-number-2">1</span> Consignes</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+Production d'un rapport de 20 pages maximum : expliquer l'interface homme-machine, expliquer le code, expliquer la démarche et les difficultés rencontrées, extraction d'activités NSI en séances (hors projets filés) en lien avec les compétences décrites dans le programme NSI de 
+Première.
+</p>
+</div>
+</div>
+
+
+<div id="outline-container-org71eb0d8" class="outline-2">
+<h2 id="org71eb0d8"><span class="section-number-2">2</span> Interface homme-machine</h2>
+<div class="outline-text-2" id="text-2">
+</div>
+<div id="outline-container-org1b503cf" class="outline-3">
+<h3 id="org1b503cf"><span class="section-number-3">2.1</span> Au démarrage</h3>
+<div class="outline-text-3" id="text-2-1">
+<p>
+Au démarrage (figure <a href="#org956f01d">1</a>) la grille de Sudoku apparaît vide au centre de la fenêtre.
+Sur la gauche, la jauge de remplissage est vide.
+La pioche, au bas de la fenêtre, indique que neuf symboles de chaque sorte restent à placer sur la grille.
+</p>
+
+<p>
+Sur la droite, un bouton <b>Nouvelle partie</b> de couleur distinctive permet d'amorcer une nouvelle partie.
+</p>
+
+
+<div id="org956f01d" class="figure">
+<p><img src="./images/au_demarrage.png" alt="au_demarrage.png" width="60%" />
+</p>
+<p><span class="figure-number">Figure&nbsp;1&nbsp;: </span>au démarrage</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org7997087" class="outline-3">
+<h3 id="org7997087"><span class="section-number-3">2.2</span> Nouvelle partie</h3>
+<div class="outline-text-3" id="text-2-2">
+<p>
+La grille est tirée de façon aléatoire et secrète.
+La pioche, au bas de la fenêtre (figure <a href="#org206360a">2</a>) est vide: elle indique que tous les symboles ont été placés sur la grille.
+Sur la gauche, la jauge de remplissage est pleine.
+Sur la droite, un curseur est apparu, il permet de choisir le niveau de difficulté. Un bouton <b>Commencer</b> de couleur distinctive permet au joueur de commencer la partie.
+</p>
+
+<div id="org206360a" class="figure">
+<p><img src="./images/choix_du_niveau.png" alt="choix_du_niveau.png" width="60%" />
+</p>
+<p><span class="figure-number">Figure&nbsp;2&nbsp;: </span>choix du niveau</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org68b9b3f" class="outline-3">
+<h3 id="org68b9b3f"><span class="section-number-3">2.3</span> Début de partie</h3>
+<div class="outline-text-3" id="text-2-3">
+<p>
+La grille pleine est vidée aléatoirement jusqu'à atteindre le niveau souhaité par le joueur. 
+La jauge de remplissage et la pioche se retrouvent partiellement remplies.
+La grille est révélée au joueur et les cases dors et déjà remplies sont gelées : le joueur ne peut plus ni les effacer ni les modifier.
+Sur la gauche, le chronomètre est mis en marche et décompte le temps qui s'écoule.  
+</p>
+
+
+
+<div id="orgaf18e05" class="figure">
+<p><img src="./images/debut_de_partie.png" alt="debut_de_partie.png" width="60%" />
+</p>
+<p><span class="figure-number">Figure&nbsp;3&nbsp;: </span>début de partie</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org62f8449" class="outline-3">
+<h3 id="org62f8449"><span class="section-number-3">2.4</span> Placer un symbole sur la grille</h3>
+<div class="outline-text-3" id="text-2-4">
+<p>
+Pour placer un symbole sur la grille, le joueur commence par sélectionner le symbole qu'il souhaite placer soit en le choisissant sur la grille, soit en le choisissant dans la pioche. Le symbole sélectionné apparaît alors d'une couleur distinctive (figure <a href="#orgfb51767">4</a>).
+</p>
+
+
+<div id="orgfb51767" class="figure">
+<p><img src="./images/selectionner_un_symbole.png" alt="selectionner_un_symbole.png" width="60%" />
+</p>
+<p><span class="figure-number">Figure&nbsp;4&nbsp;: </span>sélectionner un symbole</p>
+</div>
+
+<p>
+Le joueur clique alors sur une case vide pour y placer le symbole.
+Si la case est susceptible d'accepter le symbole celui est placé (figure <a href="#org04f016d">5</a>). 
+La pioche et la jauge de remplissage évoluent en conséquence.
+</p>
+
+
+<div id="org04f016d" class="figure">
+<p><img src="./images/placer_un_symbole.png" alt="placer_un_symbole.png" width="60%" />
+</p>
+<p><span class="figure-number">Figure&nbsp;5&nbsp;: </span>placer un symbole</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgdef70dc" class="outline-3">
+<h3 id="orgdef70dc"><span class="section-number-3">2.5</span> Effacer un symbole de la grille</h3>
+<div class="outline-text-3" id="text-2-5">
+<p>
+Pour effacer un symbole, le joueur sélectionne le  bouton d'effacement <b>X</b> à droite de la pioche. Ce bouton apparaît alors en rouge (figure <a href="#orgd206181">6</a>).
+Ce bouton agit en bascule: si le joueur clique dessus une nouvelle fois, on sort du mode effacement. On peut aussi en sortir en sélectionnant un autre symbole.
+</p>
+
+<p>
+Quand le mode effacement est actif, à chaque fois que le joueur clique sur une case pleine de la grille, celle-ci est effacée.
+La pioche et la jauge de remplissage évoluent en conséquence.
+</p>
+
+
+<div id="orgd206181" class="figure">
+<p><img src="./images/effacer_un_symbole.png" alt="effacer_un_symbole.png" width="60%" />
+</p>
+<p><span class="figure-number">Figure&nbsp;6&nbsp;: </span>effacer un symbole</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org5bd784e" class="outline-3">
+<h3 id="org5bd784e"><span class="section-number-3">2.6</span> Menus</h3>
+<div class="outline-text-3" id="text-2-6">
+<p>
+En haut de la fenêtre se trouve la barre de menu qui comporte:
+</p>
+<ul class="org-ul">
+<li>le menu fichier (figure <a href="#orgde89d03">7</a>) qui permet notamment d'ouvrir un fichier (figure <a href="#orgafe740f">8</a>). Le format <b>sdk</b> n'est pas encore implémenté, il faut donc utiliser le format <b>csv</b>.</li>
+</ul>
+
+<div id="orgde89d03" class="figure">
+<p><img src="./images/menu_fichier.png" alt="menu_fichier.png" width="60%" />
+</p>
+<p><span class="figure-number">Figure&nbsp;7&nbsp;: </span>menu fichier</p>
+</div>
+
+
+<div id="orgafe740f" class="figure">
+<p><img src="./images/ouvrir.png" alt="ouvrir.png" width="60%" />
+</p>
+<p><span class="figure-number">Figure&nbsp;8&nbsp;: </span>ouvrir un fichier</p>
+</div>
+
+<ul class="org-ul">
+<li>le menu langue (figure <a href="#orgdb5e23d">9</a>) permet de choisir la langue de l'interface parmi français, anglais (figure <a href="#org060c6a9">10</a>) et grec.</li>
+</ul>
+
+
+<div id="orgdb5e23d" class="figure">
+<p><img src="./images/choix_langue.png" alt="choix_langue.png" width="60%" />
+</p>
+<p><span class="figure-number">Figure&nbsp;9&nbsp;: </span>choix de la langue</p>
+</div>
+
+
+<div id="org060c6a9" class="figure">
+<p><img src="./images/anglais.png" alt="anglais.png" width="60%" />
+</p>
+<p><span class="figure-number">Figure&nbsp;10&nbsp;: </span>interface en anglais</p>
+</div>
+
+<ul class="org-ul">
+<li>le menu afficher (figure <a href="#org66890f9">11</a>) qui permet d'afficher les <b>outils développeur</b> (figure <a href="#org21b28db">12</a>), le  <b>chronomètre</b> et une fenêtre <b>À propos</b>.</li>
+</ul>
+
+<div id="org66890f9" class="figure">
+<p><img src="./images/menu_afficher.png" alt="menu_afficher.png" width="60%" />
+</p>
+<p><span class="figure-number">Figure&nbsp;11&nbsp;: </span>menu afficher</p>
+</div>
+
+
+
+<div id="org21b28db" class="figure">
+<p><img src="./images/outils.png" alt="outils.png" width="60%" />
+</p>
+<p><span class="figure-number">Figure&nbsp;12&nbsp;: </span>les outils sont affichés au dessus du chronomètre</p>
+</div>
+
+<p>
+Si le joueur renonce à remplir la grille, il peut recourir au solveur. S'il a déjà placé des symboles sur la grille, il doit cliquer sur <b>Recommencer</b> puis sur <b>Solveur</b>. 
+</p>
+
+
+<div id="orgaf1ac20" class="figure">
+<p><img src="./images/victoire.png" alt="victoire.png" width="60%" />
+</p>
+<p><span class="figure-number">Figure&nbsp;13&nbsp;: </span>victoire</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org7fa9afd" class="outline-3">
+<h3 id="org7fa9afd"><span class="section-number-3">2.7</span> Aides</h3>
+<div class="outline-text-3" id="text-2-7">
+<p>
+Le joueur peut activer des aides en cochant les cases aides qui sont situées en haut, à droite de la grille. 
+</p>
+<ul class="org-ul">
+<li>l'aide <code>Grille</code> permet d'afficher (en haut à droite) les prétendants au survol des cases (figure <a href="#org2fa6ba7">14</a>). Au départ, toutes les cases admettent les neuf symboles comme prétendants. Puis, au fur et à mesure du remplissage, les symboles présents dans les cases cousines de la même ligne, colonne ou bloc 3x3 sont déduites de la liste des prétendants.</li>
+</ul>
+
+
+<div id="org2fa6ba7" class="figure">
+<p><img src="./images/pretendants.png" alt="pretendants.png" width="60%" />
+</p>
+<p><span class="figure-number">Figure&nbsp;14&nbsp;: </span>prétendants</p>
+</div>
+
+<ul class="org-ul">
+<li>l'aide <code>Pioche</code> permet d'indiquer (figure <a href="#orga611016">15</a> à gauche du <b>X</b>) les destinations envisageables pour les symboles de la pioche si l'on survole le cardinal de la pioche quand un symbole est sélectionné. Le bouton <b>Index cases</b> permet de révéler de façon transitoire les index des cases tant que le bouton de la souris est maintenu enfoncé.</li>
+</ul>
+
+
+<div id="orga611016" class="figure">
+<p><img src="./images/destinations.png" alt="destinations.png" width="60%" />
+</p>
+<p><span class="figure-number">Figure&nbsp;15&nbsp;: </span>destinations</p>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgcfe2f6a" class="outline-2">
+<h2 id="orgcfe2f6a"><span class="section-number-2">3</span> Le code</h2>
+<div class="outline-text-2" id="text-3">
+</div>
+<div id="outline-container-org9a17572" class="outline-3">
+<h3 id="org9a17572"><span class="section-number-3">3.1</span> Documentation</h3>
+<div class="outline-text-3" id="text-3-1">
+<p>
+Le code est documenté par <i>docstring</i> python. Cela procure une documentation accessible depuis la console. 
+Par exemple, la classe <code>Case</code> (extrait de programme <a href="#org6765e90">1</a>) à une documentation intégrée accessible en tapant <code>help(Case)</code> dans la console python.
+</p>
+
+<div class="org-src-container">
+<label class="org-src-name"><span class="listing-number">Programme&nbsp;1&nbsp;: </span>la classe <code>Case</code> comporte énormément de documentation</label><pre class="src src-python" id="org6765e90"><span class="linenr">30: </span><span style="color: #a020f0;">class</span> <span style="color: #228b22;">Case</span>(Button):
+<span class="linenr">31: </span><span style="background-color: #f2f2f2;"> </span>   <span style="color: #8b2252;">"""</span>
+<span class="linenr">32: </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   Classe repr&#233;sentant une case de la grille de Sudoku.</span>
+<span class="linenr">33: </span>
+<span class="linenr">34: </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   H&#233;ritage : Une case se configure comme une bouton.</span>
+<span class="linenr">35: </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   mais poss&#232;de des attributs et des m&#233;thodes suppl&#233;mentaires.</span>
+<span class="linenr">36: </span>
+<span class="linenr">37: </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   attributs:</span>
+<span class="linenr">38: </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   ---------</span>
+<span class="linenr">39: </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   index : Chaque case a un index compris entre 0 et 80 qui indique</span>
+<span class="linenr">40: </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   sa position dans la grille.</span>
+<span class="linenr">41: </span>
+<span class="linenr">42: </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   contenu : Une case non vide a un `contenu`, le symbole qui est affich&#233;</span>
+<span class="linenr">43: </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   quand on tape le nom de la case dans l'interpr&#233;teur.</span>
+<span class="linenr">44: </span>
+<span class="linenr">45: </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   pretendants : Une case vide &#224; des pr&#233;tendants (symboles qu'il est  possible</span>
+<span class="linenr">46: </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   de mettre cette case).</span>
+<span class="linenr">47: </span>
+<span class="linenr">48: </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   index_cousines : Une case a des cases cousines qui sont soit dans la m&#234;me</span>
+<span class="linenr">49: </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   ligne, soit dans la m&#234;me colonne soit dans le m&#234;me carr&#233; (3 x 3). Une case</span>
+<span class="linenr">50: </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   conserve les index de ses cousines.</span>
+<span class="linenr">51: </span>
+<span class="linenr">52: </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   exemple :</span>
+<span class="linenr">53: </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   -------</span>
+<span class="linenr">54: </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   &gt;&gt;&gt; root = Tk()</span>
+<span class="linenr">55: </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   &gt;&gt;&gt; index_cousines = list()</span>
+<span class="linenr">56: </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   &gt;&gt;&gt; ma_case = Case(root, 0, index_cousines, text="une case")</span>
+<span class="linenr">57: </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   &gt;&gt;&gt; ma_case.pack()</span>
+<span class="linenr">58: </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   &gt;&gt;&gt; ma_case.pretendants</span>
+<span class="linenr">59: </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   ['1', '2', '3', '4', '5', '6', '7', '8', '9']</span>
+<span class="linenr">60: </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   &gt;&gt;&gt; ma_case</span>
+<span class="linenr">61: </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   0</span>
+<span class="linenr">62: </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   """</span>
+</pre>
+</div>
+
+<p>
+Il en va de même pour toutes les classes utilisées dans le programme:
+</p>
+<ul class="org-ul">
+<li>la classe <code>Case</code></li>
+<li>la classe <code>Grille</code> qui utilise la classe <code>Case</code> (extrait de programme <a href="#orgcd2fdf7">2</a>) tout en disposant d'attributs et de méthodes propres (extrait de programme <a href="#org8e2f3d9">3</a>).</li>
+<li>la classe <code>Watchdog</code> utilisée lors du tirage</li>
+<li>la classe <code>Sac</code>. Un sac contient des symboles identiques.</li>
+<li>la classe <code>Pioche</code>. Classe utilisant 9 sacs contenant chacun des symboles identiques tous différents (1 sac avec que des "1", un autre avec que des "2", etc.)</li>
+</ul>
+
+<div class="org-src-container">
+<label class="org-src-name"><span class="listing-number">Programme&nbsp;2&nbsp;: </span>la classe Grille fait appel à la classe Case</label><pre class="src src-python" id="orgcd2fdf7"><span class="linenr">208: </span><span style="color: #b22222;"># </span><span style="color: #b22222;">Disposition du conteneur cadre qui contient la grille de sudoku</span>
+<span class="linenr">209: </span><span style="color: #a020f0;">for</span> row <span style="color: #a020f0;">in</span> <span style="color: #483d8b;">range</span>(<span style="color: #a020f0;">self</span>.LARGEUR_GRILLE):
+<span class="linenr">210: </span><span style="background-color: #f2f2f2;"> </span>   cadre.rowconfigure(row, weight=1)
+<span class="linenr">211: </span><span style="color: #a020f0;">for</span> column <span style="color: #a020f0;">in</span> <span style="color: #483d8b;">range</span>(<span style="color: #a020f0;">self</span>.LARGEUR_GRILLE):
+<span class="linenr">212: </span><span style="background-color: #f2f2f2;"> </span>   cadre.columnconfigure(column, weight=1)
+<span class="linenr">213: </span><span style="color: #b22222;"># </span><span style="color: #b22222;">Affichage de la grille de sudoku</span>
+<span class="linenr">214: </span><span style="color: #a0522d;">index</span> = 0
+<span class="linenr">215: </span><span style="color: #a020f0;">for</span> j <span style="color: #a020f0;">in</span> <span style="color: #483d8b;">range</span>(<span style="color: #a020f0;">self</span>.LARGEUR_GRILLE):
+<span class="linenr">216: </span><span style="background-color: #f2f2f2;"> </span>   <span style="color: #a020f0;">for</span> i <span style="color: #a020f0;">in</span> <span style="color: #483d8b;">range</span>(<span style="color: #a020f0;">self</span>.LARGEUR_GRILLE):
+<span class="linenr">217: </span><span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   Case(cadre,
+<span class="linenr">218: </span><span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>index,
+<span class="linenr">219: </span><span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span><span style="color: #a020f0;">self</span>.get_index_cousines(index),
+<span class="linenr">220: </span><span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>name=<span style="color: #8b2252;">'{}'</span>.<span style="color: #483d8b;">format</span>(index),
+<span class="linenr">221: </span><span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>font=<span style="color: #a020f0;">self</span>.police_case,
+<span class="linenr">222: </span><span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>text=<span style="color: #8b2252;">' '</span>,  <span style="color: #b22222;"># </span><span style="color: #b22222;">cases vides &#224; l'initialisation</span>
+<span class="linenr">223: </span><span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>disabledforeground=<span style="color: #8b2252;">'saddle brown'</span>,
+<span class="linenr">224: </span><span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span><span style="color: #b22222;"># </span><span style="color: #b22222;">background pour linux et windows</span>
+<span class="linenr">225: </span><span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>background=<span style="color: #a020f0;">self</span>.get_couleur_case(
+<span class="linenr">226: </span><span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>index, <span style="color: #8b2252;">' '</span>),
+<span class="linenr">227: </span><span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span><span style="color: #b22222;"># </span><span style="color: #b22222;">highlightbackground pour mac osx</span>
+<span class="linenr">228: </span><span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>highlightbackground=<span style="color: #a020f0;">self</span>.get_couleur_case(
+<span class="linenr">229: </span><span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>index, <span style="color: #8b2252;">' '</span>)).grid(row=j,
+<span class="linenr">230: </span><span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>  column=i,
+<span class="linenr">231: </span><span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>  sticky=<span style="color: #8b2252;">"nsew"</span>)
+<span class="linenr">232: </span><span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="color: #a0522d;">index</span> += 1
+</pre>
+</div>
+
+<div class="org-src-container">
+<label class="org-src-name"><span class="listing-number">Programme&nbsp;3&nbsp;: </span>attributs et méthodes de la classe Grille</label><pre class="src src-python" id="org8e2f3d9"><span class="linenr">123: </span>m&#233;thodes:
+<span class="linenr">124: </span>---------
+<span class="linenr">125: </span>- cacher_jauge_parcours_combinaisons
+<span class="linenr">126: </span>- monter_jauge_parcours_combinaisons
+<span class="linenr">127: </span>- get_couleur_case
+<span class="linenr">128: </span>- get_case
+<span class="linenr">129: </span>- get_index_cousines
+<span class="linenr">130: </span>- get_index_cousines_en_bloc
+<span class="linenr">131: </span>- get_index_cousines_en_colonne
+<span class="linenr">132: </span>- get_index_cousines_en_ligne
+<span class="linenr">133: </span>- __getitem__
+<span class="linenr">134: </span>- __setitem__
+<span class="linenr">135: </span>- __len__
+<span class="linenr">136: </span>- __repr__
+<span class="linenr">137: </span>- basculer_le_bouton_effacerX
+<span class="linenr">138: </span>- activer_le_symbole
+<span class="linenr">139: </span>- rafraichir_affichage
+<span class="linenr">140: </span>- afficher_les_index
+<span class="linenr">141: </span>- effacer_grille
+<span class="linenr">142: </span>- effacer_case
+<span class="linenr">143: </span>- diminuer_jauge_de_remplissage
+<span class="linenr">144: </span>- restaurer_pretendants
+<span class="linenr">145: </span>- remplir_case
+<span class="linenr">146: </span>- augmenter_jauge_de_remplissage
+<span class="linenr">147: </span>- reduire_pretendants_des_cousines_de_la_case
+<span class="linenr">148: </span>- get_colonne
+<span class="linenr">149: </span>- get_ligne
+<span class="linenr">150: </span>- get_bloc
+<span class="linenr">151: </span>- solveur
+<span class="linenr">152: </span>- remplissage
+<span class="linenr">153: </span>- placer_pioche_sur_grille
+<span class="linenr">154: </span>- placement_est_possible
+<span class="linenr">155: </span>- combinaison_existe
+<span class="linenr">156: </span>- purger
+<span class="linenr">157: </span>- grille_export
+<span class="linenr">158: </span>- grille_export_csv
+<span class="linenr">159: </span>- grille_import
+<span class="linenr">160: </span>- recalculer_les_destinations_envisageables
+<span class="linenr">161: </span>- congeler
+<span class="linenr">162: </span>- file_load
+<span class="linenr">163: </span>- file_save
+</pre>
+</div>
+
+<p>
+Il en va de même pour toutes les fonctions utilisées dans le programme: elles sont, elles aussi, documentées par <i>docstring</i>.
+</p>
+</div>
+</div>
+
+<div id="outline-container-org457bac3" class="outline-3">
+<h3 id="org457bac3"><span class="section-number-3">3.2</span> Multiplateforme</h3>
+<div class="outline-text-3" id="text-3-2">
+<p>
+Python et tkinter sont théoriquement multiplateformes mais l'apparence est différente suivant la plateforme utilisée.
+Globalement tkinter fonctionne mieux sous Linux que sous Windows (on perd le changement d'aspect du bouton au survol de la souris) ou sous mac OSX (idem, de plus le <code>background</code> des boutons doit être obtenu de façon détournée et les fenêtre Toplevel sont mal gérées).
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org6cad109" class="outline-2">
+<h2 id="org6cad109"><span class="section-number-2">4</span> Démarche</h2>
+<div class="outline-text-2" id="text-4">
+</div>
+<div id="outline-container-orge07ba49" class="outline-3">
+<h3 id="orge07ba49"><span class="section-number-3">4.1</span> Réflexion initiale</h3>
+<div class="outline-text-3" id="text-4-1">
+<ul class="org-ul">
+<li>Ne pas consulter de documentation sur les méthodes de résolution pour essayer d'établir une méthode personnelle.</li>
+<li>Chaque case vide à des prétendants (symboles que l'ont peut envisager de placer dans la case). La liste des prétendants se réduit au fur et à mesure que la grille se remplit car il faut retirer les symboles placés dans les cases cousines (cases de même ligne, colonne ou bloc). Je me propose donc de gérer les prétendants pour chacune des cases de la grille (d'où le menu d'aide <code>Grille</code> qui fait apparaître les prétendants).</li>
+<li>Les symboles sont prélevés dans une pioche qui comporte 9 sacs contenant chacun des symboles identiques. Au départ, il y a 81 destinations possibles pour le premier symbole à placer. Le nombre de destinations possibles pour le second symbole à placer n'est pas forcément de 80 car, si le second symbole est le même que le premier, il ne peut pas être placé dans une case cousine du premier. Je me propose donc de  gérer les destinations pour chacun des neuf symboles au cours de la partie (d'où le menu d'aide <code>Pioche</code> qui fait apparaître les destinations).</li>
+</ul>
+</div>
+</div>
+<div id="outline-container-org639bb11" class="outline-3">
+<h3 id="org639bb11"><span class="section-number-3">4.2</span> Tirage d'une grille</h3>
+<div class="outline-text-3" id="text-4-2">
+<ul class="org-ul">
+<li>aléatoirement, je place le premier '1' dans une des 81 cases, puis le deuxième '1' aléatoirement dans une des destinations restantes, etc. Chaque placement est stocké dans une pile. Si l'on arrive à une impasse (case sans contenu ni prétendants) on remonte dans la pile et on choisi aléatoirement une autre destination envisageable parmi les destinations non testées.</li>
+<li>Pour gagner en efficacité, je rajoute un watchdog. Si l'on remonte plus de 4 niveaux dans la pile, le watchdog se déclenche et provoque l'effacement des '1' car placés en premier avec plein de destinations à leur disposition, ils ont peut être adopté une configuration problématique pour le placement des autres symboles. Les '1' sont renvoyés en fin de liste des symboles à placer. Si le watchdog se déclenche à nouveau, les '2' sont à leur tour renvoyés en fin de liste, etc. Pour éviter de rentrer dans un cercle vicieux qui consisterait à renvoyer les symboles en fin de liste les uns après les autre, la profondeur de déclenchement du watchdog augmente au cours des déclenchements.</li>
+<li>Réglage du niveau: on part d'une grille pleine obtenue par tirage. Puis on réalise la suppression aléatoire des symboles de la grille qui sont replacés dans la pioche  jusqu'à parvenir au taux de remplissage souhaité par le joueur. Cette méthode ne garantit pas l'unicité de la solution mais, peu importe, car si le joueur parvient à placer tous les symboles sur la grille la victoire lui est accordée (même si la grille pleine tirée au départ était différente).</li>
+</ul>
+</div>
+</div>
+<div id="outline-container-orgdf32896" class="outline-3">
+<h3 id="orgdf32896"><span class="section-number-3">4.3</span> Solveur</h3>
+<div class="outline-text-3" id="text-4-3">
+<ul class="org-ul">
+<li>Pas indispensable par pouvoir avoir un jeu fonctionnel (sauf si l'on tient à s'assurer de l'unicité) mais réalisé tout de même.</li>
+<li>Première tentative: utiliser le mécanisme du tireur sans watchdog&#x2026; fonctionne en théorie mais la résolution est beaucoup mais alors beaucoup trop longue car des permutations équivalentes sont testées comme étant des propositions différentes .</li>
+<li>Solution : s'inspirer du tireur mais utiliser des ensembles de symboles plutôt que de placer un symbole après l'autre.</li>
+<li>Par exemple, sur la figure <a href="#orga611016">15</a> à gauche du <b>X</b> on peut voir que les cinq symboles '8' de la pioche peuvent être placés sur onze cases dont les index sont connus. Grâce à la fonction <code>nCr(n, r)</code> qui retourne le nombre de combinaisons de n objets pris r à r, on calcule le nombre de combinaisons de 5 symboles '8' parmi 11 destinations. Il y en a 462.</li>
+<li>On fait de même pour les autres symboles de la pioche. Cela nous permet de déterminer dans quel ordre on va placer les symboles. En commençant par placer ceux qui ont le plus petit nombre de combinaisons cela va diminuer le nombre de destinations possibles pour les autres et donc limiter le nombre de combinaisons possibles pour eux.</li>
+<li>On détermine les combinaisons grâce à la fonction <code>combinations</code> du module <code>itertools</code> (programme <a href="#org2d43a67">4</a>) puis on purge la liste en conservant celles qui sont possibles (programme <a href="#orgf26a543">5</a>). La purge est drastique: pour un nombre de combinaisons allant typiquement de quelques centaines à quelques milliers on se retrouve avec un nombre de combinaisons valables se comptant sur les doigts d'une seule main.</li>
+</ul>
+
+
+<div class="org-src-container">
+<label class="org-src-name"><span class="listing-number">Programme&nbsp;4&nbsp;: </span>détermination des combinaisons (classe Sac)</label><pre class="src src-python" id="org2d43a67"><span class="linenr">1173: </span><span style="color: #a020f0;">def</span> <span style="color: #0000ff;">get_combinaisons</span>(<span style="color: #a020f0;">self</span>):
+<span class="linenr">1174: </span><span style="background-color: #f2f2f2;"> </span>   <span style="color: #8b2252;">"""</span>
+<span class="linenr">1175: </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   G&#233;n&#232;re puis retourne l'ensemble des combinaisons de destinations</span>
+<span class="linenr">1176: </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   envisageables</span>
+<span class="linenr">1177: </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   """</span>
+<span class="linenr">1178: </span><span style="background-color: #f2f2f2;"> </span>   <span style="color: #a020f0;">return</span> <span style="color: #483d8b;">set</span>(combinations(<span style="color: #a020f0;">self</span>.destinations_envisageables,
+<span class="linenr">1179: </span><span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="color: #a020f0;">self</span>.cardinal))
+</pre>
+</div>
+
+<div class="org-src-container">
+<label class="org-src-name"><span class="listing-number">Programme&nbsp;5&nbsp;: </span>détermination des combinaisons (classe Grille)</label><pre class="src src-python" id="orgf26a543"><span class="linenr">815: </span><span style="color: #a020f0;">def</span> <span style="color: #0000ff;">determine_combinaisons</span>(<span style="color: #a020f0;">self</span>, symbole):
+<span class="linenr">816: </span><span style="background-color: #f2f2f2;"> </span>   <span style="color: #8b2252;">"""</span>
+<span class="linenr">817: </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   G&#233;n&#232;re l'ensemble des combinaisons de destinations envisageables.</span>
+<span class="linenr">818: </span>
+<span class="linenr">819: </span>
+<span class="linenr">820: </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   Interroge la pioche puis purge la liste des combinaisons</span>
+<span class="linenr">821: </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   dont le placement est impossible.</span>
+<span class="linenr">822: </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   """</span>
+<span class="linenr">823: </span><span style="background-color: #f2f2f2;"> </span>   <span style="color: #a0522d;">combinaisons</span> = <span style="color: #a020f0;">self</span>.pioche[symbole].get_combinaisons()
+<span class="linenr">824: </span><span style="background-color: #f2f2f2;"> </span>   <span style="color: #a0522d;">combinaisons_valables</span> = <span style="color: #483d8b;">set</span>()
+<span class="linenr">825: </span><span style="background-color: #f2f2f2;"> </span>   <span style="color: #a020f0;">for</span> combinaison <span style="color: #a020f0;">in</span> combinaisons:
+<span class="linenr">826: </span><span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="color: #a020f0;">if</span> <span style="color: #a020f0;">self</span>.placement_est_possible(
+<span class="linenr">827: </span><span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="color: #a020f0;">self</span>.destinations_en_place[symbole],
+<span class="linenr">828: </span><span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="color: #483d8b;">list</span>(combinaison)):
+<span class="linenr">829: </span><span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   combinaisons_valables.add(combinaison)
+<span class="linenr">830: </span><span style="background-color: #f2f2f2;"> </span>   <span style="color: #a020f0;">return</span> combinaisons_valables
+<span class="linenr">831: </span>
+<span class="linenr">832: </span><span style="color: #a020f0;">def</span> <span style="color: #0000ff;">placement_est_possible</span>(<span style="color: #a020f0;">self</span>, en_place, autres):
+<span class="linenr">833: </span><span style="background-color: #f2f2f2;"> </span>   <span style="color: #8b2252;">"""</span>
+<span class="linenr">834: </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   Retourne True si les 9 lignes, les 9 colonnes et les 9 blocs 3x3</span>
+<span class="linenr">835: </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   sont pr&#233;sents parmi les candidats.</span>
+<span class="linenr">836: </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   Retourne False dans le cas contraire.</span>
+<span class="linenr">837: </span><span style="color: #8b2252; background-color: #f2f2f2;"> </span><span style="color: #8b2252;">   """</span>
+<span class="linenr">838: </span><span style="background-color: #f2f2f2;"> </span>   <span style="color: #a0522d;">lignes_requises</span> = <span style="color: #483d8b;">set</span>()
+<span class="linenr">839: </span><span style="background-color: #f2f2f2;"> </span>   <span style="color: #a0522d;">colonnes_requises</span> = <span style="color: #483d8b;">set</span>()
+<span class="linenr">840: </span><span style="background-color: #f2f2f2;"> </span>   <span style="color: #a0522d;">blocs_requis</span> = <span style="color: #483d8b;">set</span>()
+<span class="linenr">841: </span><span style="background-color: #f2f2f2;"> </span>   <span style="color: #a0522d;">destinations</span> = en_place.copy()
+<span class="linenr">842: </span><span style="background-color: #f2f2f2;"> </span>   destinations.extend(autres.copy())
+<span class="linenr">843: </span><span style="background-color: #f2f2f2;"> </span>   <span style="color: #a020f0;">for</span> destination <span style="color: #a020f0;">in</span> destinations:
+<span class="linenr">844: </span><span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   lignes_requises.add(<span style="color: #a020f0;">self</span>.get_ligne(destination))
+<span class="linenr">845: </span><span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   colonnes_requises.add(<span style="color: #a020f0;">self</span>.get_colonne(destination))
+<span class="linenr">846: </span><span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   blocs_requis.add(<span style="color: #a020f0;">self</span>.get_bloc(destination))
+<span class="linenr">847: </span><span style="background-color: #f2f2f2;"> </span>   <span style="color: #a020f0;">return</span> (<span style="color: #483d8b;">len</span>(lignes_requises) == 9) <span style="color: #a020f0;">and</span> (
+<span class="linenr">848: </span><span style="background-color: #f2f2f2;"> </span>   <span style="background-color: #f2f2f2;"> </span>   <span style="color: #483d8b;">len</span>(colonnes_requises) == 9) <span style="color: #a020f0;">and</span> (<span style="color: #483d8b;">len</span>(blocs_requis) == 9)
+</pre>
+</div>
+
+
+<ul class="org-ul">
+<li>Aléatoirement, on place le premier ensemble de symboles dans une des destinations valables et en parallèlement on sauvegarde cela dans une pile. On passe ensuite à l'ensemble suivant et on fait de même, etc. Quand on arrive à une impasse (car l'ensemble suivant se retrouve sans destinations valables) on remonte dans la pile et on choisit aléatoirement un autre ensemble parmi l'ensemble des destinations valables.</li>
+<li>Ce mécanisme fonctionne parfaitement bien et fini toujours par trouver une solution si celle-ci existe.</li>
+<li>Commentaires :
+<ul class="org-ul">
+<li>Si plusieurs solutions existe la première solution rencontrée est retenue.</li>
+<li>Si le solveur est relancé pour résoudre la même grille, il déterminera la solution dans un temps différent à chaque tentative car le parcours des destinations valables se fait de façon aléatoire.</li>
+<li>Pour la même raison, si plusieurs solutions existent, le solveur ne tombera pas forcement sur la même à chaque fois.</li>
+</ul></li>
+<li>Pour gagner en efficacité, le solveur par pile est précédé d'un traitement des singletons. Tant que la grille possède des cases admettant un seul prétendant, elles sont remplies puis on passe au traitement par pile.</li>
+<li>Lorsque le traitement par pile est mis en oeuvre, une jauge de parcours des combinaisons est affichée sous la grille.</li>
+</ul>
+
+
+<div id="org05070ff" class="figure">
+<p><img src="./images/jauge_de_parcours.png" alt="jauge_de_parcours.png" width="60%" />
+</p>
+<p><span class="figure-number">Figure&nbsp;16&nbsp;: </span>jauge de parcours sous la grille</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<p class="author">Auteur: Raoul HATTERER &amp; Jean-Luc COSSALTER</p>
+<p class="date">Created: 2019-08-28 mer. 19:37</p>
+<p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
+</div>
+</body>
+</html>
