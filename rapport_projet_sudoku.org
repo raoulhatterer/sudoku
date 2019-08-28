@@ -51,8 +51,8 @@
 
    La grille pleine est vidée aléatoirement jusqu'à atteindre le niveau souhaité par le joueur. 
    La jauge de remplissage et la pioche se retrouvent partiellement remplies.
-   La grille est révélée au joueur et les cases dors et déjà remplies sont gelées : le joueur ne peut ni les effacer ni les modifier.
-   Sur la gauche, le chronomètre mis en marche décompte le temps qui s'écoule.  
+   La grille est révélée au joueur et les cases dors et déjà remplies sont gelées : le joueur ne peut plus ni les effacer ni les modifier.
+   Sur la gauche, le chronomètre est mis en marche et décompte le temps qui s'écoule.  
 
 
    #+attr_html: :width 75%
@@ -141,7 +141,7 @@
    # # C-c C-x C-v toggle preview
    # # C-c C-o to follow link
 
-   - le menu afficher (figure [[fig:afficher]]) qui permet d'afficher les outils développeur (figure [[fig:outils]]) dont le *solveur*, le *chronomètre* et une fenêtre *À propos*.
+   - le menu afficher (figure [[fig:afficher]]) qui permet d'afficher les *outils développeur* (figure [[fig:outils]]), le  *chronomètre* et une fenêtre *À propos*.
    #+attr_html: :width 75%
    #+attr_latex: :width 400
    #+CAPTION: menu afficher
@@ -153,13 +153,13 @@
 
    #+attr_html: :width 75%
    #+attr_latex: :width 400
-   #+CAPTION: les outils sont affichés
+   #+CAPTION: les outils sont affichés au dessus du chronomètre
    #+NAME:   fig:outils
    [[file:./images/outils.png]]
    # # C-c C-x C-v toggle preview
    # # C-c C-o to follow link
 
-   Si le joueur renonce à remplir la grille et veut recourir au solveur, il doit cliquer sur *Recommencer* puis sur *Solveur*.
+   Si le joueur renonce à remplir la grille, il peut recourir au solveur. S'il a déjà placé des symboles sur la grille, il doit cliquer sur *Recommencer* puis sur *Solveur*. 
 
    #+attr_html: :width 75%
    #+attr_latex: :width 400
@@ -170,8 +170,8 @@
    # # C-c C-o to follow link
 
 ** Aides
-   Le joueur peut activer des aides en cochant les cases aides à droite de la grille. 
-   - l'aide =Grille= permet d'afficher (en haut à droite) les prétendants au survol des cases (figure [[fig:pretendants]]). Au départ, toutes les cases admettent les neuf symboles comme prétendants. Puis, au fur et à mesure du remplissage, les symboles présents dans les cases cousines de la même ligne, colonne ou bloc 3x3 sont déduites.
+   Le joueur peut activer des aides en cochant les cases aides qui sont situées en haut, à droite de la grille. 
+   - l'aide =Grille= permet d'afficher (en haut à droite) les prétendants au survol des cases (figure [[fig:pretendants]]). Au départ, toutes les cases admettent les neuf symboles comme prétendants. Puis, au fur et à mesure du remplissage, les symboles présents dans les cases cousines de la même ligne, colonne ou bloc 3x3 sont déduites de la liste des prétendants.
 
    #+attr_html: :width 75%
    #+attr_latex: :width 400
@@ -181,7 +181,7 @@
    # # C-c C-x C-v toggle preview
    # # C-c C-o to follow link
   
-   - l'aide =Pioche= permet d'indiquer (figure [[fig:destinations]] à gauche du *X*) les destinations envisageables pour les symboles de la pioche. Le bouton *Index cases* permet de révéler de façon transitoire les index des cases tant que le bouton de la souris est enfoncé.
+   - l'aide =Pioche= permet d'indiquer (figure [[fig:destinations]] à gauche du *X*) les destinations envisageables pour les symboles de la pioche. Le bouton *Index cases* permet de révéler de façon transitoire les index des cases tant que le bouton de la souris est maintenu enfoncé.
 
    #+attr_html: :width 75%
    #+attr_latex: :width 400
@@ -194,21 +194,19 @@
 * Le code
 
 ** Documentation
-   Le code est documenté par /docstring/ python.  
-   Par exemple, la classe ~Case~ à une documentation intégrée accessible  en tapant ~help(Case)~ dans la console python.
+   Le code est documenté par /docstring/ python. Cela procure une documentation accessible depuis la console. 
+   Par exemple, la classe ~Case~ (extrait de programme [[prog:code_class_Case]]) à une documentation intégrée accessible en tapant ~help(Case)~ dans la console python.
 
-   #+CAPTION: classe Case
+   #+CAPTION: la classe ~Case~ comporte énormément de documentation 
    #+NAME:   prog:code_class_Case
    #+INCLUDE: "sudoku.py" src python -n 30 :lines "30-100"
 
    Il en va de même pour toutes les classes utilisées dans le programme:
-   - la classe ~Case~ (extrait de programme [[prog:code_class_Case]])
+   - la classe ~Case~ 
    - la classe ~Grille~ qui utilise la classe ~Case~ (extrait de programme [[prog:code_class_Grille]]) tout en disposant d'attributs et de méthodes propres (extrait de programme [[prog:code_class_Grille_methodes]]).
-   - la classe ~Watchdog~
+   - la classe ~Watchdog~ utilisée lors du tirage
    - la classe ~Sac~. Un sac contient des symboles identiques.
    - la classe ~Pioche~. Classe utilisant 9 sacs contenant chacun des symboles identiques tous différents (1 sac avec que des "1", un autre avec que des "2", etc.)
-
-   Les fonctions sont elles aussi documentées par /docstring/.
 
    #+CAPTION: la classe Grille fait appel à la classe Case
    #+NAME:   prog:code_class_Grille
@@ -217,21 +215,27 @@
    #+NAME:   prog:code_class_Grille_methodes
    #+INCLUDE: "sudoku.py" src python -n 123 :lines "123-164"
 
+   Il en va de même pour toutes les fonctions utilisées dans le programme: elles sont, elles aussi, documentées par /docstring/.
+
 ** Multiplateforme
    Python et tkinter sont théoriquement multiplateformes mais l'apparence est différente suivant la plateforme utilisée.
    Globalement tkinter fonctionne mieux sous Linux que sous Windows (on perd le changement d'aspect du bouton au survol de la souris) ou sous mac OSX (idem, de plus le ~background~ des boutons doit être obtenu de façon détournée et les fenêtre Toplevel sont mal gérées).
 
 * Démarche
+** Réflexion initiale
+   - Ne pas consulter de documentation sur les méthodes de résolution pour essayer d'établir une méthode personnelle.
+   - Chaque case vide à des prétendants (symboles que l'ont peut envisager de placer dans la case). La liste des prétendants se réduit au fur et à mesure que la grille se remplit car il faut retirer les symboles placés dans les cases cousines (cases de même ligne, colonne ou bloc). Je me propose donc de gérer les prétendants pour chacune des cases de la grille (d'où le menu d'aide =Grille= qui fait apparaître les prétendants).
+   - Les symboles sont prélevés dans une pioche qui comporte 9 sacs contenant chacun des symboles identiques. Au départ, il y a 81 destinations possibles pour le premier symbole à placer. Le nombre de destinations possibles pour le second symbole à placer n'est pas forcément de 80 car, si le second symbole est le même que le premier, il ne peut pas être placé dans une case cousine du premier. Je me propose donc de  gérer les destinations pour chacun des neuf symboles au cours de la partie (d'où le menu d'aide =Pioche= qui fait apparaître les destinations).
+** Tirage d'une grille
+   - aléatoirement je place le premier '1' dans une des 81 cases, puis le deuxième '1' aléatoirement dans une des destinations restantes, etc. Chaque placement est stocké dans une pile. Si l'on arrive à une impasse (case sans contenu ni prétendants) on remonte dans la pile et on choisi aléatoirement une autre destination envisageable parmi les destinations non testées. 
+   - Pour gagner en efficacité, je rajoute un watchdog. Si l'on remonte plus de 4 niveaux dans la pile, le watchdog se déclenche et provoque l'effacement des '1' car placés en premier avec plein de destinations à leur disposition, ils ont peut être adopté une configuration problématique pour le placement des autres symboles. Les '1' sont renvoyés en fin de liste des symboles à placer. Si le watchdog se déclenche à nouveau, les '2' sont à leur tour renvoyés en fin de liste, etc. Pour éviter de rentrer dans un cercle vicieux qui consisterait à renvoyer les symboles en fin de liste les uns après les autre, la profondeur de déclenchement du watchdog augmente au cours des déclenchements. 
+   - Réglage du niveau: on part d'une grille pleine obtenue par tirage. Puis on réalise la suppression aléatoire des symboles de la grille qui sont replacés dans la pioche  jusqu'à parvenir au taux de remplissage souhaité par le joueur. Cette méthode ne garantit pas l'unicité de la solution mais, peu importe, car si le joueur parvient à placer tous les symboles sur la grille la victoire lui est accordée (même si la grille pleine tirée au départ était différente).  
+** Solveur 
+   - Pas indispensable par pouvoir avoir un jeu fonctionnel (sauf si l'on tient à s'assurer de l'unicité) mais réalisé tout de même.
+   - Première tentative: utiliser le mécanisme du tireur sans watchdog... fonctionne en théorie mais la résolution est beaucoup mais alors beaucoup trop longue car des permutations équivalentes sont testées comme étant des propositions différentes .  
+   - Solution : s'inspirer du tireur mais utiliser des ensembles de symboles plutôt que de placer un symbole après l'autre. 
+   - Exemple: 
+     - sur la figure [[fig:destinations]] à gauche du *X* on peut voir que les cinq symboles '8' de la pioche peuvent être placés sur onze cases dont les index sont connus. Grâce à la fonction ~nCr(n, r)~ qui retourne le nombre de combinaisons de n objets pris r à r, on calcule le nombre de combinaisons de 5 symboles '8' parmi 11 destinations. Il y en a 462.   
+     - on fait de même pour les autres symboles de la pioche. Cela nous permet de déterminer dans quel ordre on va placer les symboles. En commençant par placer ceux qui ont le plus petit nombre de combinaisons cela va diminuer le nombre de destinations possibles pour les autres et donc limiter le nombre de combinaisons possibles pour eux.
+     - on détermine les combinaisons grâce à la fonction ~combinations~ du module ~itertools~ puis on purge la liste en conservant celles qui sont possibles: 
 
-- Ne pas consulter de documentation sur les méthodes de résolution pour essayer d'établir une méthode personnelle.
-- Chaque case vide à des prétendants (symboles que l'ont peut envisager de placer dans la case). La liste des prétendants se réduit au fur et à mesure que la grille se remplit car il faut retirer les symboles placés dans les cases cousines (cases de même ligne, colonne ou bloc). Je me propose donc de gérer les prétendants pour chacune des cases de la grille (d'où le menu d'aide =Grille= qui fait apparaître les prétendants).
-- Les symboles sont prélevés dans une pioche qui contient 9 sacs contenant chacun des symboles identiques. Au départ il y a 81 destinations possibles pour le premier symbole à placer. Le nombre de destinations possibles pour le second symbole à placer n'est pas forcément de 80 car si le second symbole est le même que le premier il ne peut pas être placé dans une case cousine du premier. Je me propose donc de  gérer les destinations pour chaque symbole au cours de la partie (d'où le menu d'aide =Pioche= qui fait apparaître les destinations).
-- Tirage d'une grille: 
-  - aléatoirement je place le premier '1' dans une des 81 cases, puis le deuxième '1' aléatoirement dans une des destinations restantes, etc. Chaque placement est stocké dans une pile. Si l'on arrive à une impasse (case sans contenu ni prétendants) on remonte dans la pile et on choisi aléatoirement une autre destination envisageable parmi les destinations non testées. 
-  - Pour gagner en efficacité, je rajoute un watchdog. Si l'on remonte plus de 4 niveaux dans la pile, le watchdog se déclenche et provoque l'effacement des '1' qui placés en premier avec plein de destinations à leur disposition ont peut être adopté une configuration problématique pour le placement des autres symboles. Les '1' sont renvoyés en fin de liste des symboles à placer. Si le watchdog se déclenche à nouveau, les '2' sont à leur tour renvoyés en fin de liste, etc. Pour éviter de rentrer dans un cercle vicieux qui consisterait à renvoyer les symboles en fin de liste les uns après les autre, la profondeur de déclenchement du watchdog augmente au cours des déclenchements. 
-- Réglage du niveau: on part d'une grille pleine obtenue par tirage. Puis on réalise la suppression aléatoire des symboles de la grille qui sont replacés dans la pioche  jusqu'à parvenir au taux de remplissage souhaité par le joueur. Cette méthode ne garantit pas l'unicité de la solution mais, peu importe, car si le joueur parvient à placer tous les symboles sur la grille la victoire lui est accordée (même si la grille pleine tirée au départ était différente).  
-- Solveur : 
-  - Pas indispensable par pouvoir avoir un jeu fonctionnel (sauf si l'on tient à s'assurer de l'unicité) mais réalisé tout de même.
-  - Première tentative: utiliser le mécanisme du tireur sans watchdog... fonctionne en théorie mais la résolution est beaucoup mais alors beaucoup trop longue car des permutations équivalentes sont testées comme étant des propositions différentes .  
-  - Solution : s'inspirer du tireur mais utiliser des ensembles des symboles plutôt que de placer un symbole après l'autre.
-        
