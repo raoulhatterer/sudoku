@@ -29,3 +29,9 @@ Si vous décidez de faire un autre projet, mettez sa description dans cette sect
 
 * [Rapport de projet (org)](https://github.com/L2InfoAMU/diu-eil-project123-lycee_mediterranee/blob/master/rapport_projet_sudoku.org)
 * [Rapport de projet (pdf)](https://github.com/L2InfoAMU/diu-eil-project123-lycee_mediterranee/blob/master/rapport_projet_sudoku.pdf)
+
+### Production
+* [Sudoku (version1)](https://github.com/L2InfoAMU/diu-eil-project123-lycee_mediterranee/blob/master/sudoku.py)
+* [Sudoku (version2)](https://github.com/L2InfoAMU/diu-eil-project123-lycee_mediterranee/blob/master/Jouer.py)
+* [Sudoku (version3)](https://github.com/L2InfoAMU/diu-eil-project123-lycee_mediterranee/blob/master/Sudoku_jouable-1.html)
+
