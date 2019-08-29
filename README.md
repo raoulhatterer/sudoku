@@ -8,8 +8,6 @@ Il peut y avoir de 2 à 4 personnes impliqués dans le projet. Vous devez indiqu
 
 - Jean-Luc COSSALTER : jlcoss
 - Raoul HATTERER : raoulhatterer
-- Prénom3 NOM3 : login_github3
-- Prénom4 NOM4 : login_github4
 
 ## Description du projet
 
@@ -30,3 +28,4 @@ Si vous décidez de faire un autre projet, mettez sa description dans cette sect
 
 
 * [Rapport de projet (org)](https://github.com/L2InfoAMU/diu-eil-project123-lycee_mediterranee/blob/master/rapport_projet_sudoku.org)
+* [Rapport de projet (pdf)](https://github.com/L2InfoAMU/diu-eil-project123-lycee_mediterranee/blob/master/rapport_projet_sudoku.pdf)
