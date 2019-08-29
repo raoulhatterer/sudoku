@@ -71,9 +71,17 @@ def Clic(event):
 
 def dessiner_tableau_vide() :
     for i in range(9) :
-        rect_choix=can.create_rectangle(larg_carre*i+5,larg_carre*10+5,larg_carre*(i+1)+5,larg_carre*(10+1)+5,fill="chartreuse2")
+        rect_choix=can.create_rectangle(larg_carre*i+5,
+                                        larg_carre*10+5,
+                                        larg_carre*(i+1)+5,
+                                        larg_carre*(10+1)+5,
+                                        fill="chartreuse2")
         for j in range(9):
-            rect=can.create_rectangle(larg_carre*i+5,larg_carre*j+5,larg_carre*(i+1)+5,larg_carre*(j+1)+5,fill="lightyellow")
+            rect=can.create_rectangle(larg_carre*i+5,
+                                      larg_carre*j+5,
+                                      larg_carre*(i+1)+5,
+                                      larg_carre*(j+1)+5,
+                                      fill="lightyellow")
         for i in range(4) :
             ligne_1=can.create_line(3*larg_carre*i+5,5,3*larg_carre*(i)+5,9*larg_carre+5,fill="red",width=3)
             ligne_2=can.create_line(5,3*larg_carre*i+5,9*larg_carre+5,3*larg_carre*(i)+5,fill="red",width=3)

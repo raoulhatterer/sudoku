@@ -191,7 +191,7 @@
 ** Le code
 *** Documentation
     Le code est documenté par /docstring/ python. Cela procure une documentation accessible depuis la console. 
-    Par exemple, la classe ~Case~ (extrait de programme [[prog:code_class_Case]]) à une documentation intégrée accessible en tapant ~help(Case)~ dans la console python.
+    Par exemple, la classe ~Case~ (listing [[prog:code_class_Case]]) à une documentation intégrée accessible en tapant ~help(Case)~ dans la console python.
 
     #+CAPTION: la classe ~Case~ comporte énormément de documentation 
     #+NAME:   prog:code_class_Case
@@ -199,7 +199,7 @@
 
     Il en va de même pour toutes les classes utilisées dans le programme:
     - la classe ~Case~ 
-    - la classe ~Grille~ qui utilise la classe ~Case~ (extrait de programme [[prog:code_class_Grille]]) tout en disposant d'attributs et de méthodes propres (extrait de programme [[prog:code_class_Grille_methodes]]).
+    - la classe ~Grille~ qui utilise la classe ~Case~ (listing [[prog:code_class_Grille]]) tout en disposant d'attributs et de méthodes propres (listing [[prog:code_class_Grille_methodes]]).
     - la classe ~Watchdog~ utilisée lors du tirage
     - la classe ~Sac~. Un sac contient des symboles identiques.
     - la classe ~Pioche~. Classe utilisant 9 sacs contenant chacun des symboles identiques tous différents (1 sac avec que des "1", un autre avec que des "2", etc.)
@@ -233,7 +233,7 @@
     - Solution : s'inspirer du tireur mais utiliser des ensembles de symboles plutôt que de placer un symbole après l'autre. 
     - Par exemple, sur la figure [[fig:destinations]] à gauche du *X* on peut voir que les cinq symboles '8' de la pioche peuvent être placés sur onze cases dont les index sont connus. Grâce à la fonction ~nCr(n, r)~ qui retourne le nombre de combinaisons de n objets pris r à r, on calcule le nombre de combinaisons de 5 symboles '8' parmi 11 destinations. Il y en a 462.   
     - On fait de même pour les autres symboles de la pioche. Cela nous permet de déterminer dans quel ordre on va placer les symboles. En commençant par placer ceux qui ont le plus petit nombre de combinaisons cela va diminuer le nombre de destinations possibles pour les autres et donc limiter le nombre de combinaisons possibles pour eux.
-    - On détermine les combinaisons grâce à la fonction ~combinations~ du module ~itertools~ (programme [[prog:determine_combinaisons_Sac]]) puis on purge la liste en conservant celles qui sont possibles (programme [[prog:determine_combinaisons_Grille]]). La purge est drastique: pour un nombre de combinaisons allant typiquement de quelques centaines à quelques milliers on se retrouve avec un nombre de combinaisons valables se comptant sur les doigts d'une seule main.
+    - On détermine les combinaisons grâce à la fonction ~combinations~ du module ~itertools~ (listing [[prog:determine_combinaisons_Sac]]) puis on purge la liste en conservant celles qui sont possibles (listing [[prog:determine_combinaisons_Grille]]). La purge est drastique: pour un nombre de combinaisons allant typiquement de quelques centaines à quelques milliers on se retrouve avec un nombre de combinaisons valables se comptant sur les doigts d'une seule main.
 
 
     #+CAPTION: détermination des combinaisons (classe Sac) 
@@ -304,7 +304,7 @@
     #+NAME:   FoncSudo:intersection_2_listes
     #+INCLUDE: "FoncSudo.py" src python -n 14 :lines "14-25"
 
-    On passe à la fonction =intersection_2_listes= (programme [[FoncSudo:intersection_2_listes]]) deux paramètres qui sont des listes (=L1= et =L2=).
+    On passe à la fonction =intersection_2_listes= (listing [[FoncSudo:intersection_2_listes]]) deux paramètres qui sont des listes (=L1= et =L2=).
     - Si une des deux  liste est vide (on teste si la longueur d'une des liste est nulle) alors l'intersection est vide et l'on renvoie une liste vide 
     - Sinon on compare tous les éléments de la première avec tous ceux de la deuxième et si l'on trouve un élément commun on le rajoute à la liste résultat à condition que l'on ne l'ai pas déjà rajouté. Une fois les comparaisons terminées, on renvoie la liste des éléments communs.
 
@@ -313,7 +313,7 @@
     #+NAME:   FoncSudo:est_complet
     #+INCLUDE: "FoncSudo.py" src python -n 27 :lines "27-38"
 
-    La fonction =est_complet= (programme [[FoncSudo:est_complet]]) est utilisée pour savoir si dans une liste on a bien tous les nombres de 1 à 9 une fois. Cette fonction renvoie =True= ou =False=. 
+    La fonction =est_complet= (listing [[FoncSudo:est_complet]]) est utilisée pour savoir si dans une liste on a bien tous les nombres de 1 à 9 une fois. Cette fonction renvoie =True= ou =False=. 
 
     On passe à cette fonction un paramètre qui est la liste :  =a_tester=.
     Pour tous les éléments de la liste, obtenus en faisant varier index de 0 à 8 on teste si les éléments de la liste =a_tester= sont dans la liste de départ : =liste=. S'ils le sont on enlève l'élément de la liste de départ =liste=, sinon on renvoie =False=. À la fin, si aucun élément ne manque on renvoie =True=.
@@ -324,7 +324,7 @@
 
 
  
-    La fonction =reste= (programme [[FoncSudo:reste]]) est utilisée pour savoir quels sont les éléments qui restent par rapport à la liste des nombres de 1 à 9. Pour la grille de sudoku, cette fonction est utile pour connaître les possibilités qui restent dans une case en éliminant peu à peu tous les éléments qui sont impossibles.
+    La fonction =reste= (listing [[FoncSudo:reste]]) est utilisée pour savoir quels sont les éléments qui restent par rapport à la liste des nombres de 1 à 9. Pour la grille de sudoku, cette fonction est utile pour connaître les possibilités qui restent dans une case en éliminant peu à peu tous les éléments qui sont impossibles.
 
     On passe à cette fonction un paramètre : la liste : =liste_a_tester= et la fonction renvoie les éléments restants. On passe en revue tous les éléments de la =liste_a_tester= et s'ils sont dans la liste on les retire de celle-ci. À la fin la fonction renvoie  ce qui reste de la liste.
 
@@ -334,34 +334,31 @@
     #+NAME:   FoncSudo:teste_ligne
     #+INCLUDE: "FoncSudo.py" src python -n 49 :lines "49-60"
  
-    La fonction =teste_ligne= (programme [[FoncSudo:teste_ligne]]) est utilisée pour savoir si les 9 chiffres sont présents dans les 9 lignes de la grille.
+    La fonction =teste_ligne= (listing [[FoncSudo:teste_ligne]]) est utilisée pour savoir si les 9 chiffres sont présents dans les 9 lignes de la grille.
 
     On passe en paramètre la grille à tester et la fonction retourne =True= si les 9 chiffres sont présents dans toutes les lignes ;  elle retourne =False= sinon. Cette fonction fait appel à la fonction =est_complet= décrite précédemment. Pour chaque ligne de la grille à tester, on crée une liste (=mot_a_tester=) est on teste si  cette liste est complète ou non.
 
-    #+CAPTION: teste si les 9 chiffres sont presents dans toutes les colonnes
-    #+NAME:   FoncSudo:teste_colonne
-    #+INCLUDE: "FoncSudo.py" src python -n 61 :lines "61-73"
+    # #+CAPTION: teste si les 9 chiffres sont presents dans toutes les colonnes
+    # #+NAME:   FoncSudo:teste_colonne
+    # #+INCLUDE: "FoncSudo.py" src python -n 61 :lines "61-73"
  
-    La fonction =teste_colonne= (programme [[FoncSudo:teste_colonne]]) est  utilisée pour savoir si les 9 chiffres sont présents dans les 9 colonnes de la grille. Même fonction que la précédente pour les colonnes.
+    Une fonction équivalente appelée  =teste_colonne= est  utilisée pour savoir si les 9 chiffres sont présents dans les 9 colonnes de la grille. 
 
     #+CAPTION: teste si les 9 chiffres sont présents dans tous les carrés
     #+NAME:   FoncSudo:teste_carre
-    #+INCLUDE: "FoncSudo.py" src python -n 75 :lines "75-86"
+    #+INCLUDE: "FoncSudo.py" src python -n 75 :lines "75-87"
  
-    La fonction =teste_carre= (programme [[FoncSudo:teste_carre]]) est  utilisée pour savoir si les 9 chiffres sont présents dans les 9 carrés de la grille. Même fonction que la précédente pour les carrés.
+    La fonction =teste_carre= (listing [[FoncSudo:teste_carre]]) est  utilisée pour savoir si les 9 chiffres sont présents dans les 9 carrés de la grille. 
 
     =[i % 3 + 3 * (carre % 3)][i // 3 + 3 * (carre // 3)]=, permet d'obtenir la position =[ligne][colonne]= d'un élément de la grille en fonction du numéro du carré et de la position =i= de l'élément.
 
 
     #+CAPTION: teste si les 9 chiffres sont presents LCC
     #+NAME:   FoncSudo:test_complet
-    #+INCLUDE: "FoncSudo.py" src python -n 87 :lines "87-98"
+    #+INCLUDE: "FoncSudo.py" src python -n 88 :lines "88-99"
  
-    La fonction =test_complet= (programme [[FoncSudo:test_complet]]) utilise les 3 fonctions précédentes.
-    On lui passe en paramètre la grille à tester. Elle teste successivement si les 9 chiffres sont présents :
-    - dans toutes les lignes
-    - dans toutes les colonnes
-    - dans tous les carrés
+    La fonction =test_complet= (listing [[FoncSudo:test_complet]]) utilise les 3 fonctions précédentes.
+    On lui passe en paramètre la grille à tester. 
     Elle retourne =True= si tous les chiffres sont présents dans toutes les lignes, toutes les colonnes et tous les carrés.  Sinon elle retourne =False=.
 
     Cette fonction permet de savoir si la grille de sudoku est bien remplie.
@@ -369,31 +366,28 @@
 *** Tests pour la résolution
     #+CAPTION: quels sont les chiffres qui restent à mettre dans une  colonne
     #+NAME:   FoncSudo:reste_colonne
-    #+INCLUDE: "FoncSudo.py" src python -n 100 :lines "100-106"
+    #+INCLUDE: "FoncSudo.py" src python -n 101 :lines "101-107"
  
-    La fonction =reste_colonne= (programme [[FoncSudo:reste_colonne]]) va fournir la liste des éléments qui rentent à placer dans une colonne.
+    La fonction =reste_colonne= (listing [[FoncSudo:reste_colonne]]) va fournir la liste des éléments qui rentent à placer dans une colonne.
 
     On lui passe en paramètre la grille à tester et un numéro de colonne. Cette fonction crée une liste constituée des éléments de la colonne spécifiée : =mot_a_tester=, elle retourne la liste des éléments  non encore placés en utilisant la fonction reste vue précédemment. 
 
-    #+CAPTION: quels sont les chiffres qui restent à mettre dans une ligne ou un carré
-    #+NAME:   FoncSudo:reste_ligne_carre
-    #+INCLUDE: "FoncSudo.py" src python -n 108 :lines "108-123"
+    #+CAPTION: quels sont les chiffres qui restent à mettre dans un carré
+    #+NAME:   FoncSudo:reste_carre
+    #+INCLUDE: "FoncSudo.py" src python -n 116 :lines "116-124"
 
-
-    On réalise (programme [[FoncSudo:reste_ligne_carre]]) les fonctions =reste-ligne= et =reste_carré= qui respectivement vont fournir la liste des éléments qui restent à placer dans une ligne et la liste des éléments qui rentent à placer dans un carré.
+    De façon similaire, on réalise la fonctions =reste-ligne= et la fonction  =reste_carré= (listing [[FoncSudo:reste_carre]]) qui respectivement vont fournir la liste des éléments qui restent à placer dans une ligne et la liste des éléments qui rentent à placer dans un carré.
    
-    On passe en paramètre à la fonction =reste_carre= :
-    - la grille à tester
-    - la ligne d'un élément
-    - la colonne de l'élément.
-    On crée une liste vide : =mot_a_tester=[]=. On détermine la position du carré en fonction de la ligne et de la colonne de l'élément : =position_carre=3*(ligne//3)+colonne//3=. Pour tous les éléments du carré trouvé, on ajoute à la liste =mot_a_tester= tous les éléments du carré. On renvoie le reste en utilisant la fonction reste (programme [[FoncSudo:reste]]).
+   =position_carre=3*(ligne//3)+colonne//3=  permet de déterminer la position du carré en fonction de la ligne et de la colonne.
+
+Pour tous les éléments du carré trouvé, on ajoute à la liste =mot_a_tester= tous les éléments du carré. On renvoie le reste en utilisant la fonction reste (listing [[FoncSudo:reste]]).
  
 
     #+CAPTION: finalement aux coordonnées données que reste-t-il comme chiffre possible ?
     #+NAME:   FoncSudo:reste_possible
-    #+INCLUDE: "FoncSudo.py" src python -n 125 :lines "125-137"
+    #+INCLUDE: "FoncSudo.py" src python -n 126 :lines "126-137"
  
-    La fonction =reste_possible= (programme [[FoncSudo:reste_possible]]) va déterminer pour une case du sudoku quels sont les candidats possibles.
+    La fonction =reste_possible= (listing [[FoncSudo:reste_possible]]) va déterminer pour une case du sudoku quels sont les candidats possibles.
 
     On passe en paramètre:
     - la grille à tester
@@ -410,13 +404,13 @@
     #+NAME:   FoncSudo:reste_possible_creation
     #+INCLUDE: "FoncSudo.py" src python -n 140 :lines "140-148"
  
-    La fonction =reste_possible_creation= (programme [[FoncSudo:reste_possible_creation]]) est la même fonction que la précédente, mais qui ne renvoie pas une liste vide lorsque l'élément est présent. 
+    La fonction =reste_possible_creation= (listing [[FoncSudo:reste_possible_creation]]) est la même fonction que la précédente, mais qui ne renvoie pas une liste vide lorsque l'élément est présent. 
  
     #+CAPTION: inverser 2 chiffres d'une grille
     #+NAME:   FoncSudo:inverser_nombres_grille
     #+INCLUDE: "FoncSudo.py" src python -n 154 :lines "154-165"
  
-    La fonction =inverser_nombres_grille= (programme [[FoncSudo:inverser_nombres_grille]]) sert à inverser 2 chiffres d'une grille. Ceci permet de créer une grille différente de celle d'origine.
+    La fonction =inverser_nombres_grille= (listing [[FoncSudo:inverser_nombres_grille]]) sert à inverser 2 chiffres d'une grille. Ceci permet de créer une grille différente de celle d'origine.
 
     On passe en paramètre :
     - le nom de la grille (=tab=)
@@ -424,13 +418,13 @@
     La fonction renvoie la grille avec les deux chiffres échangés.
     Dans la grille, on passe en revue toutes les lignes (indice =i=) et toutes les colonnes (indice =j=). Si dans une case on trouve un des deux chiffres on l'échange avec l'autre. La variable =fait= est mise à =False= au départ et elle passe à =True= dès que l'échange a été fait, ceci pour ne pas échanger deux fois le contenu de la case lorsque l'on tombe sur =nombre1=.
 
-    Cette fonction n'est plus utilisée car la fonction =melange_nombre_grille= (programme [[FoncSudo:melange_nombre_grille]]) permet de mélanger tous les nombres d'un seul coup.
+    Cette fonction n'est plus utilisée car la fonction =melange_nombre_grille= (listing [[FoncSudo:melange_nombre_grille]]) permet de mélanger tous les nombres d'un seul coup.
 
-    #+CAPTION: inverser 2 lignes ou 2 colonnes
-    #+NAME:   FoncSudo:inverserCL
-    #+INCLUDE: "FoncSudo.py" src python -n 166 :lines "166-188"
+    #+CAPTION: inverser 2 lignes
+    #+NAME:   FoncSudo:inverser_lignes
+    #+INCLUDE: "FoncSudo.py" src python -n 178 :lines "178-188"
  
-    Les fonctions =inverser_colonnes= et =inverser_lignes= (programme [[FoncSudo:inverserCL]]) permettent d'inverser 2 colonnes ou 2 lignes d'une grille. Ceci permet de créer une grille différente de celle d'origine.
+    Des fonctions =inverser_colonnes= et =inverser_lignes= (listing [[FoncSudo:inverser_lignes]]) permettent d'inverser 2 colonnes ou 2 lignes d'une grille. Ceci permet de créer une grille différente de celle d'origine.
 
     On passe en paramètre :
     - le nom de la grille (=tab=)
@@ -438,7 +432,7 @@
 
     La fonction renvoie la grille avec les deux lignes (ou colonnes) échangées.
 
-    La ligne:     = if colonne1//3==colonne2//3: (if ligne1//3==ligne2//3: )= permet de vérifier que l'échange se fait dans les mêmes carrés, sinon on créerait une grille fausse.
+    La ligne:     =if ligne1//3==ligne2//3= permet de vérifier que l'échange se fait dans les mêmes carrés, sinon on créerait une grille fausse.
 
     Pour le reste on fait simplement un échange en passant par une variable temporaire =temp=.
      
@@ -446,7 +440,7 @@
     #+NAME:   FoncSudo:melange_nombre_grille
     #+INCLUDE: "FoncSudo.py" src python -n 140 :lines "140-148"
  
-    La fonction =melange_nombre_grille= (programme [[FoncSudo:melange_nombre_grille]]) permet de mélanger aléatoirement les nombres d'une grille ce qui permet de créer des grilles différentes à partir d'une grille de départ.
+    La fonction =melange_nombre_grille= (listing [[FoncSudo:melange_nombre_grille]]) permet de mélanger aléatoirement les nombres d'une grille ce qui permet de créer des grilles différentes à partir d'une grille de départ.
 
     On part d'une liste =chiffres_melanges= : =[1,2,3,4,5,6,7,8,9]= que l'on mélange aléatoirement avec la fonction =shuffle=, son ordre est donc quelconque. On passe en revue à l'aide de 2 boucles =for= imbriquées (indices =i= et =j=) tous les éléments de la grille =tab= et on remplace le chiffre de départ  si celui-ci est positif (le zéro correspond à une case vide) par le contenu du tableau =chiffres_melanges= dont le rang est le chiffre de départ -1 (pour commencer les indices à 0).
 
@@ -454,37 +448,36 @@
     #+NAME:   FoncSudo:change_3_col
     #+INCLUDE: "FoncSudo.py" src python -n 204 :lines "204-220"
  
-    La fonction =change_3_col= (programme [[FoncSudo:change_3_col]]) permet de mélanger aléatoirement 3 grandes colonnes ce qui permet de créer des grilles différentes à partir d'une grille de départ.
+    La fonction =change_3_col= (listing [[FoncSudo:change_3_col]]) permet de mélanger aléatoirement 3 grandes colonnes ce qui permet de créer des grilles différentes à partir d'une grille de départ.
 
     On part d'un tableau (grille de sudoku), on crée 2 listes contenant 0, 1, 2 : 
     - =a= dans l'ordre
     - =b= dans un ordre aléatoire après l'utilisation de la fonction shuffle.
     On recopie le tableau dans un tableau temporaire : =tab_temp=
-    Puis on recopie ce tableau temporaire dans le tableau de départ en mélangeant les 3 grandes colonnes.  J'utilise pour cela la fonction =[(b[colon//3]-a[colon//3])*3+colon]= qui va permettre de mélanger les colonnes par groupes  de 3 : on pourra par exemple obtenir 345012678 ce qui va permettre d'échanger les colonnes 012 avec les 345 la colonne 678 restant en place.
+    Puis on recopie ce tableau temporaire dans le tableau de départ en mélangeant les 3 grandes colonnes. =[(b[colon//3]-a[colon//3])*3+colon]= va permettre de mélanger les colonnes par groupes  de 3 : on pourra par exemple obtenir 345012678 ce qui va permettre d'échanger les colonnes 012 avec les 345 la colonne 678 restant en place.
     Il y a 3! = 6 combinaisons possibles.
 
-    #+CAPTION: mélange aléatoire 3 grandes lignes
-    #+NAME:   FoncSudo:change_3_lign
-    #+INCLUDE: "FoncSudo.py" src python -n 224 :lines "224-240"
+    # #+CAPTION: mélange aléatoire 3 grandes lignes
+    # #+NAME:   FoncSudo:change_3_lign
+    # #+INCLUDE: "FoncSudo.py" src python -n 224 :lines "224-240"
  
-    La fonction =change_3_lign= (programme [[FoncSudo:change_3_lign]]) permet de mélanger aléatoirement 3 grandes lignes ce qui permet de créer des grilles différentes à partir d'une grille de départ.
-    C'est la même fonction que la précédente, mais appliquée aux lignes à la place des colonnes.
+    De même, une fonction =change_3_lign= permet de mélanger aléatoirement 3 grandes lignes ce qui permet de créer des grilles différentes à partir d'une grille de départ.C'est la même fonction que la précédente, mais appliquée aux lignes à la place des colonnes.
 
     #+CAPTION: mélange aléatoire de 3 petites colonnes
     #+NAME:   FoncSudo:change_3_petites_col
     #+INCLUDE: "FoncSudo.py" src python -n 245 :lines "245-269"
  
-    La fonction =change_3_petites_col= (programme [[FoncSudo:change_3_petites_col]]) permet d'échanger aléatoirement les 3 petites colonnes des 3 grandes colonnes d'une grille. Ceci permet de créer des grilles différentes à partir d'une grille de départ.
+    La fonction =change_3_petites_col= (listing [[FoncSudo:change_3_petites_col]]) permet d'échanger aléatoirement les 3 petites colonnes des 3 grandes colonnes d'une grille. Ceci permet de créer des grilles différentes à partir d'une grille de départ.
 
     On commence par copier le tableau (=grille=) dans un tableau temporaire. On mélange =b= avec la fonction =shuffle=. On recopie les 3 premières colonnes en changeant l'ordre de celles-ci (on remplace le numéro de colonne par la valeur de b d'indice le numéro en question). 
 
     Idem avec les 3 colonnes suivantes et les 3 dernières.
 
-    #+CAPTION: mélange aléatoire de 3 petites lignes
-    #+NAME:   FoncSudo:change_3_petites_lignes
-    #+INCLUDE: "FoncSudo.py" src python -n 273 :lines "273-296"
+    # #+CAPTION: mélange aléatoire de 3 petites lignes
+    # #+NAME:   FoncSudo:change_3_petites_lignes
+    # #+INCLUDE: "FoncSudo.py" src python -n 273 :lines "273-296"
 
-    Idem mélange des 3 petites colonnes, mais pour les lignes.
+    De même on réalise une fonction =change_3_petites_lignes= qui mélange 3 petites lignes.
 
     #+CAPTION: supprime la valeur d'une case aléatoirement
     #+NAME:   FoncSudo:supprimer_nombre
@@ -496,10 +489,12 @@
 
     On leur passe en paramètre une grille complète ou partiellement complète elles renvoient cette même grille avec eventuellement une case mise à 0.
 
+
     La fonction =supprimer_nombre_simple= :
     - Tire 2 coordonnées (ligne, colonne)  aléatoirement entre 0 et 8
     - Si à ces coordonnées il y a une valeur que l'on peut trouver directement, on la supprime de la 
     grille. Cette fonction permet de générer des grilles pour débutants.
+
 
     La fonction =supprimer_nombre= :
     - Tire 2 coordonnées (ligne, colonne)  aléatoirement entre 0 et 8
@@ -509,11 +504,11 @@
     - Si on a pu résoudre, on enlève la valeur de la grille et on la retourne.
 
 
-    #+CAPTION: création de grille
+    #+CAPTION: création aléatoire de grille
     #+NAME:   FoncSudo:creation_aleatoire
-    #+INCLUDE: "FoncSudo.py" src python -n 323 :lines "323-385"
+    #+INCLUDE: "FoncSudo.py" src python -n 323 :lines "323-374"
  
-    La fonction =creation_aleatoire= (programme [[FoncSudo:creation_aleatoire]]) permet de créer une grille aléatoirement :
+    La fonction =creation_aleatoire= (listing [[FoncSudo:creation_aleatoire]]) permet de créer une grille aléatoirement :
     - On part d'une grille quelconque (pleine ou partiellement remplie)
     - On utilise les fonctions de mélange (chiffres, colonnes, lignes, petites colonnes et petites lignes) pour créer une grille différente.
     - On supprime ensuite (avec fonction =supprimer_nombre=) des valeurs de la grille
@@ -526,32 +521,32 @@
    #+NAME:   FoncSudo:grille_des_possibles
    #+INCLUDE: "FoncSudo.py" src python -n 395 :lines "395-403"
  
-   La fonction =grille_des_possibles= (programme [[FoncSudo:grille_des_possibles]]) en elle-même ne résout rien, mais elle crée un tableau gdp image de la grille de départ qui au lieu de contenir les valeurs contient la liste des prétendants.
+   La fonction =grille_des_possibles= (listing [[FoncSudo:grille_des_possibles]]) en elle-même ne résout rien, mais elle crée un tableau =gdp= image de la grille de départ qui au lieu de contenir les valeurs contient la liste des prétendants.
 
-   Pour chaque ligne de la grille, on crée une ligne des possibles (ldp)  contenant tous les restes possibles de la ligne et on l'ajoute à la grilles des possibles (gdp). Lorsque celle-ci est pleine, la fonction la retourne.
+   Pour chaque ligne de la grille, on crée une ligne des possibles (=ldp=)  contenant tous les restes possibles de la ligne et on l'ajoute à la grilles des possibles (=gdp=). Lorsque celle-ci est pleine, la fonction la retourne.
 
 *** Première fonction de résolution:  =ou_le_nombre_peut_etre=
 
-    #+CAPTION: Première fonction de résolution
-    #+NAME:   FoncSudo: ou_le_nombre_peut_etre
-    #+INCLUDE: "FoncSudo.py" src python -n 405 :lines "405-499"
+    #+CAPTION: Première fonction de résolution (singleton et élimination indirecte)
+    #+NAME:   FoncSudo: ou_le_nombre_peut_etre_singleton
+    #+INCLUDE: "FoncSudo.py" src python -n 405 :lines "405-455"
  
 
-    La fonction =ou_le_nombre_peut_etre= va rechercher dans quelles cases un nombre peut être placé.
+    La fonction =ou_le_nombre_peut_etre= (listing [[FoncSudo: ou_le_nombre_peut_etre_singleton]]) va rechercher dans quelles cases un nombre peut être placé.
     On crée pour cela un tableau =possible= de même dimension que la grille qui contiendra 0 si le 
     nombre ne peut pas être à la position et 1 si le nombre peut être à la position.
     Au départ toutes les cases sont possibles et l'on place la valeur 1 dans toutes les cases.
     Ensuite au fur et à mesure on va éliminer les possibilités en placant des 0.
 
 **** Recherche d'un singleton caché
-     On étudie une à une les cases de la grille (une boucle for pour les lignes : i , une boucle for pour les colonnes : j)
-     - Si la grille contient déjà une valeur (if tab[i][j]!=0), la valeur ne peut être dans la case et donc elle est notée comme impossible : possible[i][j]=0
+     On étudie une à une les cases de la grille (une boucle =for= pour les lignes : =i= , une boucle =for= pour les colonnes : =j=)
+     - Si la grille contient déjà une valeur (=if tab[i][j]!=0=), la valeur ne peut être dans la case et donc elle est notée comme impossible : =possible[i][j]=0=
      - Si la grille contient le nombre que l'on teste :
 
      #+BEGIN_SRC python
 for k in range(9):
-    possible[i][k] = 0  # on met toute la ligne à 0
-    possible[k][j] = 0  #on met toute la colonne  à 0
+    possible[i][k] = 0                                # on met toute la ligne à 0
+    possible[k][j] = 0                                # on met toute la colonne  à 0
     possible[3*(carre//3)+k//3][3*(carre%3)+k%3] = 0  # et tout le carré
      #+END_SRC
 
@@ -563,16 +558,11 @@ for k in range(9):
 
      Le 1 de la ligne D impose un 1 dans la colonne g dans le rectangle milieu droit.
 
-     Le 1 du rectangle inférieur droit ne peut donc pas être :
-     - Colonne g
-     - Lignes H et J
-       La seule possibilité : G, j
+     Le 1 du rectangle inférieur droit ne peut donc pas être colonne g ni lignes H et J donc la seule possibilité est G, j. C'est cela que nous allons rechercher.
 
-       C'est cela que nous allons rechercher dans cette deuxième partie.
+     J'ai numéroté les grands carrés de 0 à 8 le 0 correspondant à celui en haut à gauche, le 8 en  bas à droite.
 
-       J'ai numéroté les grands carrés de 0 à 8 le 0 correspondant à celui en haut à gauche, le 8 en  bas à droite.
-
-       On passe en revue tous les carrés. Dans un carré si on rencontre une case possible pour notre valeur : 
+     On passe en revue tous les carrés. Dans un carré si on rencontre une case possible pour notre valeur : 
      - On enregistre la position de sa colonne dans =debut_colonne= si c'est la première valeur  rencontrée (on a alors =debut_colonne = 10=)
      - Si c'est une des suivantes, on enregistre sa position dans fin_colonne.
 
@@ -584,14 +574,23 @@ for k in range(9):
 
        On recommence l'opération pour les lignes. Le raisonnement est identique. On aurait pu transposer  la grille et refaire d=strictement le même programme.
 
-**** Analyse des lignes
-     On analyse ensuite les différentes lignes de la grille à la recherche d'un 1 isolé sur la ligne :
+**** Analyse des lignes et des colonnes
+
+     #+CAPTION: Analyse des lignes
+     #+NAME:   FoncSudo: ou_le_nombre_peut_etre_analyseL
+     #+INCLUDE: "FoncSudo.py" src python -n 457 :lines "457-467"
+
+
+     On analyse ensuite les différentes lignes de la grille (listing [[FoncSudo: ou_le_nombre_peut_etre_analyseL]]) à la recherche d'un 1 isolé sur la ligne :
      - Si on rencontre un 1, on enregistre ses coordonnées (ligne,colonne) dans un tableau de  résultats. 
      - Si sur la ligne on a trouvé un seul 1, on renvoie ses coordonnées.
-**** Analyse des colonnes
-     Même chose avec les colonnes.
+
+     On fait ensuite la même chose pour l'analyse des colonnes.
 **** Analyse des carrés 3x3
-       Même chose avec les carrés.
+     #+CAPTION: Analyse des carrés
+     #+NAME:   FoncSudo: ou_le_nombre_peut_etre_analyseC
+     #+INCLUDE: "FoncSudo.py" src python -n 485 :lines "485-497"
+     Même chose avec les carrés.
 *** Groupes nus et cachés
     À partir de ce niveau de difficulté, j'ai abandonné le tableau des 1 indiquant où il était possible de trouver une valeur au profit d'un tableau des possibles, indiquant pour chaque case une liste des prétendants et une liste vide si la case a une valeur trouvée.
 *** Groupes nus
@@ -604,12 +603,12 @@ for k in range(9):
     Si on a abc puis abc puis ab, sans qu'il y ait égalité des groupes, on pouvait quand même éliminer des candidats de la région. De plus on pouvait faire 4 groupes de 4 ou 5 groupes de 5… et il aurait fallu faire autant de fonctions différentes. Je me suis donc consacré à la recherche des groupes nus quel que soit leur taille.
  
 
-   #+CAPTION: groupes nus
-   #+NAME:   FoncSudo:groupes_nus
-   #+INCLUDE: "FoncSudo.py" src python -n 500 :lines "500-554"
+    #+CAPTION: groupes nus ligne
+    #+NAME:   FoncSudo:groupes_nusL
+    #+INCLUDE: "FoncSudo.py" src python -n 502 :lines "502-519"
 
 
-    La fonction =groupes_nus_ligne= (programme [[FoncSudo:groupes_nus]]) recherche de groupes nus dans une ligne.
+    La fonction =groupes_nus_ligne= (listing [[FoncSudo:groupes_nusL]]) recherche de groupes nus dans une ligne.
 
     Les paramètres passés sont la grille des possibles et la ligne. La fonction modifie la grille des possibles.
 
@@ -623,7 +622,13 @@ for k in range(9):
  
     Idem pour les colonnes avec la fonction =groupes_nus_colonne=. 
  
-    Idem pour les carrés  avec la fonction =groupes_nus_carre=.
+    Idem pour les carrés  avec la fonction =groupes_nus_carre= (listing [[FoncSudo:groupes_nus_carre]]) .
+
+    #+CAPTION: groupes nus carré
+    #+NAME:   FoncSudo:groupes_nus_carre
+    #+INCLUDE: "FoncSudo.py" src python -n 538 :lines "538-557"
+
+
 
 *** Groupes cachés
  
@@ -635,8 +640,12 @@ for k in range(9):
 
     L'idée pour trouver ces groupes : créer une liste des positions de chaque élément et comparer les éléments de la liste.
 
+    #+CAPTION: groupes cachés ligne
+    #+NAME:   FoncSudo:groupes_caches_ligne
+    #+INCLUDE: "FoncSudo.py" src python -n 563 :lines "563-589"
+
  
-    On teste une à une toutes les lignes de la grille. Pour chaque ligne :
+    On teste une à une toutes les lignes de la grille (listing [[FoncSudo:groupes_caches_ligne]]). Pour chaque ligne :
 
     On crée la liste de toutes les positions possibles pour chacune des valeurs de 1 à 9 : =liste_position=
 
@@ -646,12 +655,19 @@ for k in range(9):
     - On va créer la liste des valeurs en décalant de 1 les index de la liste des index
     - Pour tout =k= de la liste des positions: Pour toutes les valeurs =val=  qui ne sont pas dans la liste des valeurs, on va les ôter de la liste des possibles.
 
-    Idem pour les carrés.
+    Idem pour les carrés avec la fonction =groupes_caches_carre=.
  
-    Idem pour les colonnes.
+    Idem pour les colonnes avec la fonction =groupes_caches_colonne=.
 
 *** X-WING
-    Si sur 2 lignes, on retrouve un même candidat sur 2 mêmes colonnes uniquement, dans les colonnes des sommets, cette valeur peut être éliminée de tous les prétendants des colonnes des sommets sauf celles des lignes des sommets .
+
+    Si sur 2 lignes, on retrouve un même candidat sur 2 mêmes colonnes uniquement, dans les colonnes des sommets, cette valeur peut être éliminée de tous les prétendants des colonnes des sommets sauf celles des lignes des sommets.
+
+
+
+    #+CAPTION: x-wing ligne
+    #+NAME:   FoncSudo:x_wing_ligne
+    #+INCLUDE: "FoncSudo.py" src python -n 657 :lines "657-683"
 
 
 
@@ -666,7 +682,7 @@ for k in range(9):
 
     On retourne la liste des possibles modifiée.
  
-    Idem Pour les colonnes.
+    Idem pour les colonnes avec la fonction =x_wing_colonne=.
     
 *** Sword-fish
     C'est une extension du X-wing : si sur trois lignes différentes, un candidat n'apparaît que sur trois colonnes (voir exemples ci-contre), alors on supprime ce candidat sur les trois colonnes sauf sur les trois lignes de la grille des possibles.
@@ -675,6 +691,16 @@ for k in range(9):
     - =liste_des_sommets= qui enregistre toutes les paires de sommets
     - =groupes_de_3= qui vérifie que dans la liste des sommets on peut en trouver 3 alignés
     - =sword_fish= qui va supprimer sur les colonnes la valeur aux bons endroits.
+
+
+    #+CAPTION:liste des sommets
+    #+NAME:   FoncSudo:x_wing_ligne
+    #+INCLUDE: "FoncSudo.py" src python -n 657 :lines "657-683"
+
+
+
+
+
 
     Pour chacune des lignes, on ajoute à la =liste_sommets_ligne= la ligne et la  colonne où se trouve la valeur.
 

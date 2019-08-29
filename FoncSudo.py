@@ -73,12 +73,13 @@ def teste_colonne(grille_a_tester):
 
 
 # -------------teste si les 9 chiffres sont presents dans tous les carres
-def teste_carre(grille_a_tester) :
+def teste_carrlpe(grille_a_tester) :
     carre=0
     while carre<9 :
         mot_a_tester=[]
         for i in range(9) :
-            mot_a_tester.append(grille_a_tester[i % 3 + 3 * (carre % 3)][i // 3 + 3 * (carre // 3)])
+            mot_a_tester.append(
+                grille_a_tester[i % 3 + 3 * (carre % 3)][i // 3 + 3 * (carre // 3)])
         if not est_complet(mot_a_tester):
             return False
         carre= carre + 1
@@ -117,12 +118,12 @@ def reste_carre(grille_a_tester,ligne,colonne):
     mot_a_tester=[]
     position_carre=3*(ligne//3)+colonne//3
     for index in range(9) :
-        mot_a_tester.append(grille_a_tester[index // 3 + 3 * (position_carre // 3)][index % 3 + 3 * (position_carre % 3)])
-        
+        mot_a_tester.append(
+            grille_a_tester[index//3+3*(position_carre//3)][index%3+3*(position_carre % 3)])
     return reste(mot_a_tester)
 
 
-# -------------- finalement aux coordonnees donnees que reste-t-il comme chiffre possible
+# ----------- finalement aux coordonnees donnees que reste-t-il comme chiffre possible
 
 def reste_possible(grille_a_tester,ligne,colonne):
     if (grille_a_tester[ligne][colonne]>0) :
@@ -132,7 +133,6 @@ def reste_possible(grille_a_tester,ligne,colonne):
     reste3=reste_carre(grille_a_tester,ligne,colonne)
     reste4 = intersection_2_listes(reste1,reste2)
     reste=intersection_2_listes(reste4,reste3)
-    
     return reste
 
 # ----------------- Fonctions pour la création des grilles --------------------------------
@@ -187,7 +187,7 @@ def inverser_lignes(tab,ligne1,ligne2):
     return tab
     
 
-#_________________melange aleatoir des nombres d'une grille________________
+#_________________melange aleatoire des nombres d'une grille________________
 
 def melange_nombre_grille(tab):
     a = range(1,10)
@@ -201,7 +201,7 @@ def melange_nombre_grille(tab):
            
 
 
-#_________________melange aleatoir 3 grandes colonnes__________
+#_________________melange aleatoire 3 grandes colonnes__________
 
 def change_3_col(tableau):
     a = range(3)
@@ -221,7 +221,7 @@ def change_3_col(tableau):
 
 
 
-#_________________melange aleatoir 3 grandes lignes____________________
+#_________________melange aleatoire 3 grandes lignes____________________
 
 def change_3_lign(tableau):
     a = range(3)
@@ -240,7 +240,7 @@ def change_3_lign(tableau):
            
 
 
-#_________________melange aleatoir 3 petites colonnes__________
+#_________________melange aleatoire 3 petites colonnes__________
 
 def change_3_petites_col(tableau):
     b = [0,1,2]
@@ -268,7 +268,7 @@ def change_3_petites_col(tableau):
     return tableau
 
 
-#_________________melange aleatoir 3 petites lignes__________
+#_________________melange aleatoire 3 petites lignes__________
 
 def change_3_petites_lignes(tableau):
     b = [0,1,2]
@@ -300,7 +300,7 @@ def supprimer_nombre_simple(tableau):
     lign=randint(0,8)
     colon=randint(0,8)
     
-    if (tableau[lign][colon] != 0) and  len(reste_possible_creation(tableau,lign,colon))==0:
+    if (tableau[lign][colon]!=0) and  len(reste_possible_creation(tableau,lign,colon))==0:
         tableau[lign][colon]=0
     return tableau
 
@@ -318,32 +318,25 @@ def supprimer_nombre(tableau):
 
 
 
-
-
 #----------------------   CREATION GRILLE   ---------------------------------      
     
 def creation_aleatoire(grille_s,grille_d,difficulte) :
-  
     grille_s=melange_nombre_grille(grille_s)
     grille_s=change_3_col(grille_s)
     grille_s=change_3_lign(grille_s)
     grille_s=change_3_petites_col(grille_s)
     grille_s=change_3_petites_lignes(grille_s)
-    
     if difficulte<5 :
         for i in range(10+8*difficulte):
            supprimer_nombre_simple(grille_s)
-
     elif difficulte<10 :
         for i in range(20):
             supprimer_nombre_simple(grille_s)
         for j in range(difficulte*5):
             supprimer_nombre(grille_s)
-                                    
     elif difficulte<18 :
         for i in range(30+difficulte*3):
             supprimer_nombre(grille_s)
-
     elif difficulte<20 :
         for i in range(30+difficulte*3):
             supprimer_nombre(grille_s)
@@ -356,8 +349,6 @@ def creation_aleatoire(grille_s,grille_d,difficulte) :
                     copie[i][j]=0
                     if teste_ligne(resolution(copie)):
                         grille_s[i][j]=0
-        
-
     else :
         grille17=[[1,0,0,0,0,0,5,2,0],
                   [0,0,0,0,7,8,0,0,0],
@@ -371,19 +362,28 @@ def creation_aleatoire(grille_s,grille_d,difficulte) :
         for i in range(9):
             for j in range(9):
                 grille_s[i][j]=grille17[i][j]
-        
         grille_s=melange_nombre_grille(grille_s)
         grille_s=change_3_col(grille_s)
         grille_s=change_3_lign(grille_s)
         grille_s=change_3_petites_col(grille_s)
         grille_s=change_3_petites_lignes(grille_s)
-                                    
     for i in range(9) :
         for j in range(9):
             grille_d[i][j] = grille_s[i][j]
     return grille_s,grille_d
     
 #___________creation_aleatoire(grille_sudoku,grille_depart)__________________
+
+
+
+
+
+
+
+
+
+
+
 
 
 #----------------------------------------------------------------------------
@@ -482,7 +482,7 @@ def ou_le_nombre_peut_etre(tab,nombre):
         
      
         
-#analyse des carres 3x3
+#analyse des carres 3X3
 
     for carre in range(9):
         resultat=[]
@@ -504,7 +504,10 @@ def groupes_nus_ligne(grille_pos,ligne):
         liste_index=[]
         liste=grille_pos[ligne][colonne]
         for index in range(9):
-            if intersection_2_listes(liste,grille_pos[ligne][index])==grille_pos[ligne][index] and len(liste)>1 and len(grille_pos[ligne][index])>1:
+            if intersection_2_listes(liste,grille_pos[ligne][index])==\
+               grille_pos[ligne][index]\
+            and len(liste)>1\
+            and len(grille_pos[ligne][index])>1:
                 liste_index.append(index)
         if len(liste)==len(liste_index) :
             for index in range(9) :
@@ -519,10 +522,11 @@ def groupes_nus_colonne(grille_pos,colonne):
         liste_inclus=[]
         liste=grille_pos[ligne][colonne]
         for index in range(9):
-            if intersection_2_listes(liste,grille_pos[index][colonne])==grille_pos[index][colonne]and len(liste)>1 and len(grille_pos[index][colonne])>1:
+            if intersection_2_listes(liste,\
+                                     grille_pos[index][colonne])==grille_pos[index][colonne]\
+            and len(liste)>1\
+            and len(grille_pos[index][colonne])>1:
                 liste_inclus.append(index)
-                
-            
         if len(liste)==len(liste_inclus) :
             for index in range(9) :
                 if index not in liste_inclus :
@@ -531,24 +535,25 @@ def groupes_nus_colonne(grille_pos,colonne):
                             grille_pos[index][colonne].remove(element)
     return grille_pos
 
-
 def groupes_nus_carre(grille_pos,carre):
     for position in range(9):
         liste_inclus=[]
         liste=grille_pos[3*(carre//3)+position//3][3*(carre%3)+position%3]
         for index in range(9):
-            if intersection_2_listes(liste,grille_pos[3*(carre//3)+index//3][3*(carre%3)+index%3])==grille_pos[3*(carre//3)+index//3][3*(carre%3)+index%3]and len(liste)>1 and len(grille_pos[3*(carre//3)+index//3][3*(carre%3)+index%3])>1:
+            if intersection_2_listes(liste,\
+                                     grille_pos[3*(carre//3)+index//3][3*(carre%3)+index%3])==\
+                                     grille_pos[3*(carre//3)+index//3][3*(carre%3)+index%3]\
+            and len(liste)>1\
+            and len(grille_pos[3*(carre//3)+index//3][3*(carre%3)+index%3])>1:
                 liste_inclus.append(index)
-                
-            
         if len(liste)==len(liste_inclus) :
             for index in range(9) :
                 if index not in liste_inclus :
                     for element in liste :
                         if element in grille_pos[3*(carre//3)+index//3][3*(carre%3)+index%3]:
-                            grille_pos[3*(carre//3)+index//3][3*(carre%3)+index%3].remove(element)
+                            grille_pos[3*(carre//3)+index//3]\
+                                [3*(carre%3)+index%3].remove(element)
     return grille_pos
-
 
 #____FIN  fonctions gerant a la fois les groupes nus de toutes tailles________________
 
@@ -563,14 +568,14 @@ def groupes_caches_ligne(grille_pos):
             for colonne in range(9) :
                 if chiffre in grille_pos[ligne][colonne] :
                     positions.append(colonne)
-                    
             liste_positions.append(positions)
-            
         for colonne in range(9):
             liste_index=[]
             liste=liste_positions[colonne]
             for index in range(9):
-                if intersection_2_listes(liste,liste_positions[index])==liste_positions[index] and len(liste)>1 and len(liste_positions[index])>1:
+                if intersection_2_listes(liste,liste_positions[index])==\
+                   liste_positions[index] and len(liste)>1\
+                and len(liste_positions[index])>1:
                     liste_index.append(index)
             if len(liste_positions[colonne])==len(liste_index) and len(liste_index)>0 :
                 valeurs=[]
@@ -589,30 +594,27 @@ def groupes_caches_carre(grille_pos):
         for chiffre in range(1,10) :
             positions=[]
             for index_carre in range(9) :
-                if chiffre in grille_pos[3*(carre//3)+index_carre//3][3*(carre%3)+index_carre%3] :
+                if chiffre in grille_pos[3*(carre//3)+index_carre//3]\
+                   [3*(carre%3)+index_carre%3] :
                     positions.append(index_carre)
-                    
             liste_positions.append(positions)
-            
         for index_carre in range(9):
             liste_index=[]
             liste=liste_positions[index_carre]
             for index in range(9):
-                if intersection_2_listes(liste,liste_positions[index])==liste_positions[index] and len(liste)>1 and len(liste_positions[index])>1:
+                if intersection_2_listes(liste,liste_positions[index])==\
+                   liste_positions[index] and len(liste)>1\
+                and len(liste_positions[index])>1:
                     liste_index.append(index)
             if len(liste_positions[index_carre])==len(liste_index) and len(liste_index)>0 :
                 valeurs=[]
                 for j in range(len(liste_index)) : valeurs.append(liste_index[j]+1)
-                
                 for k in liste_positions[index_carre] :
                     for val in range(1,10) :
-                        if val in grille_pos[3*(carre//3)+k//3][3*(carre%3)+k%3]and val not in valeurs :
+                        if val in grille_pos[3*(carre//3)+k//3][3*(carre%3)+k%3]\
+                        and val not in valeurs :
                             grille_pos[3*(carre//3)+k//3][3*(carre%3)+k%3].remove(val)
-        
     return grille_pos
-
-
-
 
 
 def groupes_caches_colonne(grille_pos):
@@ -630,7 +632,9 @@ def groupes_caches_colonne(grille_pos):
             liste_index=[]
             liste=liste_positions[ligne]
             for index in range(9):
-                if intersection_2_listes(liste,liste_positions[index])==liste_positions[index] and len(liste)>1 and len(liste_positions[index])>1:
+                if intersection_2_listes(liste,liste_positions[index])==liste_positions[index]\
+                and len(liste)>1\
+                and len(liste_positions[index])>1:
                     liste_index.append(index)
             if len(liste_positions[ligne])==len(liste_index) and len(liste_index)>0 :
                 valeurs=[]
@@ -665,11 +669,15 @@ def x_wing_ligne(grille_pos,k):
         for index2 in range(index1+1,len(liste)):
             if liste[index1][1]==liste[index2][1] and liste[index1][2]==liste[index2][2]:
                 for i in range(9) :
-                    if k in grille_pos[i][liste[index1][1]] and i != liste[index1][0] and i != liste[index2][0]:
+                    if k in grille_pos[i][liste[index1][1]]\
+                    and i != liste[index1][0]\
+                    and i != liste[index2][0]:
                         grille_pos[i][liste[index1][1]].remove(k)    
             
                 for i in range(9) :
-                    if k in grille_pos[i][liste[index1][2]] and i != liste[index1][0] and i != liste[index2][0]:
+                    if k in grille_pos[i][liste[index1][2]]\
+                    and i != liste[index1][0]\
+                    and i != liste[index2][0]:
                         grille_pos[i][liste[index1][2]].remove(k)    
     return grille_pos
 
@@ -688,16 +696,20 @@ def x_wing_colonne(grille_pos,k):
         for index2 in range(index1+1,len(liste)):
             if liste[index1][1]==liste[index2][1] and liste[index1][2]==liste[index2][2]:
                 for i in range(9) :
-                    if k in grille_pos[liste[index1][1]][i] and i != liste[index1][0] and i != liste[index2][0]:
+                    if k in grille_pos[liste[index1][1]][i]\
+                    and i != liste[index1][0]\
+                    and i != liste[index2][0]:
                         grille_pos[liste[index1][1]][i].remove(k)    
             
                 for i in range(9) :
-                    if k in grille_pos[liste[index1][2]][i] and i != liste[index1][0] and i != liste[index2][0]:
+                    if k in grille_pos[liste[index1][2]][i]\
+                    and i != liste[index1][0]\
+                    and i != liste[index2][0]:
                         grille_pos[liste[index1][2]][i].remove(k)    
     return grille_pos
-#_____________________________________________FIN   X-WING_____________________________________________________
+#_____________________________________________FIN   X-WING_________________________________________________
 
-#  ----------------------------------------- SWORD-fish ligne-------------------------------------------------------
+#  ----------------------------------------- SWORD-fish ligne----------------------------------------------
 
     
 def sword_fish(liste_des_sommets,grille_pos,valeur) :
@@ -707,11 +719,18 @@ def sword_fish(liste_des_sommets,grille_pos,valeur) :
             colonnes_trouvees.append(liste_des_sommets[indice][1])
     if len(colonnes_trouvees)!=3 :
         return grille_pos
-    elif [liste_des_sommets[0][1],liste_des_sommets[1][1]]!=[liste_des_sommets[2][1],liste_des_sommets[3][1]] and [liste_des_sommets[0][1],liste_des_sommets[1][1]]!=[liste_des_sommets[4][1],liste_des_sommets[5][1]] and [liste_des_sommets[2][1],liste_des_sommets[3][1]]!=[liste_des_sommets[4][1],liste_des_sommets[5][1]] :
+    elif [liste_des_sommets[0][1],liste_des_sommets[1][1]]!=\
+         [liste_des_sommets[2][1],liste_des_sommets[3][1]]\
+    and [liste_des_sommets[0][1],liste_des_sommets[1][1]]!=\
+            [liste_des_sommets[4][1],liste_des_sommets[5][1]]\
+    and [liste_des_sommets[2][1],liste_des_sommets[3][1]]!=\
+            [liste_des_sommets[4][1],liste_des_sommets[5][1]] :
         for colon in colonnes_trouvees :
             for lign in range(9) :
-                if lign not in [liste_des_sommets[0][0],liste_des_sommets[2][0],liste_des_sommets[4][0]] and valeur in grille_pos[lign][colon] :
-                        grille_pos[lign][colon].remove(valeur)
+                if lign not in [liste_des_sommets[0][0],\
+                                liste_des_sommets[2][0],\
+                                liste_des_sommets[4][0]] and valeur in grille_pos[lign][colon] :
+                    grille_pos[lign][colon].remove(valeur)
         return grille_pos
     else :
         return grille_pos
@@ -736,13 +755,18 @@ def groupes_de_3 (grille_pos,liste_des_sommets,valeur):
         for i in liste[:len(liste)-2] :
             for j in liste[i+1:len(liste)-1] :
                 for k in liste[j+1:len(liste)] :
-                    liste_des_sommets_a_tester = [liste_des_sommets[2*i],liste_des_sommets[2*i+1],liste_des_sommets[2*j],liste_des_sommets[2*j+1],liste_des_sommets[2*k],liste_des_sommets[2*k+1]]
+                    liste_des_sommets_a_tester = [liste_des_sommets[2*i],\
+                                                  liste_des_sommets[2*i+1],\
+                                                  liste_des_sommets[2*j],\
+                                                  liste_des_sommets[2*j+1],\
+                                                  liste_des_sommets[2*k],\
+                                                  liste_des_sommets[2*k+1]]
                     sword_fish(liste_des_sommets_a_tester,grille_pos,valeur)
                 
     return grille_pos
-# _________________________________________fin SWORD-fish ligne________________________________________________
+# _________________________________________fin SWORD-fish ligne____________________________________________
 
-#---------------------------------------Sword-Fish colonne------------------------------------------------------
+#---------------------------------------Sword-Fish colonne-------------------------------------------------
 
     
 def sword_fish_c(liste_des_sommets,grille_pos,valeur) :
@@ -752,11 +776,19 @@ def sword_fish_c(liste_des_sommets,grille_pos,valeur) :
             lignes_trouvees.append(liste_des_sommets[indice][0])
     if len(lignes_trouvees)!=3 :
         return grille_pos
-    elif [liste_des_sommets[0][0],liste_des_sommets[1][0]]!=[liste_des_sommets[2][0],liste_des_sommets[3][0]] and [liste_des_sommets[0][0],liste_des_sommets[1][0]]!=[liste_des_sommets[4][0],liste_des_sommets[5][0]] and [liste_des_sommets[2][0],liste_des_sommets[3][0]]!=[liste_des_sommets[4][0],liste_des_sommets[5][0]] :
+    elif [liste_des_sommets[0][0],liste_des_sommets[1][0]]!=\
+         [liste_des_sommets[2][0],liste_des_sommets[3][0]]\
+    and [liste_des_sommets[0][0],liste_des_sommets[1][0]]!=\
+        [liste_des_sommets[4][0],liste_des_sommets[5][0]]\
+    and [liste_des_sommets[2][0],liste_des_sommets[3][0]]!=\
+        [liste_des_sommets[4][0],liste_des_sommets[5][0]] :
         for lign in lignes_trouvees :
             for colon in range(9) :
-                if colon not in [liste_des_sommets[0][1],liste_des_sommets[2][1],liste_des_sommets[4][1]] and valeur in grille_pos[lign][colon] :
-                        grille_pos[lign][colon].remove(valeur)
+                if colon not in [liste_des_sommets[0][1],\
+                                 liste_des_sommets[2][1],\
+                                 liste_des_sommets[4][1]]\
+                and valeur in grille_pos[lign][colon] :
+                    grille_pos[lign][colon].remove(valeur)
         return grille_pos
     else :
         return grille_pos
@@ -781,11 +813,16 @@ def groupes_de_3_c (grille_pos,liste_des_sommets,valeur):
         for i in liste[:len(liste)-2] :
             for j in liste[i+1:len(liste)-1] :
                 for k in liste[j+1:len(liste)] :
-                    liste_des_sommets_a_tester = [liste_des_sommets[2*i],liste_des_sommets[2*i+1],liste_des_sommets[2*j],liste_des_sommets[2*j+1],liste_des_sommets[2*k],liste_des_sommets[2*k+1]]
+                    liste_des_sommets_a_tester = [liste_des_sommets[2*i],\
+                                                  liste_des_sommets[2*i+1],\
+                                                  liste_des_sommets[2*j],\
+                                                  liste_des_sommets[2*j+1],\
+                                                  liste_des_sommets[2*k],\
+                                                  liste_des_sommets[2*k+1]]
                     sword_fish_c(liste_des_sommets_a_tester,grille_pos,valeur)
     return grille_pos          
 
-# _________________________________________fin SWORD-fish colonne________________________________________________
+# _________________________________________fin SWORD-fish colonne__________________________________________
 
         
 def essai_erreur(grille_pos,grille_s,choix):
@@ -838,10 +875,10 @@ def essai_erreur2(grille_pos,grille_s,choix):
                         return "carre"                                           
 
 
-#______________________________________________________________________________________________________________
+#__________________________________________________________________________________________________________
 #
 #                                           RESOLUTION
-#______________________________________________________________________________________________________________
+#__________________________________________________________________________________________________________
 
 
 def resolution_(grille_s):
@@ -852,7 +889,8 @@ def resolution_(grille_s):
         fait=False
         for i in range (1,10):
             if len(ou_le_nombre_peut_etre(grille_s,i))==1:
-                grille_s[ou_le_nombre_peut_etre(grille_s,i)[0][0]][ou_le_nombre_peut_etre(grille_s,i)[0][1]]=i
+                grille_s[ou_le_nombre_peut_etre(grille_s,i)[0][0]]\
+                    [ou_le_nombre_peut_etre(grille_s,i)[0][1]]=i
                 fait=True        
     fait=True           
     while fait == True:
@@ -889,7 +927,8 @@ def resolution_(grille_s):
         grille_possibles=groupes_de_3(grille_possibles,liste_des_sommets(grille_possibles,valeur),valeur)
 
     for valeur in range(9) :
-        grille_possibles=groupes_de_3_c(grille_possibles,liste_des_sommets_c(grille_possibles,valeur),valeur)
+        grille_possibles=\
+            groupes_de_3_c(grille_possibles,liste_des_sommets_c(grille_possibles,valeur),valeur)
 
     for ligne in range(9) :
         for colonne in range(9):
