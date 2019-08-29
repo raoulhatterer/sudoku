@@ -378,9 +378,9 @@
 
     De façon similaire, on réalise la fonctions =reste-ligne= et la fonction  =reste_carré= (listing [[FoncSudo:reste_carre]]) qui respectivement vont fournir la liste des éléments qui restent à placer dans une ligne et la liste des éléments qui rentent à placer dans un carré.
    
-   =position_carre=3*(ligne//3)+colonne//3=  permet de déterminer la position du carré en fonction de la ligne et de la colonne.
+    =position_carre=3*(ligne//3)+colonne//3=  permet de déterminer la position du carré en fonction de la ligne et de la colonne.
 
-Pour tous les éléments du carré trouvé, on ajoute à la liste =mot_a_tester= tous les éléments du carré. On renvoie le reste en utilisant la fonction reste (listing [[FoncSudo:reste]]).
+    Pour tous les éléments du carré trouvé, on ajoute à la liste =mot_a_tester= tous les éléments du carré. On renvoie le reste en utilisant la fonction reste (listing [[FoncSudo:reste]]).
  
 
     #+CAPTION: finalement aux coordonnées données que reste-t-il comme chiffre possible ?
@@ -688,56 +688,73 @@ for k in range(9):
     C'est une extension du X-wing : si sur trois lignes différentes, un candidat n'apparaît que sur trois colonnes (voir exemples ci-contre), alors on supprime ce candidat sur les trois colonnes sauf sur les trois lignes de la grille des possibles.
 
     Pour cela j'ai créé 3 fonctions :
-    - =liste_des_sommets= qui enregistre toutes les paires de sommets
-    - =groupes_de_3= qui vérifie que dans la liste des sommets on peut en trouver 3 alignés
-    - =sword_fish= qui va supprimer sur les colonnes la valeur aux bons endroits.
-
+    - =liste_des_sommets= (listing [[FoncSudo:liste_des_sommets]]) qui enregistre toutes les paires de sommets
 
     #+CAPTION:liste des sommets
-    #+NAME:   FoncSudo:x_wing_ligne
-    #+INCLUDE: "FoncSudo.py" src python -n 657 :lines "657-683"
+    #+NAME:   FoncSudo:liste_des_sommets
+    #+INCLUDE: "FoncSudo.py" src python -n 740 :lines "740-751"
+
+    Pour chacune des lignes, on ajoute à la =liste_sommets_ligne= la ligne et la  colonne où se trouve la valeur. Si dans =liste_sommets_ligne=, il y a 2 éléments, on rajoute ces 2 éléments à =liste_des_sommets=.
 
 
+    - =groupes_de_3= (listing [[FoncSudo:groupes_de_3]]) qui vérifie que dans la liste des sommets on peut en trouver 3 alignés
 
 
+    #+CAPTION:groupes de trois sommets alignés
+    #+NAME:   FoncSudo:groupes_de_3
+    #+INCLUDE: "FoncSudo.py" src python -n 752 :lines "752-766"
 
 
-    Pour chacune des lignes, on ajoute à la =liste_sommets_ligne= la ligne et la  colonne où se trouve la valeur.
-
-    Si dans =liste_sommets_ligne=,il y a 2 éléments, on rajoute ces 2éléments à =liste_des_sommets=.
  
     On passe en paramètre : une grille des possibles, la liste des sommets trouvés avec la fonction précédente, la valeur recherchée. La fonction retourne la grille des possibles modifiée.
-
     La =liste_des_sommets= est rangée sous la forme =[ligne1, colonne1, ligne2, colonne2…]=.
-
-    On commence par créer une liste [0, 1, 2…] comportant autant de valeurs qu'il y a de sommets.
-
+    On commence par créer une liste =[0, 1, 2…]= comportant autant de valeurs qu'il y a de sommets.
     On va créer ensuite toutes les combinaisons possibles de 3 éléments des valeurs de la liste qui serviront d'indice pour tester les combinaisons des différents sommets avec la fonction =sword_fish= suivante.
+
+
+
+    - =sword_fish= (listing [[FoncSudo:sword_fish]]) qui va supprimer sur les colonnes la valeur aux bons endroits.
+
+    #+CAPTION:sword-fish
+    #+NAME:   FoncSudo:sword_fish
+    #+INCLUDE: "FoncSudo.py" src python -n 715 :lines "715-737"
+
+
+
  
-    On fait la liste des =colonnes_trouvées= en rajoutant pour tous les sommets la colonne où il se trouve à condition que cette colonne n'ait pas déjà été enregistrée.
-
-    Si le nombre de colonnes_trouvées n'est pas égal à 3 on ne peut pas faire de sword-fish et la 
+    On fait la liste des =colonnes_trouvees= en rajoutant pour tous les sommets la colonne où il se trouve à condition que cette colonne n'ait pas déjà été enregistrée.
+    Si le nombre de =colonnes_trouvees= n'est pas égal à 3 on ne peut pas faire de sword-fish et la 
     =grille_des_possibles= n'est pas modifiée.
-
     Sinon on vérifie que l'on a pas 2 listes de sommets identiques et là, on est sûr d'être dans le cas du sword-fish et l'on élimine de la grille des possibles  ce candidat sur les trois colonnes sauf sur les trois lignes.
  
-    Les mêmes fonctions pour un sword-fish sur les colonnes.
+    Des fonctions équivalentes sont créées pour un sword-fish sur les colonnes:
+    - =sword_fish_c=
+    - =liste_des_sommets_c=
+    - =groupes_de_3_c=. 
 
 *** Cas où un choix s'impose
- 
-    Lorsque qu'aucune des méthodes précédentes n'arrive à se sortir d'une impasse, il arrive que l'on soit obligé de faire une hypothèse pour une case. C'est le cas si sur une ligne et une colonne on a les 2 mêmes prétendants en 2 cases différentes.
 
-    On passe pour paramètres : la grille des possibles, la grille de sudoku traitée et le choix (0 ou 1) que l'on va faire quand à l'hypothèse à prendre.
+    #+CAPTION:traitement des hypothèses
+    #+NAME:   FoncSudo:essai_erreurs
+    #+INCLUDE: "FoncSudo.py" src python -n 827 :lines "827-873"
+ 
+    Lorsque qu'aucune des méthodes précédentes n'arrive à se sortir d'une impasse, il arrive que l'on soit obligé de faire une hypothèse pour une case (listing [[FoncSudo:essai_erreurs]]). C'est le cas si sur une ligne et une colonne on a les 2 mêmes prétendants en 2 cases différentes.
+
+    La fonction =essai_erreur= reçoit comme paramètres : la grille des possibles, la grille de sudoku traitée et le choix (0 ou 1) que l'on va faire quand à l'hypothèse à prendre.
 
     On recherche dans tout le tableau de la =grille_des_possibles= un couple de candidats.
-
     On cherche si ce couple est présent sur la même ligne et sur la même colonne. Si c'est le cas on modifie la =grille_de_sudoku= et la =grille_des_possibles= avec le choix 0 ou 1 et l'on renvoie ces nouvelles grilles comme hypothèse de départ. Bien entendu si le premier choix ne mène pas à la solution finale,  il faudra tester le deuxième cas.
  
-    Une deuxième variante de recherche en cas de blocage avec recherche de 2 cases contenant les mêmes prétendants sur une même ligne, une même grande colonne ou un carré de 9.
+    Une deuxième variante de recherche est assuré par la fonction =essai_erreur2=  en cas de blocage avec recherche de 2 cases contenant les mêmes prétendants sur une même ligne, une même grande colonne ou un carré de 9.
 
 ** La résolution
+*** Version 1: la fonction =resolution_=  (listing [[FoncSudo:resolutionV1]])
+   #+CAPTION: la résolution V1
+    #+NAME:   FoncSudo:resolutionV1
+    #+INCLUDE: "FoncSudo.py" src python -n 881 :lines "881-927"
  
-   On fait subir aux grilles toutes les fonctions sauf la fonction =essai_erreur=, les unes après les autres.
+
+   On fait subir aux grilles toutes les fonctions les unes après les autres (sauf la fonction =essai_erreur=).
 
    Les deux premières bouclant jusqu'à ce qu'elles ne trouvent plus de solution (ce sont des fonctions 
    simples qui remplissent beaucoup de cases sans consommer trop de puissance de calcul).
@@ -752,10 +769,17 @@ for k in range(9):
    Si la grille n'est pas résolue, on mémorise les 2 grilles (sudoku et possibles) on teste avec la fonction =essai_erreur= et le choix 0 si l'on peut résoudre.
 
    Si l'on n'a pas résolu on teste avec la fonction =essai_erreur= et le choix 1 si l'on peut résoudre.
- 
-   Deuxième version de la fonction résolution :
+*** Version 2: la fonction =resolution=
+   #+CAPTION: la résolution V2 (début)
+    #+NAME:   FoncSudo:resolutionV2d
+    #+INCLUDE: "FoncSudo.py" src python -n 929 :lines "929-968"
 
-   Après avoir mémorisé l'état de la grille, on teste une des valeurs puis l'autre avec la première version de la fonction =essai_erreur=. Si on n'a pas réussi, on revient à la grille mémorisée et l'on teste la deuxième version =essai_erreur2=. 
+
+   #+CAPTION: la résolution V2 (fin)
+    #+NAME:   FoncSudo:resolutionV2f
+    #+INCLUDE: "FoncSudo.py" src python -n  968:lines "968-996"
+
+   Après avoir mémorisé l'état de la grille, on teste une des valeurs puis l'autre avec la première version de la fonction =essai_erreur= (listing [[FoncSudo:resolutionV2d]]). Si on n'a pas réussi, on revient à la grille mémorisée et l'on teste la deuxième version =essai_erreur2=. 
 
 ** Épilogue
 

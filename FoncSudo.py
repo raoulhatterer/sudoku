@@ -762,11 +762,10 @@ def groupes_de_3 (grille_pos,liste_des_sommets,valeur):
                                                   liste_des_sommets[2*k],\
                                                   liste_des_sommets[2*k+1]]
                     sword_fish(liste_des_sommets_a_tester,grille_pos,valeur)
-                
     return grille_pos
-# _________________________________________fin SWORD-fish ligne____________________________________________
+# _________________________________________fin SWORD-fish ligne________________________________________
 
-#---------------------------------------Sword-Fish colonne-------------------------------------------------
+#---------------------------------------Sword-Fish colonne---------------------------------------------
 
     
 def sword_fish_c(liste_des_sommets,grille_pos,valeur) :
@@ -822,7 +821,7 @@ def groupes_de_3_c (grille_pos,liste_des_sommets,valeur):
                     sword_fish_c(liste_des_sommets_a_tester,grille_pos,valeur)
     return grille_pos          
 
-# _________________________________________fin SWORD-fish colonne__________________________________________
+# _________________________________________fin SWORD-fish colonne______________________________________
 
         
 def essai_erreur(grille_pos,grille_s,choix):
@@ -840,9 +839,6 @@ def essai_erreur(grille_pos,grille_s,choix):
                                     if grille_pos[ligne][co]==liste:
                                         grille_pos[ligne][colonne]=[]
                                         grille_s[ligne][colonne]=liste[choix]
-                                
-                                    
-#------------------------
 
 def essai_erreur2(grille_pos,grille_s,choix):
     for ligne in range(9):
@@ -868,22 +864,22 @@ def essai_erreur2(grille_pos,grille_s,choix):
                 liste_carre =[]
                 for index in range(9):
                     if (3*(carre//3)+index//3) != ligne or (3*(carre%3)+index%3) != colonne :
-                        liste_carre.append(grille_pos[(3*(carre//3))+index//3][(3*(carre%3))+index%3])
+                        liste_carre.append(\
+                            grille_pos[(3*(carre//3))+index//3][(3*(carre%3))+index%3])
                     if memo in liste_carre :
                         grille_pos[ligne][colonne]=[]
                         grille_s[ligne][colonne]=memo[choix]
                         return "carre"                                           
 
 
-#__________________________________________________________________________________________________________
+#______________________________________________________________________________________________________
 #
 #                                           RESOLUTION
-#__________________________________________________________________________________________________________
+#______________________________________________________________________________________________________
 
 
 def resolution_(grille_s):
     global grille_possibles
-
     fait=True
     while fait == True:
         fait=False
@@ -901,35 +897,28 @@ def resolution_(grille_s):
                     fait=True
                     temp=reste_possible(grille_s,i,j)[0]
                     grille_s[i][j]=temp  
-    
     grille_possibles=grille_des_possibles(grille_s)
-    
     for lignes in range(9):
         grille_possibles=groupes_nus_ligne(grille_possibles,lignes)
-        
     for colonne in range(9):
         grille_possibles=groupes_nus_colonne(grille_possibles,colonne)  
-
     for carre in range(9):
         grille_possibles=groupes_nus_carre(grille_possibles,carre)
-
     grille_possibles=groupes_caches_ligne(grille_possibles)
     grille_possibles=groupes_caches_colonne(grille_possibles)
     grille_possibles=groupes_caches_carre(grille_possibles)
-
     for valeur in range(1,10):
         grille_possibles=x_wing_ligne(grille_possibles,valeur)
-
     for valeur in range(1,10):
         grille_possibles=x_wing_colonne(grille_possibles,valeur)
-
     for valeur in range(9) :
-        grille_possibles=groupes_de_3(grille_possibles,liste_des_sommets(grille_possibles,valeur),valeur)
-
+        grille_possibles=groupes_de_3(grille_possibles,\
+                                      liste_des_sommets(grille_possibles,valeur),\
+                                      valeur)
     for valeur in range(9) :
-        grille_possibles=\
-            groupes_de_3_c(grille_possibles,liste_des_sommets_c(grille_possibles,valeur),valeur)
-
+        grille_possibles=groupes_de_3_c(grille_possibles,\
+                                        liste_des_sommets_c(grille_possibles,valeur),\
+                                        valeur)
     for ligne in range(9) :
         for colonne in range(9):
             if len(grille_possibles[ligne][colonne])==1:
@@ -939,14 +928,11 @@ def resolution_(grille_s):
 
 def resolution(grille_s):
     global grille_possibles
-
     memogrille=[]
     memopossible=[]
     for i in range(9):
         memogrille.append([0,0,0,0,0,0,0,0,0])
         memopossible.append([0,0,0,0,0,0,0,0,0])
-    
-    
     essais=0  
     while not teste_ligne(grille_s) and essais!=3:
         resolution_(grille_s)
@@ -969,20 +955,16 @@ def resolution(grille_s):
             for j in range(9):
                 grille_s[i][j]=memogrille[i][j]
                 grille_possibles[i][j]=memopossible[i][j]
-        
         essai_erreur(grille_possibles,grille_s,1)
         while not teste_ligne(grille_s) and essais!=3:
             resolution_(grille_s)
             essais+=1
-
     if not teste_ligne(grille_s):
         for i in range(9):
             for j in range(9):
                 grille_s[i][j]=memogrille[i][j]
                 grille_possibles[i][j]=memopossible[i][j]
-
 # ______ fin essai erreur
-
 #--memorisation 2
     if not teste_ligne(grille_s):
         for i in range(9):
@@ -1000,21 +982,16 @@ def resolution(grille_s):
             for j in range(9):
                 grille_s[i][j]=memogrille[i][j]
                 grille_possibles[i][j]=memopossible[i][j]
-        
         essai_erreur2(grille_possibles,grille_s,1)
         while not teste_ligne(grille_s) and essais!=3:
             resolution_(grille_s)
             essais+=1
-
     if not teste_ligne(grille_s):
         for i in range(9):
             for j in range(9):
                 grille_s[i][j]=memogrille[i][j]
                 grille_possibles[i][j]=memopossible[i][j]
-
 # ______ fin essai erreur
-
-            
     return grille_s
 
 #____________________________________________________________________________________
